@@ -1,0 +1,17 @@
+*.user
+*.aps
+*.ncb
+*.sdf
+*.suo
+*.exp
+*.ilk
+*.pdb
+*.obj
+*.log*
+*.dmp*
+*¸±±¾*
+*_bk*
+*bk_*
+build/
+temp/
+
