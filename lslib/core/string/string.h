@@ -31,7 +31,7 @@ namespace lslib
 		const bool is_float() const;
 		const bool is_bool(bool numeric = false) const;
 		const int to_int() const;
-		const float to_float() const;
+		const double to_float() const;
 		const bool to_bool() const;
 		lstring lower() const;
 		lstring upper() const;
@@ -40,6 +40,9 @@ namespace lslib
 		_ref lstring& trim();
 		_ref lstring& trim_left();
 		_ref lstring& trim_right();
+		_ref lstring& trim(_lchar c);
+		_ref lstring& trim_left(_lchar c);
+		_ref lstring& trim_right(_lchar c);
 		_ref lstring& replace(_lchar needle, _lchar replacement, size_t index = 0, int counts = -1);
 		_ref lstring& replace(_lpcstr needle, _lpcstr replacement, size_t index = 0, int counts = -1);
 		_ref lstring& format(_lpcstr pfmt, ...);

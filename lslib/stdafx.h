@@ -14,5 +14,9 @@
 
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // 某些 CString 构造函数将是显式的
 
-// TODO: 在此处引用程序需要的其他头文件
+
+#pragma warning(disable:4800)
+#pragma warning(disable:4996)
+
+
 #include "lslib.h"

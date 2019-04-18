@@ -133,7 +133,7 @@ namespace lslib
 		return atoi(data());
 	}
 
-	const float lstring::to_float() const
+	const double lstring::to_float() const
 	{
 		if (!is_float()) return 0;
 		return atof(data());
@@ -197,6 +197,29 @@ namespace lslib
 		return *this;
 	}
 
+	_ref lstring& lstring::trim(_lchar c)
+	{
+		trim_left(c);
+		trim_right(c);
+		return *this;
+	}
+
+	_ref lstring& lstring::trim_left(_lchar c)
+	{
+		iterator it = begin();
+		while (it != end() && c == (*it))
+			it = erase(it);
+		return *this;
+	}
+
+	_ref lstring& lstring::trim_right(_lchar c)
+	{
+		reverse_iterator it = rbegin();
+		while (it != rend() && c == (*it))
+			it = reverse_iterator(erase((++it).base()));
+		return *this;
+	}
+
 	_ref lstring& lstring::replace(_lchar needle, _lchar replacement, size_t index /*= 0*/, int counts /*= -1*/)
 	{
 		if (needle == replacement)
@@ -204,7 +227,7 @@ namespace lslib
 
 		iterator p = begin();
 		size_t replace_index = 0;
-		size_t replace_count = 0;
+		int replace_count = 0;
 		while (p != end())
 		{
 			if (*p == needle)
@@ -216,7 +239,7 @@ namespace lslib
 					continue;
 				}
 
-				if (replace_count >= counts)
+				if (counts > 0 && replace_count >= counts)
 					break;
 
 				*p = replacement;

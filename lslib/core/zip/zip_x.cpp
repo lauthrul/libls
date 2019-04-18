@@ -45,7 +45,7 @@ namespace lslib
 				dst = arr_files[i].fullPath;
 				src = dst.substr(dst.find(root_name));
 				ret |= ZipAdd(hz, src, dst);
-				if (cb) cb(clientp, arr_files.size(), i+1);
+				if (cb != NULL) cb(clientp, arr_files.size(), i+1);
 			}
 			CloseZip(hz);
 			return (ret == ZR_OK);
@@ -68,7 +68,7 @@ namespace lslib
 				if (0 != UnzipItem(hz, zi, (target + ze.name).c_str()))
 					ret = false;
 
-				if(cb)  cb(clientp, zet.index, zi);
+				if(cb != NULL) (clientp, zet.index, zi);
 			}
 			CloseZip(hz);
 			return ret;

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "os.h"
+#include "sys/stat.h"
 #if defined _MSC_VER
 #include <ShlObj.h>
 #include <ShellAPI.h>
@@ -12,18 +13,24 @@ namespace lslib
 	namespace os
 	{
 
+		static _lchar s_slashs[] = {'\\', '/'};
+
 		LSLIB_API const _lchar get_slash()
 		{
 #if defined _MSC_VER
-			return '\\';
+			return s_slashs[0];
 #else
-			return '/';
+			return s_slashs[1];
 #endif
 		}
 
 		LSLIB_API const bool is_slash(_lchar c)
 		{
-			return (c == get_slash());
+			for (int i = 0; i < sizeof(s_slashs); i++)
+			{
+				if (c == s_slashs[i]) return true;
+			}
+			return false;
 		}
 
 		LSLIB_API const lstring path_get_dir(_lpcstr path)
@@ -125,19 +132,23 @@ namespace lslib
 		LSLIB_API const bool is_file(_lpcstr path)
 		{
 			if (is_empty(path)) return false;
-#ifdef _MSC_VER
-			return PathIsFileSpec(path);
-#else
-#endif
+			struct stat s;
+			lstring str = path_pretty(path);
+			str.trim(get_slash());
+			if(stat(str, &s) == 0)
+				return s.st_mode & S_IFREG;
+			return false;
 		}
 
 		LSLIB_API const bool is_dir(_lpcstr path)
 		{
 			if (is_empty(path)) return false;
-#ifdef _MSC_VER
-			return PathIsDirectory(path);
-#else
-#endif
+			struct stat s;
+			lstring str = path_pretty(path);
+			str.trim(get_slash());
+			if(stat(str, &s) == 0)
+				return s.st_mode & S_IFDIR;
+			return false;
 		}
 
 		LSLIB_API const bool rename(_lpcstr path, _lpcstr target)
@@ -180,7 +191,7 @@ namespace lslib
 		{
 			_lchar sz[MAX_PATH+1] = {0};
 			GetModuleFileName(NULL, sz, MAX_PATH);
-			return path_get_dir(sz) + lstring(get_slash());
+			return path_get_dir(sz) + get_slash();
 		}
 
 		LSLIB_API const lstring get_module_name()
@@ -194,7 +205,7 @@ namespace lslib
 		{
 			_lchar sz[MAX_PATH+1] = {0};
 			if (SHGetSpecialFolderPath(NULL, sz, csidl, bcreate))
-				return lstring(sz) + lstring(get_slash());
+				return lstring(sz) + get_slash();
 			else return "";
 		}
 
@@ -208,7 +219,7 @@ namespace lslib
 			lstring str = get_app_data_path();
 			if (!str.empty())
 			{
-				str += path_get_filename(get_module_name()) + lstring(get_slash());
+				str += path_get_filename(get_module_name()) + get_slash();
 				if (bcreate) mkdir(str);
 			}
 			return str;
@@ -314,7 +325,7 @@ namespace lslib
 
 			lstring strpath = path_pretty(path);
 			if (strpath.find_last_of('*') == lstring::npos) // 没有通配符，按照目录处理
-				strpath += string(1, get_slash()) + "*.*";
+				strpath += get_slash() + "*.*";
 
 			lstring str;
 			lstring_array arr_exts;
@@ -359,12 +370,12 @@ namespace lslib
 						continue;
 
 					if (recurse)
-						enumerate_files(array_files, (file_info.filePath + string(1, get_slash()) + fd.cFileName).data(), extention, filter, recurse);
+						enumerate_files(array_files, (file_info.filePath + get_slash() + fd.cFileName).data(), extention, filter, recurse);
 				}
 				else
 				{
 					file_info.fileName = fd.cFileName;
-					file_info.fullPath = file_info.filePath + string(1, get_slash()) + file_info.fileName;
+					file_info.fullPath = file_info.filePath + get_slash() + file_info.fileName;
 					file_info.size = fd.nFileSizeLow - fd.nFileSizeHigh;
 					file_info.name = path_get_filename(file_info.fileName);
 					file_info.extName = path_get_ext(file_info.fileName);

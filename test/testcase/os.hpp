@@ -6,7 +6,8 @@ cout << "get_module_name: " << get_module_name().c_str() << endl;
 cout << "get_slash: " << get_slash() << endl;
 for (int i = 0; i < 128; i++)
 {
-	cout << "[" <<  i << "]" << (_lchar)i << " is_slash: " << is_slash(i) << endl;
+	if (is_slash(i))
+		cout << "[" <<  i << "]" << (_lchar)i << " is_slash: " << is_slash(i) << endl;
 }
 
 lstring strsz[] = {
@@ -25,9 +26,9 @@ lstring strsz[] = {
 	".\\\\",
 	".////\\\\",
 	"..",
-	"../Debug",
+	"../Debug\\",
 	"test.exe",
-	"../Debug/\\test.exe",
+	"..//\\//Debug//\\test.exe",
 	"E:\\Mine\\Code\\lslib\\bin\\Debug\\test.exe",
 	"E:\\Mine\\Code\\lslib\\bin\\Debug\\test//test.exe",
 };
