@@ -1,4 +1,6 @@
 #pragma once
+#pragma warning(disable:4231)
+
 #include <log4cxx/xml/domconfigurator.h> 
 #include <log4cxx/patternlayout.h> 
 #include <log4cxx/rolling/rollingfileappender.h> 
@@ -43,23 +45,23 @@ namespace lslib
 		//////////////////////////////////////////////////////////////////////////
 		/*
 		* params:
-		*	logger: (LoggerPtr) logger instance
-		*	format: (const char*) log string format
+		*	logger: (_loggerptr) logger instance
+		*	fmt: (const char*) log string format
 		*/
-		#ifndef _DEBUG
-		#define FATAL_LOG(logger, format, ...)				LOG4CXX_FATAL(logger, (lstring("[%s] - ") + (format)), __FUNCTION__, __VA_ARGS__)
-		#define ERROR_LOG(logger, format, ...)				LOG4CXX_ERROR(logger, (lstring("[%s] - ") + (format)), __FUNCTION__, __VA_ARGS__)
-		#define WARN_LOG(logger, format, ...)				LOG4CXX_WARN(logger, (lstring("[%s] - ") + (format)), __FUNCTION__, __VA_ARGS__)
-		#define INFO_LOG(logger, format, ...)				LOG4CXX_INFO(logger, (lstring("[%s] - ") + (format)), __FUNCTION__, __VA_ARGS__)
-		#define DEBUG_LOG(logger, format, ...)				LOG4CXX_DEBUG(logger, (lstring("[%s] - ") + (format)), __FUNCTION__, __VA_ARGS__)
-		#define TRACE_LOG(logger, format, ...)				LOG4CXX_TRACE(logger, (lstring("[%s] - ") + (format)), __FUNCTION__, __VA_ARGS__)
+		#ifdef _DEBUG
+		#define FATAL_LOG(logger, fmt, ...)				LOG4CXX_FATAL(logger, lstring().format(lstring("[%s] - ") + (fmt), __FUNCTION__, __VA_ARGS__))
+		#define ERROR_LOG(logger, fmt, ...)				LOG4CXX_ERROR(logger, lstring().format(lstring("[%s] - ") + (fmt), __FUNCTION__, __VA_ARGS__))
+		#define WARN_LOG(logger, fmt, ...)				LOG4CXX_WARN(logger, lstring().format(lstring("[%s] - ") + (fmt), __FUNCTION__, __VA_ARGS__))
+		#define INFO_LOG(logger, fmt, ...)				LOG4CXX_INFO(logger, lstring().format(lstring("[%s] - ") + (fmt), __FUNCTION__, __VA_ARGS__))
+		#define DEBUG_LOG(logger, fmt, ...)				LOG4CXX_DEBUG(logger, lstring().format(lstring("[%s] - ") + (fmt), __FUNCTION__, __VA_ARGS__))
+		#define TRACE_LOG(logger, fmt, ...)				LOG4CXX_TRACE(logger, lstring().format(lstring("[%s] - ") + (fmt), __FUNCTION__, __VA_ARGS__))
 		#else
-		#define FATAL_LOG(logger, format, ...)				LOG4CXX_FATAL(logger, format, __VA_ARGS__)
-		#define ERROR_LOG(logger, format, ...)				LOG4CXX_ERROR(logger, format, __VA_ARGS__)
-		#define WARN_LOG(logger, format, ...)				LOG4CXX_WARN(logger, format, __VA_ARGS__)
-		#define INFO_LOG(logger, format, ...)				LOG4CXX_INFO(logger, format, __VA_ARGS__)
-		#define DEBUG_LOG(logger, format, ...)				LOG4CXX_DEBUG(logger, format, __VA_ARGS__)
-		#define TRACE_LOG(logger, format, ...)				LOG4CXX_TRACE(logger, format, __VA_ARGS__)
+		#define FATAL_LOG(logger, fmt, ...)				LOG4CXX_FATAL(logger, lstring().format((fmt), __VA_ARGS__))
+		#define ERROR_LOG(logger, fmt, ...)				LOG4CXX_ERROR(logger, lstring().format((fmt), __VA_ARGS__))
+		#define WARN_LOG(logger, fmt, ...)				LOG4CXX_WARN(logger, lstring().format((fmt), __VA_ARGS__))
+		#define INFO_LOG(logger, fmt, ...)				LOG4CXX_INFO(logger, lstring().format((fmt), __VA_ARGS__))
+		#define DEBUG_LOG(logger, fmt, ...)				LOG4CXX_DEBUG(logger, lstring().format((fmt), __VA_ARGS__))
+		#define TRACE_LOG(logger, fmt, ...)				LOG4CXX_TRACE(logger, lstring().format((fmt), __VA_ARGS__))
 		#endif
 
 		//////////////////////////////////////////////////////////////////////////
