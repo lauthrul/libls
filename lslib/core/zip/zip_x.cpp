@@ -68,7 +68,7 @@ namespace lslib
 				if (0 != UnzipItem(hz, zi, (target + ze.name).c_str()))
 					ret = false;
 
-				if(cb != NULL) (clientp, zet.index, zi);
+				if(cb != NULL) cb(clientp, zet.index, zi);
 			}
 			CloseZip(hz);
 			return ret;

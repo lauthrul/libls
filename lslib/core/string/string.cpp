@@ -2,6 +2,9 @@
 #include "string.h"
 
 //////////////////////////////////////////////////////////////////////////
+#define isspace(c)			((c) == ' ' || (c) == '\t' || (c) == '\r' || (c) == '\n' || (c) == '\v' || (c) == '\f')
+
+//////////////////////////////////////////////////////////////////////////
 namespace lslib
 {
 
@@ -30,10 +33,19 @@ namespace lslib
 		return c_str();
 	}
 
-	_ref lstring& lstring::operator+(_lchar c)
+	lstring lstring::operator+(_lchar c)
 	{
-		*this += lstring(c);
-		return *this;
+		return lstring(*this) += c;
+	}
+
+	lstring lstring::operator+(_lpcstr str)
+	{
+		return lstring(*this) += str;
+	}
+
+	lstring lstring::operator+(const lstring& str)
+	{
+		return lstring(*this) += str;
 	}
 
 	const bool lstring::is_space() const

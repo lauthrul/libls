@@ -30,6 +30,9 @@ namespace lslib
 		// 美化路径(转为小写，并去除多余分隔符)
 		LSLIB_API const lstring path_pretty(_lpcstr path);
 
+		// 组合路径
+		LSLIB_API const lstring path_combine(_lpcstr path, _lpcstr join);
+
 		// 获取绝对路径
 		LSLIB_API const lstring path_make_absolute(_lpcstr path);
 
@@ -43,7 +46,13 @@ namespace lslib
 		// 检查路径是否目录
 		LSLIB_API const bool is_dir(_lpcstr path);
 
-		// 重命名
+		// 复制文件或目录
+		LSLIB_API const int copy(_lpcstr path, _lpcstr target);
+
+		// 移动文件或目录
+		LSLIB_API const int move(_lpcstr path, _lpcstr target);
+
+		// 重命名文件或目录
 		LSLIB_API const bool rename(_lpcstr path, _lpcstr target);
 
 		// 创建目录（可递归）
@@ -79,9 +88,9 @@ namespace lslib
 		LSLIB_API const lstring get_program_files_path();
 
 		// 在资源管理器中打开一个路径并选中一个文件
-		LSLIB_API void opendir(_lpcstr path, _lpcstr file);
+		LSLIB_API void open_dir(_lpcstr path, _lpcstr file);
 
-		// 打开文件选择对话框。 [out] vctFiles: 选择的文件列表； lpstrTitle: 对话框标题； lpstrFilter: 文件类型； hwndOwner: 父窗口； bMulti: 是否可以多选
+		// 打开文件选择对话框。 [out] arr_files: 选择的文件列表； title: 对话框标题； filter: 文件类型； multi: 是否可以多选； owner: 父窗口
 		/* 其中lpstrFilter格式如下：
 				_T(" 常见图片格式\0*.jpg;*.jpeg;*.png;*.bmp\0"
 				" JPG图片(*.jpg)\0*.jpg;*.jpeg\0"
@@ -91,7 +100,7 @@ namespace lslib
 		*/		
 		LSLIB_API bool open_file_select_dialog(__out lstring_array& arr_files, _lpcstr title, _lpcstr filter, bool multi, HWND owner);
 
-		// 打开目录选择对话框。 [out] lpstrDest：选择的路径； lpstrTitle:对话框标题； hwndOwner: 父窗口
+		// 打开目录选择对话框。 [out] target：选择的路径； title:对话框标题； owner: 父窗口
 		LSLIB_API bool open_folder_select_dialog(__out lstring& target, _lpcstr title, HWND owner);
 #endif
 

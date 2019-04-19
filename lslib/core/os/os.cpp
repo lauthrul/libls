@@ -104,6 +104,17 @@ namespace lslib
 			return str;
 		}
 
+		LSLIB_API const lstring path_combine(_lpcstr path, _lpcstr join)
+		{
+			if (is_empty(path)) return "";
+#ifdef _MSC_VER
+			_lchar szbuf[MAX_PATH+1]={0};
+			PathCombine(szbuf, path_pretty(path), path_pretty(join));
+			return szbuf;
+#else
+#endif
+		}
+
 		LSLIB_API const lstring path_make_absolute(_lpcstr path)
 		{
 			if (is_empty(path)) return "";
@@ -151,9 +162,68 @@ namespace lslib
 			return false;
 		}
 
+		LSLIB_API const int copy(_lpcstr path, _lpcstr target)
+		{
+#ifdef _MSC_VER
+			TCHAR szPath[MAX_PATH + 2] = {0};
+			int nLen = min(_tcsclen(path), MAX_PATH);
+			memcpy(szPath, path, nLen);
+
+			TCHAR szTarget[MAX_PATH + 2] = {0};
+			nLen = min(_tcsclen(target), MAX_PATH);
+			memcpy(szTarget, target, nLen);
+
+			SHFILEOPSTRUCT fop = {0};
+			fop.wFunc		= FO_COPY;
+			fop.pFrom		= szPath;
+			fop.pTo			= szTarget;
+			fop.fFlags		= FOF_NO_UI;
+			return SHFileOperation( &fop );
+#else
+#endif
+		}
+
+		LSLIB_API const int move(_lpcstr path, _lpcstr target)
+		{
+#ifdef _MSC_VER
+			TCHAR szPath[MAX_PATH + 2] = {0};
+			int nLen = min(_tcsclen(path), MAX_PATH);
+			memcpy(szPath, path, nLen);
+
+			TCHAR szTarget[MAX_PATH + 2] = {0};
+			nLen = min(_tcsclen(target), MAX_PATH);
+			memcpy(szTarget, target, nLen);
+
+			SHFILEOPSTRUCT fop = {0};
+			fop.wFunc		= FO_MOVE;
+			fop.pFrom		= szPath;
+			fop.pTo			= szTarget;
+			fop.fFlags		= FOF_NO_UI;
+			return SHFileOperation( &fop );
+#else
+#endif
+		}
+
 		LSLIB_API const bool rename(_lpcstr path, _lpcstr target)
 		{
 			return ::rename(path, target);
+#ifdef _MSC_VER
+			TCHAR szPath[MAX_PATH + 2] = {0};
+			int nLen = min(_tcsclen(path), MAX_PATH);
+			memcpy(szPath, path, nLen);
+
+			TCHAR szTarget[MAX_PATH + 2] = {0};
+			nLen = min(_tcsclen(target), MAX_PATH);
+			memcpy(szTarget, target, nLen);
+
+			SHFILEOPSTRUCT fop = {0};
+			fop.wFunc		= FO_RENAME;
+			fop.pFrom		= szPath;
+			fop.pTo			= szTarget;
+			fop.fFlags		= FOF_NO_UI;
+			return SHFileOperation( &fop );
+#else
+#endif
 		}
 
 		LSLIB_API const int mkdir(_lpcstr path)
@@ -171,16 +241,14 @@ namespace lslib
 			if (is_empty(path)) return false;
 
 #ifdef _MSC_VER
-			TCHAR szDir[MAX_PATH + 2] = {0};
-			int nLen = _tcsclen(path);
-			nLen = min(nLen, MAX_PATH);
-			memcpy(szDir, path, nLen);
+			TCHAR szPath[MAX_PATH + 2] = {0};
+			int nLen = min(_tcsclen(path), MAX_PATH);
+			memcpy(szPath, path, nLen);
 
 			SHFILEOPSTRUCT fop = {0};
 			fop.wFunc		= FO_DELETE;
-			fop.pFrom		= szDir; // pFrom must be double-null terminated string
-			fop.pTo			= NULL;
-			fop.fFlags		= FOF_SILENT | FOF_NOCONFIRMATION | FOF_NOERRORUI;
+			fop.pFrom		= szPath; // must be double-null terminated string
+			fop.fFlags		= FOF_NO_UI;
 			return SHFileOperation(&fop);
 #endif
 		}
@@ -243,13 +311,13 @@ namespace lslib
 			return get_special_folder_path(CSIDL_PROGRAM_FILES, true);
 		}
 
-		LSLIB_API void opendir(_lpcstr path, _lpcstr file)
+		LSLIB_API void open_dir(_lpcstr path, _lpcstr file)
 		{
 			if (is_empty(path)) return;
 
-			lstring str = path;
+			lstring str = path_pretty(path);
 			if (!is_empty(file))
-				str = lstring("/e,/select, ") + path + file;
+				str = lstring("/e,/select, ") + path_combine(path, file);
 			ShellExecute(NULL, _T("open"), _T("explorer.exe"), str, NULL, SW_SHOWNORMAL);
 		}
 
@@ -370,7 +438,7 @@ namespace lslib
 						continue;
 
 					if (recurse)
-						enumerate_files(array_files, (file_info.filePath + get_slash() + fd.cFileName).data(), extention, filter, recurse);
+						enumerate_files(array_files, file_info.filePath + get_slash() + fd.cFileName, extention, filter, recurse);
 				}
 				else
 				{

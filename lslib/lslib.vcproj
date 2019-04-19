@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\3rd-party\log4cxx\include\&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LSLIB_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,7 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="log4cxx.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)\3rd-party\log4cxx\bin\&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -117,6 +119,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\3rd-party\log4cxx\include\&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LSLIB_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -135,7 +138,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="log4cxx.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)\3rd-party\log4cxx\bin\&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -257,6 +262,54 @@
 				</File>
 				<File
 					RelativePath=".\core\md5\md5_x.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="math"
+				>
+				<File
+					RelativePath=".\core\math\math.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\math\math.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="lock"
+				>
+				<File
+					RelativePath=".\core\lock\lock.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\lock\lock.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="thread"
+				>
+				<File
+					RelativePath=".\core\thread\thread.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\thread\thread.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="logger"
+				>
+				<File
+					RelativePath=".\core\logger\logger.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\logger\logger.h"
 					>
 				</File>
 			</Filter>

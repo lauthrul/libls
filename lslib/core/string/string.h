@@ -20,7 +20,9 @@ namespace lslib
 		virtual ~lstring();
 
 		operator _lpcstr() const;
-		_ref lstring& operator+ (_lchar c);
+		lstring operator+ (_lchar c);
+		lstring operator+ (_lpcstr str);
+		lstring operator+ (const lstring& str);
 
 	public:
 		const bool is_space() const;
