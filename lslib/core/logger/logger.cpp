@@ -1,15 +1,33 @@
 #pragma once
 #include "stdafx.h"
 #include "logger.h"
+#include <log4cxx/consoleappender.h>
+#include <log4cxx/basicconfigurator.h>
+#include <log4cxx/simplelayout.h>
+#include <log4cxx/xml/domconfigurator.h> 
 
 namespace lslib
 {
 	namespace logger
 	{
 		//////////////////////////////////////////////////////////////////////////
+		_loggerptr loggerInternal = NULL;
+		_loggerptr GetInternalLogger()
+		{
+			if (loggerInternal == NULL)
+			{
+				log4cxx::ConsoleAppender *consoleAppender = new log4cxx::ConsoleAppender(log4cxx::LayoutPtr(new log4cxx::SimpleLayout()));
+				log4cxx::BasicConfigurator::configure(log4cxx::AppenderPtr(consoleAppender));
+				loggerInternal = log4cxx::Logger::getRootLogger();
+			}
+			return loggerInternal;
+		}
+
+		//////////////////////////////////////////////////////////////////////////
 		LSLIB_API void InitLogger(_lpcstr lpstrCfgXml)
 		{
-			DOMConfigurator::configure(lpstrCfgXml);
+			if (is_empty(lpstrCfgXml)) return;
+			log4cxx::xml::DOMConfigurator::configure(lpstrCfgXml);
 		}
 
 		LSLIB_API _loggerptr GetLogger(_lpcstr lpstrLoggerName)
@@ -43,6 +61,9 @@ namespace lslib
 		}
 
 		//////////////////////////////////////////////////////////////////////////
+		extern _loggerptr g_logger = NULL; // = GetInternalLogger();
+		extern _loggerptr g_netlogger = NULL; // = GetInternalLogger();
+
 		LSLIB_API void RegistGlobalLogger(_loggerptr pLogger)
 		{
 			g_logger = pLogger;

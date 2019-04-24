@@ -16,7 +16,8 @@ int _tmain(int argc, _TCHAR* argv[])
 // #include "testcase/type.hpp"
 // #include "testcase/os.hpp"
 // #include "testcase/math.hpp"
-#include "testcase/logger.hpp"
+// #include "testcase/logger.hpp"
+#include "testcase/httpclient.hpp"
 
 	getchar();
 	return 0;

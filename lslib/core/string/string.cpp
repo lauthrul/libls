@@ -366,11 +366,11 @@ namespace lslib
 		return *this;
 	}
 
-	const int lstring::split(__out lstring_array& dest, _lpcstr src, _lpcstr patten) const
+	const int lstring::split(__out lstring_array& dest, _lpcstr src, _lpcstr patten)
 	{
 		if (is_empty(src) || is_empty(patten))
 		{
-			dest.push_back(*this);
+			dest.push_back(src);
 			return dest.size();
 		}
 
@@ -396,6 +396,11 @@ namespace lslib
 		if (last_pos[0] != 0) dest.push_back(last_pos);
 
 		return dest.size();
+	}
+
+	const int lstring::split(__out lstring_array& dest, _lpcstr patten) const
+	{
+		return split(dest, *this, patten);
 	}
 
 } // end of lslib

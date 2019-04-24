@@ -49,6 +49,7 @@ namespace lslib
 		_ref lstring& replace(_lpcstr needle, _lpcstr replacement, size_t index = 0, int counts = -1);
 		_ref lstring& format(_lpcstr pfmt, ...);
 		_ref lstring& append_format(_lpcstr pfmt, ...);
-		const int split(__out lstring_array& dest, _lpcstr src, _lpcstr patten) const;
+		static const int split(__out lstring_array& dest, _lpcstr src, _lpcstr patten);
+		const int split(__out lstring_array& dest, _lpcstr patten) const;
 	};
 }

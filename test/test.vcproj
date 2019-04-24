@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)\lslib\&quot;;&quot;$(SolutionDir)\lslib\\3rd-party\log4cxx\include\&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)\lslib\&quot;;&quot;$(SolutionDir)\lslib\3rd-party\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="lslib.lib log4cxx.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)\lslib\bin\$(ConfigurationName)\&quot;;&quot;$(SolutionDir)\lslib\3rd-party\log4cxx\bin\$(ConfigurationName)\&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)\lslib\bin\$(ConfigurationName)\&quot;;&quot;$(SolutionDir)\lslib\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(SolutionDir)\lslib\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -118,7 +118,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)\lslib\&quot;;&quot;$(SolutionDir)\lslib\\3rd-party\log4cxx\include\&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)\lslib\&quot;;&quot;$(SolutionDir)\lslib\3rd-party\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -139,7 +139,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="lslib.lib log4cxx.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)\lslib\bin\$(ConfigurationName)\&quot;;&quot;$(SolutionDir)\lslib\3rd-party\log4cxx\bin\$(ConfigurationName)\&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)\lslib\bin\$(ConfigurationName)\&quot;;&quot;$(SolutionDir)\lslib\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(SolutionDir)\lslib\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -176,6 +176,10 @@
 		<Filter
 			Name="testcase"
 			>
+			<File
+				RelativePath=".\testcase\httpclient.hpp"
+				>
+			</File>
 			<File
 				RelativePath=".\testcase\logger.hpp"
 				>
