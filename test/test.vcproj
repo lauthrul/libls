@@ -177,7 +177,15 @@
 			Name="testcase"
 			>
 			<File
+				RelativePath=".\testcase\algorithm.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\testcase\httpclient.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\testcase\lock.hpp"
 				>
 			</File>
 			<File
@@ -193,7 +201,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\testcase\string.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\testcase\testcase.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\testcase\thread.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\testcase\time.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\testcase\type.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\testcase\zip.hpp"
 				>
 			</File>
 		</Filter>

@@ -2,24 +2,24 @@
 //
 
 #include "stdafx.h"
-#include "lslib.h"
-using namespace lslib;
-using namespace lslib::os;
-#include <iomanip>
 
+//////////////////////////////////////////////////////////////////////////
+#include "testcase/testcase.hpp"
+#include "testcase/type.hpp"
+#include "testcase/os.hpp"
+#include "testcase/math.hpp"
+#include "testcase/logger.hpp"
+#include "testcase/httpclient.hpp"
+#include "testcase/algorithm.hpp"
+
+extern fn_test_list test_cases;
 int _tmain(int argc, _TCHAR* argv[])
 {
-	is_exist(CString("a") + "b");
-	is_exist(lstring("a") + 'b');
-	is_exist(lstring("a") + "b");
-
-// #include "testcase/type.hpp"
-// #include "testcase/os.hpp"
-// #include "testcase/math.hpp"
-// #include "testcase/logger.hpp"
-#include "testcase/httpclient.hpp"
-
-	getchar();
-	return 0;
+    for (fn_test_list::iterator it = test_cases.begin(); it != test_cases.end(); it++)
+    {
+        fn_test fn = (*it);
+        (fn != NULL) ? (*fn)() : 1;
+    }
+    getchar();
+    return 0;
 }
-

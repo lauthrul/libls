@@ -6,9 +6,9 @@
 
 namespace lslib
 {
-	namespace utils
-	{
+    namespace utils
+    {
 
-	} // utils
+    } // utils
 
 } // lslib

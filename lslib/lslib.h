@@ -80,8 +80,7 @@
 
 #include "core/type.h"
 #include "core/string/string.h"
-#include "core/base64/base64.h"
-#include "core/md5/md5_x.h"
+#include "core/algorithm/algorithm.h"
 #include "core/os/os.h"
 #include "core/math/math.h"
 #include "core/lock/lock.h"

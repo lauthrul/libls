@@ -4,41 +4,41 @@
 
 namespace lslib
 {
-	namespace utils
-	{
-		//////////////////////////////////////////////////////////////////////////
-		// common cmd line
-#define CMD_PLUGIN_MODE			"--plugin"			// --plugin <hwnd>					;plugin mode. called by other progress with HWND <hwnd>
-#define CMD_SILENT_MODE			"--silent"			// --silent							;silent mode. no message show up
-#define CMD_LAUNCHER			"--lauch"			// --lauch "<program[,param][,delay]>"		;lauch a program with param (if given) after delay time(ms, if given)
+    namespace utils
+    {
+        //////////////////////////////////////////////////////////////////////////
+        // common cmd line
+#define CMD_PLUGIN_MODE         "--plugin"          // --plugin <hwnd>                  ;plugin mode. called by other progress with HWND <hwnd>
+#define CMD_SILENT_MODE         "--silent"          // --silent                         ;silent mode. no message show up
+#define CMD_LAUNCHER            "--lauch"           // --lauch "<program[,param][,delay]>"      ;lauch a program with param (if given) after delay time(ms, if given)
 
-		// betclient cmd line
-#define CMD_GET_AGENT			"--get_agent"		// --get_agent						;get current setting agentid
-#define CMD_SET_AGENT			"--set_agent"		// --set_agent <agentid>			;for agent to set agentid
-#define CMD_UPDATE_CFG			"--update_cfg"		// --update_cfg [cfgfile]			;for update.exe to update config.dat with specificed cfgfile (if given)
-#define CMD_CLEAN_PWD			"--clean_pwd"		// --clean_pwd						;clean password cache
+        // betclient cmd line
+#define CMD_GET_AGENT           "--get_agent"       // --get_agent                      ;get current setting agentid
+#define CMD_SET_AGENT           "--set_agent"       // --set_agent <agentid>            ;for agent to set agentid
+#define CMD_UPDATE_CFG          "--update_cfg"      // --update_cfg [cfgfile]           ;for update.exe to update config.dat with specificed cfgfile (if given)
+#define CMD_CLEAN_PWD           "--clean_pwd"       // --clean_pwd                      ;clean password cache
 
-		// update cmd line
-#define CMD_RESTART				"--restart"			// --restart						;restart program
-#define	CMD_CLEANUP				"--cleanup"			// --cleanup						;clean up after update
+        // update cmd line
+#define CMD_RESTART             "--restart"         // --restart                        ;restart program
+#define CMD_CLEANUP             "--cleanup"         // --cleanup                        ;clean up after update
 
-		//////////////////////////////////////////////////////////////////////////
-		enum ERuntine
-		{
-			RUNTINE_ERORR = -1,
-			RUNTINE_CONTINUE,
-			RUNTINE_FINISH,
-		};
+        //////////////////////////////////////////////////////////////////////////
+        enum ERuntine
+        {
+            RUNTINE_ERORR = -1,
+            RUNTINE_CONTINUE,
+            RUNTINE_FINISH,
+        };
 
-		//////////////////////////////////////////////////////////////////////////
-		class LSLIB_API ICmdRuntine
-		{
-		public:
-			static int				ParserCmdLine(_lpcstr cmd, __out lstring_array& outarr);
-			virtual ERuntine		RunCmdLine(const lstring_array& arr) = 0;
-		};
+        //////////////////////////////////////////////////////////////////////////
+        class LSLIB_API ICmdRuntine
+        {
+            public:
+                static int              ParserCmdLine(_lpcstr cmd, __out lstring_array& outarr);
+                virtual ERuntine        RunCmdLine(const lstring_array& arr) = 0;
+        };
 
-	} // utils
+    } // utils
 
 } // lslib
 

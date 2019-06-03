@@ -206,18 +206,6 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="base64"
-				>
-				<File
-					RelativePath=".\core\base64\base64.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\core\base64\base64.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="zip"
 				>
 				<File
@@ -246,22 +234,46 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="md5"
+				Name="algorithm"
 				>
 				<File
-					RelativePath=".\core\md5\md5.cpp"
+					RelativePath=".\core\algorithm\algorithm.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\core\md5\md5.h"
+					RelativePath=".\core\algorithm\algorithm.h"
 					>
 				</File>
 				<File
-					RelativePath=".\core\md5\md5_x.cpp"
+					RelativePath=".\core\algorithm\md5.c"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\core\algorithm\md5.h"
 					>
 				</File>
 				<File
-					RelativePath=".\core\md5\md5_x.h"
+					RelativePath=".\core\algorithm\sha1.c"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\core\algorithm\sha1.h"
 					>
 				</File>
 			</Filter>
