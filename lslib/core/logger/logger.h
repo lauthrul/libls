@@ -50,8 +50,8 @@ namespace lslib
         #endif
 
         //////////////////////////////////////////////////////////////////////////
-        LSLIB_API extern _loggerptr g_logger;
-        LSLIB_API extern _loggerptr g_netlogger;
+        /*LSLIB_API */extern _loggerptr g_logger;
+        /*LSLIB_API */extern _loggerptr g_netlogger;
         LSLIB_API void RegistGlobalLogger(_loggerptr pLogger);
         LSLIB_API void RegistNetLogger(_loggerptr pLogger);
 

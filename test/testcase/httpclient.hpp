@@ -6,11 +6,13 @@ using namespace lslib::logger;
 void test_httpclient()
 {
     InitLogger("log4cxx.xml");
-    RegistGlobalLogger(GetLogger("applogger"));
-    RegistNetLogger(GetLogger("netlogger"));
+    _loggerptr lplogger = GetLogger("applogger");
+    _loggerptr lpnetlogger = GetLogger("netlogger");
+    RegistGlobalLogger(lplogger);
+    RegistNetLogger(lpnetlogger);
 
-    INFO_LOG(g_logger, "============================");
-    INFO_LOG(g_netlogger, "============================");
+    INFO_LOG(lplogger, "============================");
+    INFO_LOG(lpnetlogger, "============================");
 
     //////////////////////////////////////////////////////////////////////////
     // crack url test

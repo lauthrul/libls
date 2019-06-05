@@ -1,3 +1,4 @@
+#include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include "url_encode.h"
