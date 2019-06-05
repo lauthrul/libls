@@ -89,5 +89,8 @@
 #include "core/logger/logger.h"
 #include "core/net/httpclient.h"
 #include "core/thread/thread.h"
+#ifdef _MSC_VER
+#include "core/registry/registry.h"
+#endif
 #include "utils/utils.h"
 #include "utils/cmdline.h"

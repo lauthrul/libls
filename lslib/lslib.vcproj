@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="log4cxx.lib libcurld.lib"
+				AdditionalDependencies="log4cxx.lib libcurld.lib version.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(ProjectDir)\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(ProjectDir)\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;"
 				GenerateDebugInformation="true"
@@ -138,7 +138,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="log4cxx.lib libcurl.lib"
+				AdditionalDependencies="log4cxx.lib libcurl.lib version.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(ProjectDir)\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(ProjectDir)\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;"
 				GenerateDebugInformation="true"
@@ -255,6 +255,14 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\core\algorithm\md5.h"
@@ -265,6 +273,14 @@
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -346,6 +362,18 @@
 				</File>
 				<File
 					RelativePath=".\core\time\timer.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="registry"
+				>
+				<File
+					RelativePath=".\core\registry\registry.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\registry\registry.h"
 					>
 				</File>
 			</Filter>

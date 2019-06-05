@@ -33,6 +33,9 @@ void test_os()
         "..//\\//Debug//\\test.exe",
         "E:\\Mine\\Code\\lslib\\bin\\Debug\\test.exe",
         "E:\\Mine\\Code\\lslib\\bin\\Debug\\test//test.exe",
+        "c://windows/notepad.exe",
+        "C:\\//Program Files\\//WinRAR//\\WinRAR.exe",
+        "C:\\//Program Files\\//WinRAR//\\License.txt",
     };
     for (int i = 0; i < sizeof(strsz) / sizeof(lstring); i++)
     {
@@ -61,6 +64,7 @@ void test_os()
     cout << "path_combine(\"" << str4.c_str() << "\", \"" << str3.c_str()  << "\"): " << os::path_combine(str4, str3) << endl;
     cout << "------------------" << endl;
 
+#if 0
     cout << "mkdir(\"" << str1.c_str() << "\"): " << mkdir(str1) << endl;
     cout << "mkdir(\"" << str2.c_str() << "\"): " << mkdir(str2) << endl;
     cout << "copy(\"" << str3.c_str() << "\", \"" << str1  << "\"): " << os::copy(str3, str1) << endl;
@@ -76,7 +80,9 @@ void test_os()
     cout << "rm(\"" << str2.c_str() << "\"): " << rm(str2) << endl;
     cout << "rm(\"" << str1.c_str() << "\"): " << rm(str1) << endl;
     cout << "------------------" << endl;
+#endif
 
+    cout << "get_module_file_path(): " << get_module_file_path() << endl;
     cout << "get_module_path(): " << get_module_path() << endl;
     cout << "get_module_name(): " << get_module_name() << endl;
     cout << "get_special_folder_path(CSIDL_COMMON_APPDATA): " << get_special_folder_path(0x0023) << endl;
@@ -87,6 +93,7 @@ void test_os()
     cout << "get_program_files_path(): " << get_program_files_path() << endl;
     cout << "------------------" << endl;
 
+#if 0
     lstring str5 = "C:\\//Program Files\\//WinRAR//\\";
     open_dir(str5, NULL);
     open_dir(str5, "WinRAR.exe");
@@ -105,6 +112,22 @@ void test_os()
 
     open_folder_select_dialog(str5, NULL, NULL);
     cout << "open_folder_select_dialog: " << str5.c_str() << endl;
+    cout << "------------------" << endl;
+#endif
+
+    os_type ot = get_os_type();
+    cout << "get_os_type(): " << ot << endl;
+    str1 = enum_str(os_type, ot);
+    cout << "enum_str(os_type, " << ot << "): " << str1 << endl;
+    ot = enum_from_str(os_type, str1);
+    cout << "enum_from_str(os_type, \"" << str1 << "\"): " << ot << endl;
+    cout << "------------------" << endl;
+
+    for (int i = 0; i < sizeof(strsz) / sizeof(lstring); i++)
+    {
+        const lstring& str = strsz[i];
+        cout << "get_product_version(\"" << str <<  "\"): " << get_product_version(str) << endl;
+    }
     cout << "------------------" << endl;
 }
 declare_test_case(test_os);

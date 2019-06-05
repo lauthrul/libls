@@ -61,13 +61,16 @@ namespace lslib
         // 删除文件或目录
         LSLIB_API const int rm(_lpcstr path);
 
-#ifdef _MSC_VER
+        // 获取程序完整路径
+        LSLIB_API const lstring get_module_file_path();
 
         // 获取程序路径
         LSLIB_API const lstring get_module_path();
 
         // 获取程序名称
         LSLIB_API const lstring get_module_name();
+
+#ifdef _MSC_VER
 
         // 获取特殊路径，csidl参考：https://msdn.microsoft.com/en-us/library/bb762494(VS.85).aspx
         LSLIB_API const lstring get_special_folder_path(int csidl, bool bcreate = false);
@@ -102,6 +105,39 @@ namespace lslib
 
         // 打开目录选择对话框。 [out] target：选择的路径； title:对话框标题； owner: 父窗口
         LSLIB_API bool open_folder_select_dialog(__out lstring& target, _lpcstr title, HWND owner);
+
+        enum os_type
+        {
+            os_unknown,
+            os_win_nt_4_0,
+            os_win_95,
+            os_win_98,
+            os_win_me,
+            os_win_2000,
+            os_win_xp,
+            os_win_xp_64,
+            os_win_server_2003,
+            os_win_home_server,
+            os_win_server_2003_r2,
+            os_win_vista,
+            os_win_server_2008,
+            os_win_server_2008_r2,
+            os_win_7,
+            os_win_server_2012,
+            os_win_8,
+            os_win_server_2012_r2,
+            os_win_8_1,
+            os_win_server_2016,
+            os_win_10,
+        };
+        declare_enum_str(os_type, LSLIB_API);
+
+        // 获取系统类型
+        LSLIB_API os_type get_os_type();
+
+        // 获取文件版本号
+        LSLIB_API lstring get_product_version(_lpcstr path);
+
 #endif
 
 

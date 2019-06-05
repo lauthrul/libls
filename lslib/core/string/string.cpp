@@ -16,8 +16,13 @@ namespace lslib
     {
     }
 
-    lstring::lstring(_lpcstr str) : string(str)
+    lstring::lstring(_lpcstr str)
     {
+        if (str != NULL)
+        {
+            _Tidy();
+            assign(str);
+        }
     }
 
     lstring::lstring(const string& str) : string(str)
