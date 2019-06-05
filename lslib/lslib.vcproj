@@ -292,6 +292,30 @@
 					RelativePath=".\core\algorithm\sha1.h"
 					>
 				</File>
+				<File
+					RelativePath=".\core\algorithm\url_encode.c"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\core\algorithm\url_encode.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="math"
@@ -374,6 +398,18 @@
 				</File>
 				<File
 					RelativePath=".\core\registry\registry.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="process"
+				>
+				<File
+					RelativePath=".\core\process\process.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\process\process.h"
 					>
 				</File>
 			</Filter>

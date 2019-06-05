@@ -8,11 +8,12 @@
 #include "testcase/math.hpp"
 #include "testcase/logger.hpp"
 #include "testcase/httpclient.hpp"
-#include "testcase/algorithm.hpp"
 #include "testcase/string.hpp"
 #include "testcase/type.hpp"
 #include "testcase/os.hpp"
 #include "testcase/registry.hpp"
+#include "testcase/process.hpp"
+#include "testcase/algorithm.hpp"
 
 extern fn_test_list test_cases;
 int _tmain(int argc, _TCHAR* argv[])

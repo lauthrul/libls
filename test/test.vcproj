@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\testcase\process.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\testcase\registry.hpp"
 				>
 			</File>

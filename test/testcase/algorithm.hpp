@@ -79,11 +79,32 @@ void test_base64()
     }
 }
 
+void test_url_encode()
+{
+    lstring texts[] = 
+    {
+        "this is text with !, #, $, %, +, @, :, =, ?",
+        "this is text with CHINESE character£ºÄãºÃ£¡",
+    };
+    lstring stren, strde;
+    for (size_t i = 0; i < sizeof(texts) / sizeof(lstring); i++)
+    {
+        const lstring& text = texts[i];
+
+        stren = url_encode::encode(text, text.length());
+        cout << "url_encode::encode(\"" << text << "\") : \n\t" << stren << endl;
+
+        strde = url_encode::decode(stren, stren.length());
+        cout << "url_encode::decode(\"" << stren << "\") : \n\t" << strde << endl;
+    }
+}
+
 void test_algorithm()
 {
     test_md5();
     test_sha1();
     test_base64();
+    test_url_encode();
 }
 
 declare_test_case(test_algorithm);

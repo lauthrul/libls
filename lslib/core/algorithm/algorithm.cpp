@@ -3,6 +3,7 @@
 #include "md5.h"
 #include "sha1.h"
 #include "base64.h"
+#include "url_encode.h"
 
 namespace lslib
 {
@@ -197,5 +198,31 @@ namespace lslib
             return strde;
         }
     } // base64
+
+    namespace url_encode
+    {
+        LSLIB_API lstring encode(_lpcstr data, int len)
+        {
+            int out_len = ls_url_encode(data, len, NULL, 0);
+            char* pbuf = new char[out_len + 1];
+            memset(pbuf, 0, out_len + 1);
+            ls_url_encode(data, len, pbuf, out_len);
+            lstring str; str.assign(pbuf, out_len);
+            delete[] pbuf;
+            return str;
+        }
+
+        LSLIB_API lstring decode(_lpcstr data, int len)
+        {
+            char* pbuf = new char[len + 1];
+            memset(pbuf, 0, len + 1);
+            memcpy(pbuf, data, len);
+            int out_len = ls_url_decode(pbuf, len);
+            lstring str; str.assign(pbuf, out_len);
+            delete[] pbuf;
+            return str;
+        }
+
+    } // url_encode
 
 } // lslib

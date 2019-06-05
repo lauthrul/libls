@@ -91,6 +91,7 @@
 #include "core/thread/thread.h"
 #ifdef _MSC_VER
 #include "core/registry/registry.h"
+#include "core/process/process.h"
 #endif
 #include "utils/utils.h"
 #include "utils/cmdline.h"

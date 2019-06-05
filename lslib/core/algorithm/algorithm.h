@@ -19,4 +19,10 @@ namespace lslib
         LSLIB_API lstring encode(_lpcstr data, int len, int line_len = -1); // line_len: 64 or 76 or -1 (single line)
         LSLIB_API lstring decode(_lpcstr data, int len, __out int* outlen);
     };
+
+    namespace url_encode
+    {
+        LSLIB_API lstring encode(_lpcstr data, int len);
+        LSLIB_API lstring decode(_lpcstr data, int len);
+    }
 }
