@@ -38,36 +38,44 @@ void test_math()
     v.assign(iv, iv + iv_len);
     vector<vector<int>> result;
 
+    long start = Time::GetCurDateTime().GetDateTime();
     //
-    permutation(v, nu, result);
-
-    cout << "permutation ( ";
-    for (int i = 0; i < iv_len; i++)
-        cout << iv[i] << ", ";
-    cout << ") in " << nu << " : [" << result.size() << "]" << endl;
-    for (int i = 0; i < result.size(); i++)
+    int sum = 0;
+    for (int loop = 0; loop < 4200000000; loop++)
     {
-        cout << "\t{ ";
-        for (int j = 0; j < result[i].size(); j++)
-            cout << result[i][j] << " ";
-        cout << " }" << endl;
-    }
+        sum += loop; continue;
+        permutation(v, nu, result);
 
-    //
-    result.clear();
-    combination(v, nu, result);
+//         cout << "permutation ( ";
+//         for (int i = 0; i < iv_len; i++)
+//             cout << iv[i] << ", ";
+//         cout << ") in " << nu << " : [" << result.size() << "]" << endl;
+//         for (int i = 0; i < result.size(); i++)
+//         {
+//             cout << "\t{ ";
+//             for (int j = 0; j < result[i].size(); j++)
+//                 cout << result[i][j] << " ";
+//             cout << " }" << endl;
+//         }
 
-    cout << "combination ( ";
-    for (int i = 0; i < iv_len; i++)
-        cout << iv[i] << ", ";
-    cout << ") in " << nu << " : [" << result.size() << "]" << endl;
-    for (int i = 0; i < result.size(); i++)
-    {
-        cout << "\t{ ";
-        for (int j = 0; j < result[i].size(); j++)
-            cout << result[i][j] << " ";
-        cout << " }" << endl;
+        //
+        result.clear();
+        combination(v, nu, result);
+
+//         cout << "combination ( ";
+//         for (int i = 0; i < iv_len; i++)
+//             cout << iv[i] << ", ";
+//         cout << ") in " << nu << " : [" << result.size() << "]" << endl;
+//         for (int i = 0; i < result.size(); i++)
+//         {
+//             cout << "\t{ ";
+//             for (int j = 0; j < result[i].size(); j++)
+//                 cout << result[i][j] << " ";
+//             cout << " }" << endl;
+//         }
     }
+    long end = Time::GetCurDateTime().GetDateTime();
+    cout << "cost: " << end - start << " seconds!" << endl;
 
     cout << "------------------" << endl;
 }

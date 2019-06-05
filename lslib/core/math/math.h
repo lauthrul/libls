@@ -14,7 +14,7 @@ namespace lslib
 
         //////////////////////////////////////////////////////////////////////////
         template <typename T>
-        void permutation(vector<T> v, size_t count, vector<vector<T>>& result)
+        void permutation(vector<T>& v, size_t count, vector<vector<T>>& result)
         {
             assert(count <= v.size());
             do

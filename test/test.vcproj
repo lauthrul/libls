@@ -229,6 +229,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\testcase\utils.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\testcase\zip.hpp"
 				>
 			</File>

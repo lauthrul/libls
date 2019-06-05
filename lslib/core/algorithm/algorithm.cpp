@@ -2,7 +2,6 @@
 #include "algorithm.h"
 #include "md5.h"
 #include "sha1.h"
-#include "base64.h"
 #include "url_encode.h"
 
 namespace lslib
