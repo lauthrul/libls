@@ -113,25 +113,25 @@ void test_aes()
 
         printf("   ** [aes] **\n");
 
-        printf("     padding: aes_pkcs7padding\n");
-        str_en = crypto::aes_encode(str, str.length(), key, crypto::aes_bit128, crypto::aes_pkcs7padding, &len_en);
+        printf("     padding: crypto_pkcs7padding\n");
+        str_en = crypto::aes_encode(str, str.length(), key, crypto::crypto_bit128, crypto::crypto_pkcs7padding, &len_en);
         printf("     encrypt: (hex) ");
         print_hex(str_en, len_en);
         printf("\n");
 
-        str_de = crypto::aes_decode(str_en, len_en, key, crypto::aes_bit128, crypto::aes_pkcs7padding, &len_de);
+        str_de = crypto::aes_decode(str_en, len_en, key, crypto::crypto_bit128, crypto::crypto_pkcs7padding, &len_de);
         printf("     decrypt: %s\n", str_de.c_str());
         printf("       (hex): ");
         print_hex(str_de, len_de);
         printf("\n\n");
 
-        printf("     padding: aes_zeropadding\n");
-        str_en = crypto::aes_encode(str, str.length(), key, crypto::aes_bit128, crypto::aes_zeropadding, &len_en);
+        printf("     padding: crypto_zeropadding\n");
+        str_en = crypto::aes_encode(str, str.length(), key, crypto::crypto_bit128, crypto::crypto_zeropadding, &len_en);
         printf("     encrypt: (hex) ");
         print_hex(str_en, len_en);
         printf("\n");
 
-        str_de = crypto::aes_decode(str_en, len_en, key, crypto::aes_bit128, crypto::aes_zeropadding, &len_de);
+        str_de = crypto::aes_decode(str_en, len_en, key, crypto::crypto_bit128, crypto::crypto_zeropadding, &len_de);
         printf("     decrypt: %s\n", str_de.c_str());
         printf("       (hex): ");
         print_hex(str_de, len_de);
@@ -139,25 +139,25 @@ void test_aes()
 
         printf("   ** [cbc] **\n");
 
-        printf("     padding: aes_pkcs7padding\n");
-        str_en = crypto::aes_encode_cbc(str, str.length(), key, crypto::aes_bit128, crypto::aes_pkcs7padding, iv, &len_en);
+        printf("     padding: crypto_pkcs7padding\n");
+        str_en = crypto::aes_encode_cbc(str, str.length(), key, crypto::crypto_bit128, crypto::crypto_pkcs7padding, iv, &len_en);
         printf("     encrypt: (hex) ");
         print_hex(str_en, len_en);
         printf("\n");
 
-        str_de = crypto::aes_decode_cbc(str_en, len_en, key, crypto::aes_bit128, crypto::aes_pkcs7padding, iv, &len_de);
+        str_de = crypto::aes_decode_cbc(str_en, len_en, key, crypto::crypto_bit128, crypto::crypto_pkcs7padding, iv, &len_de);
         printf("     decrypt: %s\n", str_de.c_str());
         printf("       (hex): ");
         print_hex(str_de, len_de);
         printf("\n\n");
 
-        printf("     padding: aes_zeropadding\n");
-        str_en = crypto::aes_encode_cbc(str, str.length(), key, crypto::aes_bit128, crypto::aes_zeropadding, iv, &len_en);
+        printf("     padding: crypto_zeropadding\n");
+        str_en = crypto::aes_encode_cbc(str, str.length(), key, crypto::crypto_bit128, crypto::crypto_zeropadding, iv, &len_en);
         printf("     encrypt: (hex) ");
         print_hex(str_en, len_en);
         printf("\n");
 
-        str_de = crypto::aes_decode_cbc(str_en, len_en, key, crypto::aes_bit128, crypto::aes_zeropadding, iv, &len_de);
+        str_de = crypto::aes_decode_cbc(str_en, len_en, key, crypto::crypto_bit128, crypto::crypto_zeropadding, iv, &len_de);
         printf("     decrypt: %s\n", str_de.c_str());
         printf("       (hex): ");
         print_hex(str_de, len_de);

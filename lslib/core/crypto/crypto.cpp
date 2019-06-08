@@ -167,7 +167,7 @@ namespace lslib
             return strrect;
         }
 
-        LSLIB_API lstring aes_encode(_lpcstr data, int data_len, _lpcstr key, aes_key_bits key_bits, aes_padding_mode mode, __out int* out_len)
+        LSLIB_API lstring aes_encode(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, __out int* out_len)
         {
             uint32_t key_schedule[60] = {0};
             uint8_t enc_buf[AES_BLOCK_SIZE] = {0};
@@ -180,11 +180,11 @@ namespace lslib
 
             switch (mode)
             {
-                case aes_zeropadding:
+                case crypto_zeropadding:
                     memset(data_buf + data_len, 0, padding_len);
                     break;
-                case aes_pkcs5padding:
-                case aes_pkcs7padding:
+                case crypto_pkcs5padding:
+                case crypto_pkcs7padding:
                     memset(data_buf + data_len, padding_len, padding_len);
                     break;
             }
@@ -203,7 +203,7 @@ namespace lslib
             return strret;
         }
 
-        LSLIB_API lstring aes_decode(_lpcstr data, int data_len, _lpcstr key, aes_key_bits key_bits, aes_padding_mode mode, __out int* out_len)
+        LSLIB_API lstring aes_decode(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, __out int* out_len)
         {
             if (data_len % AES_BLOCK_SIZE != 0) return ""; // decrypt data size must be times of AES_BLOCK_SIZE
 
@@ -221,14 +221,18 @@ namespace lslib
                 outlen += AES_BLOCK_SIZE;
             }
 
-            switch (mode)
+            if (outlen > 0) 
             {
-            case aes_zeropadding:
-                break;
-            case aes_pkcs5padding:
-            case aes_pkcs7padding:
-                if (outlen > 0) outlen -= strret.at(outlen - 1);
-                break;
+                switch (mode)
+                {
+                case crypto_zeropadding:
+                    outlen = strret.find('\0', outlen - AES_BLOCK_SIZE);
+                    break;
+                case crypto_pkcs5padding:
+                case crypto_pkcs7padding:
+                    outlen -= strret.at(outlen - 1);
+                    break;
+                }
             }
 
             strret.resize(outlen);
@@ -236,7 +240,7 @@ namespace lslib
             return strret;
         }
 
-        LSLIB_API lstring aes_encode_cbc(_lpcstr data, int data_len, _lpcstr key, aes_key_bits key_bits, aes_padding_mode mode, _lchar iv[16], __out int* out_len)
+        LSLIB_API lstring aes_encode_cbc(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, _lchar iv[16], __out int* out_len)
         {
             uint32_t key_schedule[60] = {0};
             aes_key_setup((uint8_t*)key, key_schedule, key_bits);
@@ -247,11 +251,11 @@ namespace lslib
 
             switch (mode)
             {
-            case aes_zeropadding:
+            case crypto_zeropadding:
                 memset(data_buf + data_len, 0, padding_len);
                 break;
-            case aes_pkcs5padding:
-            case aes_pkcs7padding:
+            case crypto_pkcs5padding:
+            case crypto_pkcs7padding:
                 memset(data_buf + data_len, padding_len, padding_len);
                 break;
             }
@@ -265,7 +269,7 @@ namespace lslib
             return strret;
         }
 
-        LSLIB_API lstring aes_decode_cbc(_lpcstr data, int data_len, _lpcstr key, aes_key_bits key_bits, aes_padding_mode mode, _lchar iv[16], __out int* out_len)
+        LSLIB_API lstring aes_decode_cbc(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, _lchar iv[16], __out int* out_len)
         {
             if (data_len % AES_BLOCK_SIZE != 0) return ""; // decrypt data size must be times of AES_BLOCK_SIZE
 
@@ -280,10 +284,12 @@ namespace lslib
             int outlen = data_len;
             switch (mode)
             {
-            case aes_zeropadding:
+            case crypto_zeropadding:
+                while(data_buf[--outlen] == 0 && outlen >= 0);
+                ++outlen;
                 break;
-            case aes_pkcs5padding:
-            case aes_pkcs7padding:
+            case crypto_pkcs5padding:
+            case crypto_pkcs7padding:
                 outlen -= data_buf[outlen - 1];
                 break;
             }

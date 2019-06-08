@@ -23,7 +23,7 @@ namespace lslib
 			else							return 0;
 		}
 
-		LSLIB_API _lbyte_array hex_str_to_hex(_lpcstr data)
+		LSLIB_API _lbyte_array hex_str_to_byte_array(_lpcstr data)
 		{
 			assert(!is_empty(data));
 
@@ -39,7 +39,7 @@ namespace lslib
 			return arr;
 		}
 
-		LSLIB_API lstring hex_to_hex_str(_lbyte_array data)
+		LSLIB_API lstring byte_array_to_hex_str(_lbyte_array data)
 		{
 			lstring str;
 			for (size_t i = 0; i < data.size(); i++)
