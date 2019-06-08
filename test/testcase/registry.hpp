@@ -34,8 +34,8 @@ void test_registry()
     dw = registry_set_str(HKEY_CURRENT_USER, path, "sz 2", "abc\r\n123\r\n456\r\n789");
     cout << "registry_set_str(HKEY_CURRENT_USER, \"" << path << "\", \"sz 2\", \"abc\r\n123\r\n456\r\n789\") : " << dw << endl;
 
-    str = registry_set_str(HKEY_CURRENT_USER, path + "\\test\\test", "CurrentTheme", "abc");
-    cout << "registry_set_str(HKEY_CURRENT_USER, \"" << path + "\\test\\test" << "\", \"CurrentTheme\", \"abc\") : " << str << endl;
+    dw = registry_set_str(HKEY_CURRENT_USER, path + "\\test\\test", "CurrentTheme", "abc");
+    cout << "registry_set_str(HKEY_CURRENT_USER, \"" << path + "\\test\\test" << "\", \"CurrentTheme\", \"abc\") : " << dw << endl;
 
     dw = registry_delete_value(HKEY_CURRENT_USER, path, "dword 1");
     cout << "registry_delete_value(HKEY_CURRENT_USER, \"" << path << "\", \"dword 1\") : " << dw << endl;

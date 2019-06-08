@@ -24,7 +24,7 @@ static int ls_htoi(char* s)
 }
 
 
-int ls_url_encode(char const* s, int len, char* buff, int buff_size)
+int url_encode(char const* s, int len, char* buff, int buff_size)
 {
     register unsigned char c;
     unsigned char* to, *start;
@@ -68,7 +68,7 @@ int ls_url_encode(char const* s, int len, char* buff, int buff_size)
 }
 
 
-int ls_url_decode(__inout char* str, int len)
+int url_decode(__inout char* str, int len)
 {
     char* dest = str;
     char* data = str;

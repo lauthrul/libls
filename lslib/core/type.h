@@ -18,10 +18,7 @@ namespace lslib
     regist_ls_type(int);
     regist_ls_type(float);
     regist_ls_type(double);
-    regist_ls_type(char);
-    regist_ls_type(wchar_t);
 
-//     typedef byte*                   _lpbyte;
     typedef unsigned short          _lword;
     typedef unsigned long           _ldword;
     typedef _lword*                 _lpword;
@@ -29,10 +26,10 @@ namespace lslib
     typedef unsigned char           _luchar;
     typedef unsigned char*          _lpustr;
     typedef const unsigned char*    _lpcustr;
-//     typedef char                    _lchar;
+    typedef char                    _lchar;
     typedef char*                   _lpstr;
     typedef const char*             _lpcstr;
-//     typedef wchar_t                 _lwchar;
+    typedef wchar_t                 _lwchar;
     typedef wchar_t*                _lpwstr;
     typedef const wchar_t*          _lpcwstr;
 
@@ -42,21 +39,33 @@ namespace lslib
     typedef set<type>               type##_set;
 
 #define declare_stl_pointer(type) \
-    typedef vector<type*>           p##type##_array; \
-    typedef list<type*>             p##type##_list; \
-    typedef set<type*>              p##type##_set;
+    typedef vector<type*>           type##_ptr_array; \
+    typedef list<type*>             type##_ptr_list; \
+    typedef set<type*>              type##_ptr_set;
 
-declare_stl_obj(_lbyte);
-declare_stl_obj(_lbool);
-declare_stl_obj(_lint);
-declare_stl_obj(_lfloat);
-declare_stl_obj(_ldouble);
-declare_stl_obj(_lchar);
-declare_stl_obj(_lwchar_t);
-declare_stl_obj(_lword);
-declare_stl_obj(_ldword);
-declare_stl_obj(_luchar);
-declare_stl_obj(_lchar);
+    declare_stl_obj(_lbyte);
+    declare_stl_pointer(_lbyte);
+    declare_stl_obj(_lbool);
+    declare_stl_pointer(_lbool);
+    declare_stl_obj(_lint);
+    declare_stl_pointer(_lint);
+    declare_stl_obj(_lfloat);
+    declare_stl_pointer(_lfloat);
+    declare_stl_obj(_ldouble);
+    declare_stl_pointer(_ldouble);
+    declare_stl_obj(_lword);
+    declare_stl_pointer(_lword);
+    declare_stl_obj(_ldword);
+    declare_stl_pointer(_ldword);
+    declare_stl_obj(_luchar);
+    declare_stl_obj(_lpustr);
+    declare_stl_obj(_lpcustr);
+    declare_stl_obj(_lchar);
+    declare_stl_obj(_lpstr);
+    declare_stl_obj(_lpcstr);
+    declare_stl_obj(_lwchar);
+    declare_stl_obj(_lpwstr);
+    declare_stl_obj(_lpcwstr);
 
 //////////////////////////////////////////////////////////////////////////
 // enum related functions

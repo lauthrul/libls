@@ -12,8 +12,8 @@
 #include "testcase/os.hpp"
 #include "testcase/registry.hpp"
 #include "testcase/process.hpp"
-#include "testcase/algorithm.hpp"
 #include "testcase/math.hpp"
+#include "testcase/crypto.hpp"
 
 extern fn_test_list test_cases;
 int _tmain(int argc, _TCHAR* argv[])

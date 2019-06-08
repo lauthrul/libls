@@ -53,6 +53,11 @@ namespace lslib
         return lstring(*this) += str;
     }
 
+    _lchar lstring::operator[](size_t index)
+    {
+        return (_Myptr()[index]);
+    }
+
     const bool lstring::is_space() const
     {
         _lpcstr p = data();

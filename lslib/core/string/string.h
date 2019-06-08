@@ -23,6 +23,7 @@ namespace lslib
             lstring operator+ (_lchar c);
             lstring operator+ (_lpcstr str);
             lstring operator+ (const lstring& str);
+            _lchar operator[] (size_t index);
 
         public:
             const bool is_space() const;

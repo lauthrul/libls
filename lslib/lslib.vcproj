@@ -234,18 +234,10 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="algorithm"
+				Name="crypto"
 				>
 				<File
-					RelativePath=".\core\algorithm\algorithm.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\core\algorithm\algorithm.h"
-					>
-				</File>
-				<File
-					RelativePath=".\core\algorithm\md5.c"
+					RelativePath=".\core\crypto\aes.c"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
@@ -265,35 +257,11 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\core\algorithm\md5.h"
+					RelativePath=".\core\crypto\aes.h"
 					>
 				</File>
 				<File
-					RelativePath=".\core\algorithm\sha1.c"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\core\algorithm\sha1.h"
-					>
-				</File>
-				<File
-					RelativePath=".\core\algorithm\url_encode.c"
+					RelativePath=".\core\crypto\base64.c"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
@@ -313,7 +281,111 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\core\algorithm\url_encode.h"
+					RelativePath=".\core\crypto\base64.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\crypto\crypto.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\crypto\crypto.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\crypto\md5.c"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\core\crypto\md5.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\crypto\sha1.c"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\core\crypto\sha1.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\crypto\sha256.c"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\core\crypto\sha256.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\crypto\url_encode.c"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\core\crypto\url_encode.h"
 					>
 				</File>
 			</Filter>

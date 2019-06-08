@@ -177,7 +177,7 @@
 			Name="testcase"
 			>
 			<File
-				RelativePath=".\testcase\algorithm.hpp"
+				RelativePath=".\testcase\crypto.hpp"
 				>
 			</File>
 			<File
