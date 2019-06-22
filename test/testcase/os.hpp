@@ -85,6 +85,7 @@ void test_os()
     cout << "get_module_file_path(): " << get_module_file_path() << endl;
     cout << "get_module_path(): " << get_module_path() << endl;
     cout << "get_module_name(): " << get_module_name() << endl;
+#ifdef _MSC_VER
     cout << "get_special_folder_path(CSIDL_COMMON_APPDATA): " << get_special_folder_path(0x0023) << endl;
     cout << "get_app_data_path(): " << get_app_data_path() << endl;
     cout << "get_module_app_data_path(false): " << get_module_app_data_path(false) << endl;
@@ -92,6 +93,7 @@ void test_os()
     cout << "get_quick_launch_path(): " << get_quick_launch_path() << endl;
     cout << "get_program_files_path(): " << get_program_files_path() << endl;
     cout << "------------------" << endl;
+#endif
 
 #if 0
     lstring str5 = "C:\\//Program Files\\//WinRAR//\\";
@@ -115,6 +117,7 @@ void test_os()
     cout << "------------------" << endl;
 #endif
 
+#ifdef _MSC_VER
     os_type ot = get_os_type();
     cout << "get_os_type(): " << ot << endl;
     str1 = enum_str(os_type, ot);
@@ -129,5 +132,6 @@ void test_os()
         cout << "get_product_version(\"" << str <<  "\"): " << get_product_version(str) << endl;
     }
     cout << "------------------" << endl;
+#endif
 }
 declare_test_case(test_os);

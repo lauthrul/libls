@@ -26,7 +26,7 @@ void test_md5()
     for (size_t i = 0; i < sizeof(texts) / sizeof(lstring); i++)
     {
         const lstring& str = texts[i];
-        cout << "crypto::md5(\"" << str << "\") = " << crypto::md5(str, str.length()) << endl;
+        cout << "crypto::md5(\"" << str << "\") = " << crypto::md5((_lpbyte)str.c_str(), str.length()) << endl;
     }
 
     for (size_t i = 0; i < sizeof(files) / sizeof(lstring); i++)
@@ -43,7 +43,7 @@ void test_sha1()
     for (size_t i = 0; i < sizeof(texts) / sizeof(lstring); i++)
     {
         const lstring& str = texts[i];
-        cout << "crypto::sha1(\"" << str << "\") = " << crypto::sha1(str, str.length()) << endl;
+        cout << "crypto::sha1(\"" << str << "\") = " << crypto::sha1((_lpbyte)str.c_str(), str.length()) << endl;
     }
 
     for (size_t i = 0; i < sizeof(files) / sizeof(lstring); i++)
@@ -60,7 +60,7 @@ void test_sha256()
     for (size_t i = 0; i < sizeof(texts) / sizeof(lstring); i++)
     {
         const lstring& str = texts[i];
-        cout << "crypto::sha256(\"" << str << "\") = " << crypto::sha256(str, str.length()) << endl;
+        cout << "crypto::sha256(\"" << str << "\") = " << crypto::sha256((_lpbyte)str.c_str(), str.length()) << endl;
     }
 
     for (size_t i = 0; i < sizeof(files) / sizeof(lstring); i++)
@@ -79,11 +79,12 @@ void test_base64()
     {
         const lstring& str = texts[i];
 
-        str_en = crypto::base64_encode(str, str.length());
+        str_en = crypto::base64_encode((_lpbyte)str.c_str(), str.length());
         cout << "crypto::base64_encode(\"" << str << "\") = " << str_en << endl;
 
-        str_de = crypto::base64_decode(str_en, str_en.length(), NULL);
-        cout << "crypto::base64_decode(\"" << str_en << "\") = " << str_de << endl;
+        _lpbyte de = crypto::base64_decode(str_en, str_en.length(), NULL);
+        cout << "crypto::base64_decode(\"" << str_en << "\") = " << de << endl;
+        lsfree(de);
     }
 }
 
@@ -91,6 +92,150 @@ void print_hex(_lpcstr str, int len)
 {
     for (int j = 0; j < len; j++)
         printf("%02x", (unsigned char)str[j]);
+}
+
+void test_des()
+{
+    cout << "------------------" << endl;
+    lstring key = "12345678"; // 8 bytes
+    _lchar iv[] = "12345678"; // 8 bytes
+    printf("** test_des\n");
+    printf("   key: %s\n", key.c_str());
+    printf("   iv: (hex) ");
+    print_hex(iv, 8);
+    printf("\n\n");
+
+    lstring str_en, str_de;
+    int len_en, len_de;
+    for (size_t i = 0; i < sizeof(texts) / sizeof(lstring); i++)
+    {
+        const lstring& str = texts[i];
+        printf("---plan text: %s\n", str.c_str());
+
+        printf("   ** [ecb] **\n");
+
+        printf("     padding: crypto_pkcs7padding\n");
+        str_en = crypto::des_encrypt(str, str.length(), key, crypto::crypto_pkcs7padding, &len_en);
+        printf("     encrypt: (hex) ");
+        print_hex(str_en, len_en);
+        printf("\n");
+
+        str_de = crypto::des_decrypt(str_en, len_en, key, crypto::crypto_pkcs7padding, &len_de);
+        printf("     decrypt: %s\n", str_de.c_str());
+        printf("       (hex): ");
+        print_hex(str_de, len_de);
+        printf("\n\n");
+
+        printf("     padding: crypto_zeropadding\n");
+        str_en = crypto::des_encrypt(str, str.length(), key, crypto::crypto_zeropadding, &len_en);
+        printf("     encrypt: (hex) ");
+        print_hex(str_en, len_en);
+        printf("\n");
+
+        str_de = crypto::des_decrypt(str_en, len_en, key, crypto::crypto_zeropadding, &len_de);
+        printf("     decrypt: %s\n", str_de.c_str());
+        printf("       (hex): ");
+        print_hex(str_de, len_de);
+        printf("\n\n");
+
+        printf("   ** [cbc] **\n");
+
+        printf("     padding: crypto_pkcs7padding\n");
+        str_en = crypto::des_encode_cbc(str, str.length(), key, crypto::crypto_pkcs7padding, iv, &len_en);
+        printf("     encrypt: (hex) ");
+        print_hex(str_en, len_en);
+        printf("\n");
+
+        str_de = crypto::des_decode_cbc(str_en, len_en, key, crypto::crypto_pkcs7padding, iv, &len_de);
+        printf("     decrypt: %s\n", str_de.c_str());
+        printf("       (hex): ");
+        print_hex(str_de, len_de);
+        printf("\n\n");
+
+        printf("     padding: crypto_zeropadding\n");
+        str_en = crypto::des_encode_cbc(str, str.length(), key, crypto::crypto_zeropadding, iv, &len_en);
+        printf("     encrypt: (hex) ");
+        print_hex(str_en, len_en);
+        printf("\n");
+
+        str_de = crypto::des_decode_cbc(str_en, len_en, key, crypto::crypto_zeropadding, iv, &len_de);
+        printf("     decrypt: %s\n", str_de.c_str());
+        printf("       (hex): ");
+        print_hex(str_de, len_de);
+        printf("\n\n\n");
+    }
+}
+
+void test_3des()
+{
+    cout << "------------------" << endl;
+    lstring key = "12345678abcdefgh+-)(*&^%"; // 24 bytes
+    _lchar iv[] = "12345678"; // 8 bytes
+    printf("** test_3des\n");
+    printf("   key: %s\n", key.c_str());
+    printf("   iv: (hex) ");
+    print_hex(iv, 8);
+    printf("\n\n");
+
+    lstring str_en, str_de;
+    int len_en, len_de;
+    for (size_t i = 0; i < sizeof(texts) / sizeof(lstring); i++)
+    {
+        const lstring& str = texts[i];
+        printf("---plan text: %s\n", str.c_str());
+
+        printf("   ** [ecb] **\n");
+
+        printf("     padding: crypto_pkcs7padding\n");
+        str_en = crypto::three_des_encrypt(str, str.length(), key, crypto::crypto_pkcs7padding, &len_en);
+        printf("     encrypt: (hex) ");
+        print_hex(str_en, len_en);
+        printf("\n");
+
+        str_de = crypto::three_des_decrypt(str_en, len_en, key, crypto::crypto_pkcs7padding, &len_de);
+        printf("     decrypt: %s\n", str_de.c_str());
+        printf("       (hex): ");
+        print_hex(str_de, len_de);
+        printf("\n\n");
+
+        printf("     padding: crypto_zeropadding\n");
+        str_en = crypto::three_des_encrypt(str, str.length(), key, crypto::crypto_zeropadding, &len_en);
+        printf("     encrypt: (hex) ");
+        print_hex(str_en, len_en);
+        printf("\n");
+
+        str_de = crypto::three_des_decrypt(str_en, len_en, key, crypto::crypto_zeropadding, &len_de);
+        printf("     decrypt: %s\n", str_de.c_str());
+        printf("       (hex): ");
+        print_hex(str_de, len_de);
+        printf("\n\n");
+
+        printf("   ** [cbc] **\n");
+
+        printf("     padding: crypto_pkcs7padding\n");
+        str_en = crypto::three_des_encode_cbc(str, str.length(), key, crypto::crypto_pkcs7padding, iv, &len_en);
+        printf("     encrypt: (hex) ");
+        print_hex(str_en, len_en);
+        printf("\n");
+
+        str_de = crypto::three_des_decode_cbc(str_en, len_en, key, crypto::crypto_pkcs7padding, iv, &len_de);
+        printf("     decrypt: %s\n", str_de.c_str());
+        printf("       (hex): ");
+        print_hex(str_de, len_de);
+        printf("\n\n");
+
+        printf("     padding: crypto_zeropadding\n");
+        str_en = crypto::three_des_encode_cbc(str, str.length(), key, crypto::crypto_zeropadding, iv, &len_en);
+        printf("     encrypt: (hex) ");
+        print_hex(str_en, len_en);
+        printf("\n");
+
+        str_de = crypto::three_des_decode_cbc(str_en, len_en, key, crypto::crypto_zeropadding, iv, &len_de);
+        printf("     decrypt: %s\n", str_de.c_str());
+        printf("       (hex): ");
+        print_hex(str_de, len_de);
+        printf("\n\n\n");
+    }
 }
 
 void test_aes()
@@ -111,7 +256,7 @@ void test_aes()
         const lstring& str = texts[i];
         printf("---plan text: %s\n", str.c_str());
 
-        printf("   ** [aes] **\n");
+        printf("   ** [ecb] **\n");
 
         printf("     padding: crypto_pkcs7padding\n");
         str_en = crypto::aes_encode(str, str.length(), key, crypto::crypto_bit128, crypto::crypto_pkcs7padding, &len_en);
@@ -189,11 +334,13 @@ void test_url_encode()
 
 void test_crypto()
 {
-    test_md5();
-    test_sha1();
-    test_sha256();
-    test_base64();
-    test_aes();
+//     test_md5();
+//     test_sha1();
+//     test_sha256();
+//     test_base64();
+//     test_des();
+    test_3des();
+//     test_aes();
 //     test_url_encode();
 }
 

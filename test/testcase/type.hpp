@@ -1,7 +1,7 @@
 #include "testcase.hpp"
 
 enum enum_test { ea, eb, ec};
-declare_enum_str(enum_test);
+declare_enum_str(enum_test,);
 enum_str_begin(enum_test)
     enum_str_item(ea)
     enum_str_item(eb)

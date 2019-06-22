@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)\lslib\&quot;;&quot;$(SolutionDir)\lslib\3rd-party\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)\libls\&quot;;&quot;$(SolutionDir)\libls\3rd-party\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="lslib.lib log4cxx.lib"
+				AdditionalDependencies="libls.lib log4cxx.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)\lslib\bin\$(ConfigurationName)\&quot;;&quot;$(SolutionDir)\lslib\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(SolutionDir)\lslib\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)\libls\bin\$(ConfigurationName)\&quot;;&quot;$(SolutionDir)\libls\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(SolutionDir)\libls\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -118,7 +118,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)\lslib\&quot;;&quot;$(SolutionDir)\lslib\3rd-party\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)\libls\&quot;;&quot;$(SolutionDir)\libls\core&quot;;&quot;$(SolutionDir)\libls\utils&quot;;&quot;$(SolutionDir)\libls\3rd-party\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -137,9 +137,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="lslib.lib log4cxx.lib"
+				AdditionalDependencies="libls.lib log4cxx.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)\lslib\bin\$(ConfigurationName)\&quot;;&quot;$(SolutionDir)\lslib\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(SolutionDir)\lslib\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)\libls\bin\$(ConfigurationName)\&quot;;&quot;$(SolutionDir)\libls\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(SolutionDir)\libls\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -171,6 +171,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{E5ED28A0-B1E6-4C14-A4F9-F8E47F7B882E}"
+			RelativePathToProject=".\libls\libls.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter

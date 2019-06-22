@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lslib.h"
+#include "libls.h"
 using namespace lslib;
 
 #define singile_test 1

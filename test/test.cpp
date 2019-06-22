@@ -5,23 +5,25 @@
 
 //////////////////////////////////////////////////////////////////////////
 #include "testcase/testcase.hpp"
-#include "testcase/logger.hpp"
-#include "testcase/httpclient.hpp"
+//#include "testcase/logger.hpp"
+//#include "testcase/httpclient.hpp"
 #include "testcase/string.hpp"
 #include "testcase/type.hpp"
 #include "testcase/os.hpp"
+#ifdef _MSC_VER
 #include "testcase/registry.hpp"
 #include "testcase/process.hpp"
-#include "testcase/math.hpp"
+#endif
+//#include "testcase/math.hpp"
 #include "testcase/crypto.hpp"
 
 extern fn_test_list test_cases;
-int _tmain(int argc, _TCHAR* argv[])
+int main(int argc, char* argv[])
 {
     for (fn_test_list::iterator it = test_cases.begin(); it != test_cases.end(); it++)
     {
         fn_test fn = (*it);
-        (fn != NULL) ? (*fn)() : 1;
+        if (fn != NULL) (*fn)();
     }
     getchar();
     return 0;
