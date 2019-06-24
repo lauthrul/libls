@@ -1,14 +1,14 @@
 eclipse.preferences.version=1
 org.eclipse.cdt.core.formatter.alignment_for_arguments_in_method_invocation=18
 org.eclipse.cdt.core.formatter.alignment_for_assignment=16
-org.eclipse.cdt.core.formatter.alignment_for_base_clause_in_type_declaration=50
+org.eclipse.cdt.core.formatter.alignment_for_base_clause_in_type_declaration=18
 org.eclipse.cdt.core.formatter.alignment_for_binary_expression=16
 org.eclipse.cdt.core.formatter.alignment_for_compact_if=16
 org.eclipse.cdt.core.formatter.alignment_for_conditional_expression=16
 org.eclipse.cdt.core.formatter.alignment_for_conditional_expression_chain=18
 org.eclipse.cdt.core.formatter.alignment_for_constructor_initializer_list=18
 org.eclipse.cdt.core.formatter.alignment_for_declarator_list=16
-org.eclipse.cdt.core.formatter.alignment_for_enumerator_list=48
+org.eclipse.cdt.core.formatter.alignment_for_enumerator_list=16
 org.eclipse.cdt.core.formatter.alignment_for_expression_list=0
 org.eclipse.cdt.core.formatter.alignment_for_expressions_in_array_initializer=16
 org.eclipse.cdt.core.formatter.alignment_for_lambda_expression=20

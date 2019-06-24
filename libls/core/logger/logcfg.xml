@@ -1,0 +1,35 @@
+<logger version="1.0">
+    <!--
+    @name:              name of layout
+    @format:            log format.
+                        %d      date
+                        %t      time
+                        %ms     millisecond
+                        %T      date time with millisecond
+                        %f      file
+                        %l      line
+                        %L      log level
+                        %p      thread id
+                        %r      milliseconds now from start up
+                        %m      messges
+    -->
+    <layout name="layout_logapp" format="[%-5L] [%T] [%r] (%p, %f:%l) - %m" />
+
+    <!--
+    @name:              name of appender
+    @type:              values: [console, file]
+    @file               for @type=file. file path for log output
+    @rooling:           for @type=file. values: [no_rolling, daily_rooling, file_rooling]
+    @date_pattern       for @rooling=daily_rooling. file pattern for backup log file name
+    @max_file_size      for @rooling=file_rooling. file size for each log file
+    @max_file_counts    for @rooling=file_rooling. max backup file counts
+    -->
+    <appender name="appender_logapp" type="console" file="Log/logapp.log" rolling="daily_rooling" date_pattern="yyyyMMdd_{}" max_file_size="30MB" max_file_counts="10"></appender>
+    
+    <!--
+    @name:              name of logger
+    @level:             log level. values: [trace, debug, info, warn, error, fatal, all]
+    @appender:          reference of appender name
+    -->
+    <logger name="logger_logapp" level="all" layout="layout_logapp" appender="appender_logapp"></logger>
+</logger>

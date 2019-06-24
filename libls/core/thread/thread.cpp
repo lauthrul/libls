@@ -157,7 +157,7 @@ namespace lslib
                 HandleMessage(msg.message, msg.wParam, msg.lParam);
             }
             OnExecute();
-            Sleep(10);
+//             Sleep(10);
         }
 
         int nRemains = 0;

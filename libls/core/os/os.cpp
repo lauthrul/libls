@@ -37,7 +37,7 @@ namespace lslib
             return false;
         }
 
-        LSLIB_API const lstring path_get_dir(_lpcstr path)
+        LSLIB_API lstring path_get_dir(_lpcstr path)
         {
             if (is_empty(path)) return "";
 
@@ -49,7 +49,7 @@ namespace lslib
             return str.substr(0, pos);
         }
 
-        LSLIB_API const lstring path_get_name(_lpcstr path)
+        LSLIB_API lstring path_get_name(_lpcstr path)
         {
             if (is_empty(path)) return "";
 
@@ -60,7 +60,7 @@ namespace lslib
             return str.substr(pos + 1);
         }
 
-        LSLIB_API const lstring path_get_filename(_lpcstr path)
+        LSLIB_API lstring path_get_filename(_lpcstr path)
         {
             if (is_empty(path)) return "";
 
@@ -69,7 +69,7 @@ namespace lslib
             return str.substr(0, pos);
         }
 
-        LSLIB_API const lstring path_get_ext(_lpcstr path)
+        LSLIB_API lstring path_get_ext(_lpcstr path)
         {
             if (is_empty(path)) return "";
 
@@ -79,7 +79,7 @@ namespace lslib
             return str.substr(pos + 1);
         }
 
-        LSLIB_API const lstring path_pretty(_lpcstr path)
+        LSLIB_API lstring path_pretty(_lpcstr path)
         {
             if (is_empty(path)) return "";
 
@@ -108,7 +108,7 @@ namespace lslib
             return str;
         }
 
-        LSLIB_API const lstring path_combine(_lpcstr path, _lpcstr join)
+        LSLIB_API lstring path_combine(_lpcstr path, _lpcstr join)
         {
             if (is_empty(path)) return "";
 #ifdef _MSC_VER
@@ -121,7 +121,7 @@ namespace lslib
 #endif
         }
 
-        LSLIB_API const lstring path_make_absolute(_lpcstr path)
+        LSLIB_API lstring path_make_absolute(_lpcstr path)
         {
             if (is_empty(path)) return "";
 
@@ -268,7 +268,7 @@ namespace lslib
 #endif
         }
 
-        LSLIB_API const lstring get_module_file_path()
+        LSLIB_API lstring get_module_file_path()
         {
 #ifdef _WIN32
             return _pgmptr;
@@ -283,13 +283,13 @@ namespace lslib
 #endif
         }
 
-        LSLIB_API const lstring get_module_path()
+        LSLIB_API lstring get_module_path()
         {
             lstring str = get_module_file_path();
             return path_get_dir(str) + get_slash();
         }
 
-        LSLIB_API const lstring get_module_name()
+        LSLIB_API lstring get_module_name()
         {
             lstring str = get_module_file_path();
             return path_get_filename(str);
@@ -297,21 +297,21 @@ namespace lslib
 
 #ifdef _MSC_VER
 
-        LSLIB_API const lstring get_special_folder_path(int csidl, bool bcreate /*= false*/)
+        LSLIB_API lstring get_special_folder_path(int csidl, bool bcreate /*= false*/)
         {
             _lchar sz[MAX_PATH + 1] =
             {   0};
             if (SHGetSpecialFolderPath(NULL, sz, csidl, bcreate))
-            return lstring(sz) + get_slash();
+                return lstring(sz) + get_slash();
             else return "";
         }
 
-        LSLIB_API const lstring get_app_data_path()
+        LSLIB_API lstring get_app_data_path()
         {
             return get_special_folder_path(CSIDL_COMMON_APPDATA, true);
         }
 
-        LSLIB_API const lstring get_module_app_data_path(bool bcreate /*= false*/)
+        LSLIB_API lstring get_module_app_data_path(bool bcreate /*= false*/)
         {
             lstring str = get_app_data_path();
             if (!str.empty())
@@ -322,20 +322,20 @@ namespace lslib
             return str;
         }
 
-        LSLIB_API const lstring get_desktop_path()
+        LSLIB_API lstring get_desktop_path()
         {
             return get_special_folder_path(CSIDL_DESKTOP, true);
         }
 
-        LSLIB_API const lstring get_quick_launch_path()
+        LSLIB_API lstring get_quick_launch_path()
         {
             lstring str = get_special_folder_path(CSIDL_APPDATA);
             if (!str.empty())
-            str += "Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar\\";
+                str += "Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar\\";
             return str;
         }
 
-        LSLIB_API const lstring get_program_files_path()
+        LSLIB_API lstring get_program_files_path()
         {
             return get_special_folder_path(CSIDL_PROGRAM_FILES, true);
         }
@@ -346,7 +346,7 @@ namespace lslib
 
             lstring str = path_pretty(path);
             if (!is_empty(file))
-            str = lstring("/e,/select, ") + path_combine(path, file);
+                str = lstring("/e,/select, ") + path_combine(path, file);
             ShellExecute(NULL, _T("open"), _T("explorer.exe"), str, NULL, SW_SHOWNORMAL);
         }
 
@@ -403,9 +403,9 @@ namespace lslib
             bInfo.hwndOwner = owner;
             bInfo.lpszTitle = title;
             bInfo.ulFlags = BIF_RETURNONLYFSDIRS
-            | BIF_USENEWUI /*包含一个编辑框 用户可以手动填写路径 对话框可以调整大小之类的*/
-            | BIF_UAHINT /*带TIPS提示*/
-            | BIF_NONEWFOLDERBUTTON /*不带新建文件夹按钮*/;
+                            | BIF_USENEWUI /*包含一个编辑框 用户可以手动填写路径 对话框可以调整大小之类的*/
+                            | BIF_UAHINT /*带TIPS提示*/
+                            | BIF_NONEWFOLDERBUTTON /*不带新建文件夹按钮*/;
             _lchar szPathName[MAX_PATH] =
             {   0};
             LPITEMIDLIST lpDlist = SHBrowseForFolder(&bInfo);
@@ -472,7 +472,7 @@ namespace lslib
             OSVERSIONINFOEX os;
             os.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
             if (!GetVersionEx((OSVERSIONINFO*)&os))
-            return ostype;
+                return ostype;
 
 #define compare_ver(major, minor, other)\
     (os.dwMajorVersion == (major) && os.dwMinorVersion == (minor) && (other))
@@ -484,8 +484,8 @@ namespace lslib
             else if (compare_ver(5, 0, true)) return os_win_2000;
             else if (compare_ver(5, 1, true)) return os_win_xp;
             else if (compare_ver(5, 2, (os.wProductType == VER_NT_WORKSTATION)
-                            && (info.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64)))
-            return os_win_xp_64;
+                                 && (info.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64)))
+                return os_win_xp_64;
             else if (compare_ver(5, 2, GetSystemMetrics(SM_SERVERR2) == 0)) return os_win_server_2003;
             else if (compare_ver(5, 2, os.wSuiteMask & 0x00008000/*VER_SUITE_WH_SERVER*/)) return os_win_home_server;
             else if (compare_ver(5, 2, GetSystemMetrics(SM_SERVERR2) != 0)) return os_win_server_2003_r2;
@@ -545,7 +545,7 @@ namespace lslib
 
             lstring strpath = path_pretty(path);
             if (strpath.find_last_of('*') == lstring::npos) // 没有通配符，按照目录处理
-            strpath += get_slash() + "*.*";
+                strpath += get_slash() + "*.*";
 
             lstring str;
             lstring_array arr_exts;
@@ -583,14 +583,14 @@ namespace lslib
             {
                 file_info.filePath = path_get_dir(strpath);
                 if (file_info.filePath.empty())
-                file_info.filePath = ".";
+                    file_info.filePath = ".";
                 if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) // 如果为目录
                 {
                     if (_tcscmp(fd.cFileName, _T(".")) == 0 || _tcscmp(fd.cFileName, _T("..")) == 0)
-                    continue;
+                        continue;
 
                     if (recurse)
-                    enumerate_files(array_files, file_info.filePath + get_slash() + fd.cFileName, extention, filter, recurse);
+                        enumerate_files(array_files, file_info.filePath + get_slash() + fd.cFileName, extention, filter, recurse);
                 }
                 else
                 {
@@ -601,9 +601,18 @@ namespace lslib
                     file_info.extName = path_get_ext(file_info.fileName);
 
                     SYSTEMTIME stUTC, stLocal;
+
+                    FileTimeToSystemTime(&(fd.ftCreationTime), &stUTC);
+                    SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal);
+                    file_info.attr.createTime.format("%04d-%02d-%02d %02d:%02d:%02d", stLocal.wYear, stLocal.wMonth, stLocal.wDay, stLocal.wHour, stLocal.wMinute, stLocal.wSecond);
+
                     FileTimeToSystemTime(&(fd.ftLastWriteTime), &stUTC);
                     SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal);
-                    file_info.lastWriteTime.format("%04d-%02d-%02d %02d:%02d:%02d", stLocal.wYear, stLocal.wMonth, stLocal.wDay, stLocal.wHour, stLocal.wMinute, stLocal.wSecond);
+                    file_info.attr.writeTime.format("%04d-%02d-%02d %02d:%02d:%02d", stLocal.wYear, stLocal.wMonth, stLocal.wDay, stLocal.wHour, stLocal.wMinute, stLocal.wSecond);
+
+                    FileTimeToSystemTime(&(fd.ftLastAccessTime), &stUTC);
+                    SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal);
+                    file_info.attr.accessTime.format("%04d-%02d-%02d %02d:%02d:%02d", stLocal.wYear, stLocal.wMonth, stLocal.wDay, stLocal.wHour, stLocal.wMinute, stLocal.wSecond);
 
                     bfilter = true;
                     if (!arr_exts.empty())
@@ -618,21 +627,21 @@ namespace lslib
                             }
                         }
                         if (i == arr_exts.size())
-                        bfilter = false;
+                            bfilter = false;
                     }
                     if (!arr_filters.empty())
                     {
                         size_t i = 0;
                         for (; i < arr_filters.size(); i++)
                         {
-                            if (file_info.name.find(arr_filters[i]) != lstring::npos)
+                            if (file_info.fileName.find(arr_filters[i]) != lstring::npos)
                             {
                                 bfilter &= true;
                                 break;
                             }
                         }
                         if (i == arr_filters.size())
-                        bfilter &= false;
+                            bfilter &= false;
                     }
                     if (bfilter) array_files.push_back(file_info);
                 }
@@ -654,6 +663,21 @@ namespace lslib
                 fclose(fp);
             }
             return ret;
+        }
+
+        LSLIB_API file_attr get_file_attr(_lpcstr file)
+        {
+            file_attr attr;
+            struct stat st;
+            stat(file, &st);
+            Time tm;
+            tm.SetDataTime(st.st_ctime);
+            attr.createTime =  tm.GetDateTimeStr();
+            tm.SetDataTime(st.st_mtime);
+            attr.writeTime =  tm.GetDateTimeStr();
+            tm.SetDataTime(st.st_atime);
+            attr.accessTime =  tm.GetDateTimeStr();
+            return attr;
         }
 
         LSLIB_API _lpbyte get_file_buffer(_lpcstr file, __out__ _lpdword outsize)

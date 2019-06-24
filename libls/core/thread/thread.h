@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../lock/lock.h"
+#include "lock/lock.h"
 #include <list>
 #include <map>
 using namespace std;

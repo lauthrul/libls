@@ -16,25 +16,25 @@ namespace lslib
         LSLIB_API const bool is_slash(_lchar c);
 
         // 从路径中获取目录
-        LSLIB_API const lstring path_get_dir(_lpcstr path);
+        LSLIB_API lstring path_get_dir(_lpcstr path);
 
         // 从路径中获取最后一段名称
-        LSLIB_API const lstring path_get_name(_lpcstr path);
+        LSLIB_API lstring path_get_name(_lpcstr path);
 
         // 从路径中获取文件名称（不包含后缀）
-        LSLIB_API const lstring path_get_filename(_lpcstr path);
+        LSLIB_API lstring path_get_filename(_lpcstr path);
 
         // 从路径中获取文件后缀（不包含'.'）
-        LSLIB_API const lstring path_get_ext(_lpcstr path);
+        LSLIB_API lstring path_get_ext(_lpcstr path);
 
         // 美化路径(转为小写，并去除多余分隔符)
-        LSLIB_API const lstring path_pretty(_lpcstr path);
+        LSLIB_API lstring path_pretty(_lpcstr path);
 
         // 组合路径
-        LSLIB_API const lstring path_combine(_lpcstr path, _lpcstr join);
+        LSLIB_API lstring path_combine(_lpcstr path, _lpcstr join);
 
         // 获取绝对路径
-        LSLIB_API const lstring path_make_absolute(_lpcstr path);
+        LSLIB_API lstring path_make_absolute(_lpcstr path);
 
 
         // 检查文件或目录是否存在
@@ -62,33 +62,33 @@ namespace lslib
         LSLIB_API const int rm(_lpcstr path);
 
         // 获取程序完整路径
-        LSLIB_API const lstring get_module_file_path();
+        LSLIB_API lstring get_module_file_path();
 
         // 获取程序路径
-        LSLIB_API const lstring get_module_path();
+        LSLIB_API lstring get_module_path();
 
         // 获取程序名称
-        LSLIB_API const lstring get_module_name();
+        LSLIB_API lstring get_module_name();
 
 #ifdef _MSC_VER
 
         // 获取特殊路径，csidl参考：https://msdn.microsoft.com/en-us/library/bb762494(VS.85).aspx
-        LSLIB_API const lstring get_special_folder_path(int csidl, bool bcreate = false);
+        LSLIB_API lstring get_special_folder_path(int csidl, bool bcreate = false);
 
         // 获取%appdata%路径
-        LSLIB_API const lstring get_app_data_path();
+        LSLIB_API lstring get_app_data_path();
 
         // 获取%appdata%下当前程序路径
-        LSLIB_API const lstring get_module_app_data_path(bool bcreate /*= false*/);
+        LSLIB_API lstring get_module_app_data_path(bool bcreate /*= false*/);
 
         // 获取桌面路径
-        LSLIB_API const lstring get_desktop_path();
+        LSLIB_API lstring get_desktop_path();
 
         // 获取快速启动栏路径
-        LSLIB_API const lstring get_quick_launch_path();
+        LSLIB_API lstring get_quick_launch_path();
 
         // 获取系统程序安装路径
-        LSLIB_API const lstring get_program_files_path();
+        LSLIB_API lstring get_program_files_path();
 
         // 在资源管理器中打开一个路径并选中一个文件
         LSLIB_API void open_dir(_lpcstr path, _lpcstr file);
@@ -140,6 +140,12 @@ namespace lslib
 
 #endif
 
+        struct file_attr
+        {
+            lstring createTime;
+            lstring writeTime;
+            lstring accessTime;
+        };
 
         struct enum_file
         {
@@ -148,7 +154,7 @@ namespace lslib
             lstring fileName;
             lstring name;
             lstring extName;
-            lstring lastWriteTime;
+            file_attr attr;
             int     size;
         };
         declare_stl_obj(enum_file);
@@ -168,6 +174,9 @@ namespace lslib
 
         // 获取文件的大小
         LSLIB_API _ldword get_file_size(_lpcstr file);
+
+        // 获取文件属性
+        LSLIB_API file_attr get_file_attr(_lpcstr file);
 
         // 获取文件内容，返回结果会new出所需内存，调用后需要release_file_buffer释放，outsize保存读取的字节数
         LSLIB_API _lpbyte get_file_buffer(_lpcstr file, __out__ _lpdword outsize);

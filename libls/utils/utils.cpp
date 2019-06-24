@@ -49,6 +49,22 @@ namespace lslib
             return str;
         }
 
+        LSLIB_API lstring int_to_str(int value)
+        {
+            lstring str;
+            str.format("%d", value);
+            return str;
+        }
+
+        LSLIB_API lstring double_to_str(double value, int bit)
+        {
+            lstring format;
+            format.format("%%0%df", bit);
+            lstring str;
+            str.format(format, value);
+            return str;
+        }
+
     } // utils
 
 } // lslib

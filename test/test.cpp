@@ -5,7 +5,6 @@
 
 //////////////////////////////////////////////////////////////////////////
 #include "testcase/testcase.hpp"
-//#include "testcase/logger.hpp"
 //#include "testcase/httpclient.hpp"
 #include "testcase/string.hpp"
 #include "testcase/type.hpp"
@@ -16,6 +15,7 @@
 #endif
 //#include "testcase/math.hpp"
 #include "testcase/crypto.hpp"
+#include "testcase/logger.hpp"
 
 extern fn_test_list test_cases;
 int main(int argc, char* argv[])

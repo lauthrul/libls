@@ -141,7 +141,7 @@
                     					
                     <sourceEntries>
                         						
-                        <entry excluding="dllmain.cpp|3rd-party|core/registry|core/process|core/net" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        <entry excluding="Debug|build|bin|dllmain.cpp|3rd-party|core/registry|core/process|core/net" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
                         					
                     </sourceEntries>
                     				

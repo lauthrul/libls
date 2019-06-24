@@ -21,9 +21,7 @@ namespace lslib
 
     Time Time::GetCurDateTime()
     {
-        Time tCurTime;
-        tCurTime.SetTimer();
-        return tCurTime;
+        return Time();
     }
 
     string Time::GetCurDateStr()
