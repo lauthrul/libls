@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "thread.h"
-#include <process.h>
 #include "logger/logger.h"
 using namespace lslib::logger;
 
@@ -157,7 +156,7 @@ namespace lslib
                 HandleMessage(msg.message, msg.wParam, msg.lParam);
             }
             OnExecute();
-//             Sleep(10);
+//            Sleep(10);
         }
 
         int nRemains = 0;
@@ -273,35 +272,9 @@ namespace lslib
         return th;
     }
 
-    unsigned int CThread::GetThreadHandle() const
-    {
-        return m_hThreadHandle;
-    }
-
     EThreadState CThread::GetThreadState() const
     {
         return m_eThreadState;
-    }
-
-    int CThread::GetPriority() const
-    {
-        return m_nPriority;
-    }
-
-    bool CThread::SetPriority(int nPriority)
-    {
-        //  if (SetThreadPriority(m_hThreadHandle, nPriority)) {
-        //      m_nPriority = nPriority;
-        //      return true;
-        //  }
-        return false;
-    }
-
-    bool CThread::WaitFor(int dwMilliseconds)
-    {
-        //  if (WaitForSingleObject(m_hThreadHandle, dwMilliseconds) == WAIT_OBJECT_0)
-        return true;
-        return false;
     }
 
     bool CThread::PostMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/, int nLevel /*= 0*/)
@@ -365,7 +338,7 @@ namespace lslib
                     else HandleMessage(msg.message, msg.wParam, msg.lParam);
                 }
                 OnExecute();
-                usleep(10000); // 10msec.  1sec = 1000msec = 1000*1000usec
+//                usleep(10000); // 10msec.  1sec = 1000msec = 1000*1000usec
             }
         }
 

@@ -8,12 +8,13 @@
                         %T      date time with millisecond
                         %f      file
                         %l      line
+                        %F      function
                         %L      log level
                         %p      thread id
                         %r      milliseconds now from start up
                         %m      messges
     -->
-    <layout name="layout_app" format="[%L] [%T] [%r] (%p, %f:%l) - %m" />
+    <layout name="layout_app" format="[%L] [%T] [%r] (%p, %f:%l) [%F] - %m" />
 
     <!--
     @name:              name of appender
@@ -24,7 +25,7 @@
     @max_file_size      for @rooling=file_rooling. file size for each log file
     @max_file_counts    for @rooling=file_rooling. max backup file counts
     -->
-    <appender name="appender_app" type="file" file="Log/logapp.log" rolling="file_rooling" date_pattern="yyyyMMdd_{}" max_file_size="30MB" max_file_counts="10"></appender>
+    <appender name="appender_app" type="console" file="log/logapp.log" rolling="file_rooling" date_pattern="yyyyMMdd_{}" max_file_size="30MB" max_file_counts="10"></appender>
     
     <!--
     @name:              name of logger

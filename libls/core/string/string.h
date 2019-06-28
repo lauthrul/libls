@@ -23,7 +23,18 @@ namespace lslib
             lstring operator+ (_lchar c);
             lstring operator+ (_lpcstr str);
             lstring operator+ (const lstring& str);
-            _lchar operator[] (size_t index);
+            __ref__ lstring& operator+= (_lchar c);
+            __ref__ lstring& operator+= (_lpcstr str);
+            __ref__ lstring& operator+= (const lstring& str);
+            __ref__ lstring& append (_lchar c);
+            __ref__ lstring& append (_lpcstr str);
+            __ref__ lstring& append (const lstring& str);
+
+            template <typename T>
+            _lchar operator[] (T index)
+            {
+                return at(index);
+            }
 
         public:
             const bool is_space() const;
@@ -50,7 +61,7 @@ namespace lslib
             __ref__ lstring& replace(_lpcstr needle, _lpcstr replacement, size_t index = 0, int counts = -1);
             __ref__ lstring& format(_lpcstr pfmt, ...);
             __ref__ lstring& append_format(_lpcstr pfmt, ...);
-            static const int split(__out__ lstring_array& dest, _lpcstr src, _lpcstr patten);
-            const int split(__out__ lstring_array& dest, _lpcstr patten) const;
+            static const int split(__out__ lstring_array& dest, _lpcstr src, _lpcstr patten, bool allow_empty = true);
+            const int split(__out__ lstring_array& dest, _lpcstr patten, bool allow_empty = true) const;
     };
 }

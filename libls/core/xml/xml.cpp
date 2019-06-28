@@ -4,7 +4,7 @@
 namespace lslib
 {
 
-    Xml::Xml()
+    Xml::Xml() : m_xmlRoot(NULL)
     {
     }
 

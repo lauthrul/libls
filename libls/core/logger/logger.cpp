@@ -1,6 +1,14 @@
 #pragma once
 #include "stdafx.h"
 #include "logger.h"
+#include <stdarg.h>
+
+#ifdef USE_LOG4CXX
+#include <log4cxx/consoleappender.h>
+#include <log4cxx/basicconfigurator.h>
+#include <log4cxx/simplelayout.h>
+#include <log4cxx/xml/domconfigurator.h>
+#endif
 
 namespace lslib
 {
@@ -9,15 +17,11 @@ namespace lslib
 
 #ifdef USE_LOG4CXX
 
-// #include <log4cxx/consoleappender.h>
-// #include <log4cxx/basicconfigurator.h>
-// #include <log4cxx/simplelayout.h>
-// #include <log4cxx/xml/domconfigurator.h>
-//         //////////////////////////////////////////////////////////////////////////
-//         _loggerptr loggerInternal = NULL;
+        //////////////////////////////////////////////////////////////////////////
+//         _loggerptr loggerInternal = 0;
 //         _loggerptr GetInternalLogger()
 //         {
-//             if (loggerInternal == NULL)
+//             if (loggerInternal == 0)
 //             {
 //                 log4cxx::ConsoleAppender* consoleAppender = new log4cxx::ConsoleAppender(log4cxx::LayoutPtr(new log4cxx::SimpleLayout()));
 //                 log4cxx::BasicConfigurator::configure(log4cxx::AppenderPtr(consoleAppender));
@@ -25,6 +29,64 @@ namespace lslib
 //             }
 //             return loggerInternal;
 //         }
+
+        void Log(_loggerptr logger, ELOG_LEVEL level, _lpcstr file, int line, _lpcstr function, int threadId, ...)
+        {
+            if (logger == 0) return;
+
+            va_list args;
+            va_start(args, threadId); // last fixed param
+
+            char* format = va_arg(args, char*); // first arg
+#ifdef WIN32
+            int len = vsnprintf(NULL, 0, format, args); // next args
+            char* pbuf = (char*)malloc(len + 1);
+            memset(pbuf, 0, len + 1);
+            vsnprintf(pbuf, len, format, args);
+#else
+            char* pbuf = NULL;
+            vasprintf(&pbuf, format, args);
+#endif
+            va_end(args);
+
+            ::log4cxx::spi::LocationInfo location(file, function, line);
+            switch (level)
+            {
+                case LOG_LEVEL_FATAL:
+                    if (logger->isFatalEnabled())
+                        logger->forcedLog(::log4cxx::Level::getFatal(), pbuf, location);
+                    break;
+                case LOG_LEVEL_ERROR:
+                    if (logger->isErrorEnabled())
+                        logger->forcedLog(::log4cxx::Level::getError(), pbuf, location);
+                    break;
+                case LOG_LEVEL_WARN:
+                    if (logger->isWarnEnabled())
+                        logger->forcedLog(::log4cxx::Level::getWarn(), pbuf, location);
+                    break;
+                case LOG_LEVEL_INFO:
+                    if (logger->isInfoEnabled())
+                        logger->forcedLog(::log4cxx::Level::getInfo(), pbuf, location);
+                    break;
+                case LOG_LEVEL_DEBUG:
+                    if (logger->isDebugEnabled())
+                        logger->forcedLog(::log4cxx::Level::getDebug(), pbuf, location);
+                    break;
+                case LOG_LEVEL_TRACE:
+                    if (logger->isTraceEnabled())
+                        logger->forcedLog(::log4cxx::Level::getTrace(), pbuf, location);
+                    break;
+
+//                 case LOG_LEVEL_FATAL: LOG4CXX_FATAL(logger, pbuf); break;
+//                 case LOG_LEVEL_ERROR: LOG4CXX_ERROR(logger, pbuf); break;
+//                 case LOG_LEVEL_WARN: LOG4CXX_WARN(logger, pbuf); break;
+//                 case LOG_LEVEL_INFO: LOG4CXX_INFO(logger, pbuf); break;
+//                 case LOG_LEVEL_DEBUG: LOG4CXX_DEBUG(logger, pbuf); break;
+//                 case LOG_LEVEL_TRACE: LOG4CXX_TRACE(logger, pbuf); break;
+            }
+            free(pbuf);
+        }
+
 #else
 
         //////////////////////////////////////////////////////////////////////////
@@ -66,19 +128,20 @@ namespace lslib
             {
                 if (pNode == NULL) continue;
 
+                // read xml data
                 SLogAppender appender;
                 appender.strName = Xml::GetAttribute(*pNode, "name");
 
                 str = Xml::GetAttribute(*pNode, "type");
-                if (str == "console") appender.eType = SLogAppender::ELogAppenderType::CONSOLE;
-                else if (str == "file") appender.eType = SLogAppender::ELogAppenderType::FILE;
+                if (str == "console") appender.eType = APPENDER_CONSOLE;
+                else if (str == "file") appender.eType = APPENDER_FILE;
 
                 appender.strFile = Xml::GetAttribute(*pNode, "file");
 
                 str = Xml::GetAttribute(*pNode, "rolling");
-                if (str == "no_rolling") appender.eRooling = SLogAppender::ELogAppenderRoolling::NO_ROLLING;
-                else if (str == "daily_rooling") appender.eRooling = SLogAppender::ELogAppenderRoolling::DAILY_ROLLING;
-                else if (str == "file_rooling") appender.eRooling = SLogAppender::ELogAppenderRoolling::FILE_ROLLING;
+                if (str == "no_rolling") appender.eRooling = NO_ROLLING;
+                else if (str == "daily_rooling") appender.eRooling = DAILY_ROLLING;
+                else if (str == "file_rooling") appender.eRooling = FILE_ROLLING;
 
                 appender.strDatePattern = Xml::GetAttribute(*pNode, "date_pattern");
 
@@ -100,6 +163,37 @@ namespace lslib
 
                 str = Xml::GetAttribute(*pNode, "max_file_counts");
                 appender.nMaxFileCounts = str.to_int();
+
+                // init data
+                {
+                    os::mkdir(os::path_get_dir(appender.strFile));
+
+                    if (appender.strLogDate.empty())
+                    {
+                        lstring writeTime = os::get_file_attr(appender.strFile).writeTime;
+                        if (!writeTime.empty())
+                        {
+                            Time tm; tm.Parser(writeTime);
+                            appender.strLogDate = tm.GetDateStr();
+                        }
+                        else appender.strLogDate = Time::GetCurDateStr();
+                    }
+
+                    if (appender.nWritedSize < 0)
+                        appender.nWritedSize = os::get_file_size(appender.strFile);
+
+                    if (appender.nLogFileIndex < 0)
+                    {
+                        os::enum_file_array arr_files;
+                        os::enumerate_files(arr_files,
+                                            os::path_get_dir(appender.strFile),
+                                            NULL,
+                                            os::path_get_name(appender.strFile),
+                                            false);
+                        if (!arr_files.empty()) appender.nLogFileIndex = arr_files.size() - 1;
+                        else appender.nLogFileIndex = 0;
+                    }
+                }
 
                 m_mapAppenders[appender.strName] = appender;
             }
@@ -131,6 +225,8 @@ namespace lslib
                 if (pAppender) logger.appender = *pAppender;
                 m_mapLogger[logger.strName] = logger;
             }
+
+            return true;
         }
 
         SLogLayout* SLogConfig::GetLayout(_lpcstr name)
@@ -162,6 +258,7 @@ namespace lslib
         list<CLogManager::SLogEntity> CLogManager::m_lstLogEntitys;
         CMutexLock CLogManager::m_mtxLogEntityTmp;
         CMutexLock CLogManager::m_mtxLogEntity;
+        Time m_tmStart;
 
         CLogManager::CLogManager() : CThread(false)
         {
@@ -194,20 +291,20 @@ namespace lslib
 
         void CLogManager::Destroy()
         {
-            for (map<lstring, SLogger>::iterator it = m_logConfig.m_mapLogger.begin(); it != m_logConfig.m_mapLogger.end(); it++)
+            for (map<lstring, SLogAppender>::iterator it = m_logConfig.m_mapAppenders.begin(); it != m_logConfig.m_mapAppenders.end(); it++)
             {
-                SLogger& logger = it->second;
-                if (logger.fp != NULL)
+                SLogAppender& appender = it->second;
+                if (appender.fp != NULL)
                 {
-                    fclose(logger.fp);
-                    logger.fp = NULL;
+                    fclose(appender.fp);
+                    appender.fp = NULL;
                 }
             }
         }
 
-        void CLogManager::Log(_loggerptr logger, ELOG_LEVEL level, _lpcstr file, int line, int threadId, const char* format, ...)
+        void CLogManager::Log(_loggerptr logger, ELOG_LEVEL level, _lpcstr file, int line, _lpcstr function, int threadId, ...)
         {
-            if (!m_bInited) return;
+            if (!m_bInited || logger == NULL) return;
 
             m_mtxLogEntityTmp.Lock();
             {
@@ -216,14 +313,22 @@ namespace lslib
                 entity.level = level;
                 entity.file = file;
                 entity.line = line;
+                entity.function = function;
                 entity.threadId = threadId;
 
                 va_list args;
-                va_start(args, format);
-                int len = vsnprintf(NULL, 0, format, args);
+                va_start(args, threadId); // last fixed param
+
+                char* format = va_arg(args, char*); // first arg
+#ifdef WIN32
+                int len = vsnprintf(NULL, 0, format, args); // next args
                 char* pbuf = (char*)malloc(len + 1);
                 memset(pbuf, 0, len + 1);
                 vsnprintf(pbuf, len, format, args);
+#else
+                char* pbuf = NULL;
+                vasprintf(&pbuf, format, args);
+#endif
                 va_end(args);
 
                 entity.msg = pbuf;
@@ -246,6 +351,7 @@ namespace lslib
             }
             m_mtxLogEntityTmp.Unlock();
 
+            lstring str;
             m_mtxLogEntity.Lock();
             it = m_lstLogEntitys.begin();
             while (!m_lstLogEntitys.empty())
@@ -253,86 +359,62 @@ namespace lslib
                 SLogEntity& entity = *it;
                 _loggerptr logger = entity.logger;
                 if (logger == NULL) continue;
+                SLogAppender& appender = logger->appender;
 
                 //
-                switch (logger->appender.eType)
+                switch (appender.eType)
                 {
-                    case SLogAppender::ELogAppenderType::CONSOLE:
+                    case APPENDER_CONSOLE:
                         {
-                            if (logger->fp == NULL)
-                                logger->fp = stdout;
+                            if (appender.fp == NULL)
+                                appender.fp = stdout;
                         }
                         break;
-                    case SLogAppender::ELogAppenderType::FILE:
+                    case APPENDER_FILE:
                         {
-                            switch (logger->appender.eRooling)
+                            switch (appender.eRooling)
                             {
-                                case SLogAppender::ELogAppenderRoolling::NO_ROLLING:
+                                case NO_ROLLING:
                                     break;
-                                case SLogAppender::ELogAppenderRoolling::DAILY_ROLLING:
+                                case DAILY_ROLLING:
                                     {
-                                        // init data
-                                        if (logger->strLogDate.empty())
-                                        {
-                                            lstring writeTime = os::get_file_attr(logger->appender.strFile).writeTime;
-                                            if (!writeTime.empty())
-                                            {
-                                                Time tm; tm.Parser(writeTime);
-                                                logger->strLogDate = tm.GetDateStr();
-                                            }
-                                            else logger->strLogDate = Time::GetCurDateStr();
-                                        }
                                         // rolling
-                                        lstring strDate = Time::GetCurDateStr();
-                                        if (strDate > logger->strLogDate)
+                                        str = Time::GetCurDateStr();
+                                        if (str > appender.strLogDate)
                                         {
-                                            if (logger->fp != NULL) fclose(logger->fp);
-                                            os::rename(logger->appender.strFile, strDate + "_" + logger->appender.strFile);
-                                            logger->fp = NULL;
-                                            logger->strLogDate = strDate;
+                                            if (appender.fp != NULL) fclose(appender.fp);
+                                            os::rename(appender.strFile, str + "_" + appender.strFile);
+                                            appender.fp = NULL;
+                                            appender.strLogDate = str;
                                         }
                                     }
                                     break;
-                                case SLogAppender::ELogAppenderRoolling::FILE_ROLLING:
+                                case FILE_ROLLING:
                                     {
-                                        // init data
-                                        if (logger->nWritedSize < 0)
-                                            logger->nWritedSize = os::get_file_size(logger->appender.strFile);
-                                        if (logger->nLogFileIndex < 0)
-                                        {
-                                            os::enum_file_array arr_files;
-                                            os::enumerate_files(arr_files,
-                                                                os::path_get_dir(logger->appender.strFile) + "/*.*",
-                                                                NULL,
-                                                                os::path_get_name(logger->appender.strFile),
-                                                                false);
-                                            if (!arr_files.empty()) logger->nLogFileIndex = arr_files.size() - 1;
-                                            else logger->nLogFileIndex = 0;
-                                        }
                                         // rolling
-                                        if (logger->nWritedSize >= logger->appender.nMaxFileSize)
+                                        if (appender.nWritedSize >= appender.nMaxFileSize)
                                         {
-                                            if (logger->fp != NULL) fclose(logger->fp);
-                                            for (int i = logger->appender.nMaxFileCounts - 1; i <= logger->nLogFileIndex; i++)
-                                                os::rm(logger->appender.strFile + lstring().format(".%d", i));
-                                            for (int i = logger->nLogFileIndex; i >= 0; i--)
+                                            if (appender.fp != NULL) fclose(appender.fp);
+                                            for (int i = appender.nMaxFileCounts - 1; i <= appender.nLogFileIndex; i++)
+                                                os::rm(appender.strFile + lstring().format(".%d", i));
+                                            for (int i = appender.nLogFileIndex; i >= 0; i--)
                                             {
                                                 if (i == 0)
-                                                    os::rename(logger->appender.strFile,
-                                                               logger->appender.strFile + lstring().format(".%d", i + 1));
+                                                    os::rename(appender.strFile,
+                                                               appender.strFile + lstring().format(".%d", i + 1));
                                                 else
-                                                    os::rename(logger->appender.strFile + lstring().format(".%d", i),
-                                                               logger->appender.strFile + lstring().format(".%d", i + 1));
+                                                    os::rename(appender.strFile + lstring().format(".%d", i),
+                                                               appender.strFile + lstring().format(".%d", i + 1));
                                             }
-                                            logger->fp = NULL;
-                                            logger->nLogFileIndex = min(logger->nLogFileIndex + 1, logger->appender.nMaxFileCounts - 1);
-                                            logger->nWritedSize = 0;
+                                            appender.fp = NULL;
+                                            appender.nLogFileIndex = min(appender.nLogFileIndex + 1, appender.nMaxFileCounts - 1);
+                                            appender.nWritedSize = 0;
                                         }
                                     }
                                     break;
                             }
-                            if (logger->fp == NULL)
-                                logger->fp = fopen(logger->appender.strFile, "a+");
+                            if (appender.fp == NULL)
+                                appender.fp = fopen(appender.strFile, "a+");
                         }
                         break;
                 }
@@ -352,20 +434,22 @@ namespace lslib
                     }
 
                     //
-                    lstring msg = logger->layout.strFormat;
-                    Time tm = Time::GetCurDateTime();
-                    msg.replace("%d", tm.GetDateStr().c_str());
-                    msg.replace("%t", tm.GetTimeStr().c_str());
-                    msg.replace("%ms", lstring().format("%d", tm.GetMilliSec()));
-                    msg.replace("%T", tm.GetDateTimeStr(true).c_str());
-                    msg.replace("%f", entity.file);
-                    msg.replace("%l", lstring().format("%d", entity.line));
-                    msg.replace("%L", strlvl);
-                    msg.replace("%p", lstring().format("0x%08x", entity.threadId));
-                    msg.replace("%m", entity.msg);
-                    msg.append("\n");
+                    str = logger->layout.strFormat;
+                    Time tm;
+                    str.replace("%d", tm.GetDateStr().c_str());
+                    str.replace("%t", tm.GetTimeStr().c_str());
+                    str.replace("%ms", lstring().format("%d", tm.GetMilliSec()).c_str());
+                    str.replace("%T", tm.GetDateTimeStr(true).c_str());
+                    str.replace("%f", entity.file);
+                    str.replace("%l", lstring().format("%d", entity.line).c_str());
+                    str.replace("%F", entity.function);
+                    str.replace("%L", strlvl);
+                    str.replace("%p", lstring().format("0x%08x", entity.threadId).c_str());
+                    str.replace("%r", lstring().format("%d", tm.BetweenAllMilliSec(m_tmStart)).c_str());
+                    str.replace("%m", entity.msg);
+                    str.append("\n");
 
-                    logger->nWritedSize += fwrite(msg, 1, msg.length(), logger->fp);
+                    appender.nWritedSize += fwrite(str, 1, str.length(), appender.fp);
                 }
 
                 m_lstLogEntitys.erase(it++);
@@ -398,7 +482,7 @@ namespace lslib
 
         LSLIB_API _loggerptr GetLogger(_lpcstr lpstrLoggerName)
         {
-            if (is_empty(lpstrLoggerName)) return NULL;
+            if (is_empty(lpstrLoggerName)) return (int)NULL;
 #ifdef USE_LOG4CXX
             return Logger::getLogger(lpstrLoggerName);
 #else
@@ -435,8 +519,8 @@ namespace lslib
         }
 
         //////////////////////////////////////////////////////////////////////////
-        /*LSLIB_API */ extern _loggerptr g_logger = NULL; // GetInternalLogger();
-        /*LSLIB_API */ extern _loggerptr g_netlogger = NULL; // GetInternalLogger();
+        /*LSLIB_API */ extern _loggerptr g_logger = 0; // GetInternalLogger();
+        /*LSLIB_API */ extern _loggerptr g_netlogger = 0; // GetInternalLogger();
 
         LSLIB_API void RegistGlobalLogger(_loggerptr pLogger)
         {

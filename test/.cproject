@@ -149,7 +149,7 @@
                     					
                     <sourceEntries>
                         						
-                        <entry excluding="build|bin|Debug|testcase/logger.hpp|testcase/httpclient.hpp|libls/core/net|libls/core/logger|libls/core/registry|libls/core/process|libls/dllmain.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        <entry excluding="build|bin|Debug|testcase/httpclient.hpp|libls/core/net|libls/core/logger|libls/core/registry|libls/core/process|libls/dllmain.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
                         					
                     </sourceEntries>
                     				
@@ -178,6 +178,8 @@
             <resource resourceType="PROJECT" workspacePath="/test"/>
             		
         </configuration>
+        		
+        <configuration configurationName="Debug"/>
         	
     </storageModule>
     	

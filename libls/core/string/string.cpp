@@ -19,11 +19,7 @@ namespace lslib
 
     lstring::lstring(_lpcstr str)
     {
-        if (str != NULL)
-        {
-//            _Tidy();
-            assign(str);
-        }
+        if (str != NULL) *(string*)this = str;
     }
 
     lstring::lstring(const string& str) : string(str)
@@ -41,22 +37,53 @@ namespace lslib
 
     lstring lstring::operator+(_lchar c)
     {
-        return lstring(*this) += c;
+        return *(string*)this + c;
     }
 
     lstring lstring::operator+(_lpcstr str)
     {
-        return lstring(*this) += str;
+        return *(string*)this + str;
     }
 
     lstring lstring::operator+(const lstring& str)
     {
-        return lstring(*this) += str;
+        return *(string*)this + str;
     }
 
-    _lchar lstring::operator[](size_t index)
+    __ref__ lstring& lstring::operator+= (_lchar c)
     {
-        return at(index);
+        string::operator +=(c);
+        return *this;
+    }
+
+    __ref__ lstring& lstring::operator+= (_lpcstr str)
+    {
+        string::operator +=(str);
+        return *this;
+    }
+
+    __ref__ lstring& lstring::operator+= (const lstring& str)
+    {
+        string::operator +=(str);
+        return *this;
+    }
+
+    __ref__ lstring& lstring::append (_lchar c)
+    {
+        string::append(1, c);
+        return *this;
+    }
+
+    __ref__ lstring& lstring::append (_lpcstr str)
+    {
+        string::append(str);
+        return *this;
+    }
+
+    __ref__ lstring& lstring::append (const lstring& str)
+    {
+        string::append(str);
+        return *this;
     }
 
     const bool lstring::is_space() const
@@ -355,10 +382,15 @@ namespace lslib
     {
         va_list args;
         va_start(args, pfmt);
+#ifdef WIN32
         int len = vsnprintf(NULL, 0, pfmt, args);
-        _lpstr pbuf = new _lchar[len + 1];
+        char* pbuf = (char*)malloc(len + 1);
         memset(pbuf, 0, len + 1);
         vsnprintf(pbuf, len, pfmt, args);
+#else
+        char* pbuf = NULL;
+        vasprintf(&pbuf, pfmt, args);
+#endif
         va_end(args);
         *this = pbuf;
         delete[] pbuf;
@@ -369,23 +401,32 @@ namespace lslib
     {
         va_list args;
         va_start(args, pfmt);
+#ifdef WIN32
         int len = vsnprintf(NULL, 0, pfmt, args);
-        _lpstr pbuf = new _lchar[len + 1];
+        char* pbuf = (char*)malloc(len + 1);
         memset(pbuf, 0, len + 1);
         vsnprintf(pbuf, len, pfmt, args);
+#else
+        char* pbuf = NULL;
+        vasprintf(&pbuf, pfmt, args);
+#endif
         va_end(args);
         *this += pbuf;
         delete[] pbuf;
         return *this;
     }
 
-    const int lstring::split(__out__ lstring_array& dest, _lpcstr src, _lpcstr patten)
+    const int lstring::split(__out__ lstring_array& dest, _lpcstr src, _lpcstr patten, bool allow_empty /*= true*/)
     {
-        if (is_empty(src) || is_empty(patten))
+        if (is_empty(src)) return 0;
+        if (is_empty(patten))
         {
             dest.push_back(src);
             return dest.size();
         }
+
+#define push(str) \
+    if (strlen(str) == 0 && !allow_empty); else dest.push_back(str);
 
         _lpstr pbuff = NULL;
         _lpcstr last_pos = src;
@@ -400,20 +441,20 @@ namespace lslib
                 pbuff = new _lchar[size + 1];
                 memset(pbuff, 0, size + 1);
                 strncpy(pbuff, last_pos, size);
-                dest.push_back(pbuff);
+                push(pbuff);
                 delete[] pbuff;
                 last_pos = p + strlen(patten);
-                if (last_pos[0] == 0)  dest.push_back(last_pos);
+                if (last_pos[0] == 0) push(last_pos);
             }
         }
-        if (last_pos[0] != 0) dest.push_back(last_pos);
+        if (last_pos[0] != 0) push(last_pos);
 
         return dest.size();
     }
 
-    const int lstring::split(__out__ lstring_array& dest, _lpcstr patten) const
+    const int lstring::split(__out__ lstring_array& dest, _lpcstr patten, bool allow_empty /*= true*/) const
     {
-        return split(dest, *this, patten);
+        return split(dest, *this, patten, allow_empty);
     }
 
 } // end of lslib

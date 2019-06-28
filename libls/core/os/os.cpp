@@ -1,8 +1,9 @@
-#include <stdlib.h>
+#include <dirent.h>
 #include "stdafx.h"
 #include "os.h"
 
 #include <sys/stat.h>
+
 #if defined _MSC_VER
 #include <ShlObj.h>
 #include <ShellAPI.h>
@@ -21,7 +22,7 @@ namespace lslib
 
         LSLIB_API const _lchar get_slash()
         {
-#if defined _MSC_VER
+#ifdef _MSC_VER
             return s_slashs[0];
 #else
             return s_slashs[1];
@@ -84,10 +85,9 @@ namespace lslib
             if (is_empty(path)) return "";
 
             lstring str = path;
-            str.to_lower();
             str.trim();
-            str.replace('/', get_slash());
-            str.replace('\\', get_slash());
+            for (size_t i = 0; i < sizeof(s_slashs); i++)
+                str.replace(s_slashs[i], get_slash());
             _lchar buf[MAX_PATH] = { 0 };
             strncpy(buf, str.c_str(), min(MAX_PATH, str.length()));
 #ifdef _MSC_VER
@@ -110,14 +110,15 @@ namespace lslib
 
         LSLIB_API lstring path_combine(_lpcstr path, _lpcstr join)
         {
-            if (is_empty(path)) return "";
 #ifdef _MSC_VER
-            _lchar szbuf[MAX_PATH + 1] =
-            {   0};
+            _lchar szbuf[MAX_PATH + 1] = { 0 };
             PathCombine(szbuf, path_pretty(path), path_pretty(join));
             return szbuf;
 #else
-            return path_pretty(lstring(path) + "/" + join);
+            if (is_empty(path) || is_absolute(join))
+                return path_pretty(join);
+
+            return path_pretty(lstring(path) + get_slash() + join);
 #endif
         }
 
@@ -133,7 +134,7 @@ namespace lslib
 #else
             realpath(str.data(), resolved_path);
 #endif
-            return resolved_path;
+            return path_pretty(resolved_path);
         }
 
         LSLIB_API const bool is_exist(_lpcstr path)
@@ -150,92 +151,143 @@ namespace lslib
         {
             if (is_empty(path)) return false;
             struct stat s;
-            lstring str = path_pretty(path);
-            str.trim(get_slash());
-            if (stat(str, &s) == 0) return s.st_mode & S_IFREG;
+            if (stat(path, &s) == 0) return s.st_mode & S_IFREG;
             return false;
         }
 
         LSLIB_API const bool is_dir(_lpcstr path)
         {
             if (is_empty(path)) return false;
-            struct stat s;
             lstring str = path_pretty(path);
-            str.trim(get_slash());
+            str.trim_right(get_slash());
+            struct stat s;
             if (stat(str, &s) == 0) return s.st_mode & S_IFDIR;
             return false;
+        }
+
+        LSLIB_API const bool is_absolute(_lpcstr path)
+        {
+            if (is_empty(path)) return false;
+
+            lstring str = path_pretty(path);
+            str.to_lower();
+            if (str[0] == get_slash()) return true;
+            else if (str[0] == '.') return false;
+#ifdef _WIN32
+            if (str.length() >= 2 && (str[0] > 'a' && str[0] <='z') &&  str[1] == ':')
+                return true;
+#endif
+            return false;
+        }
+
+        int copy_single_file(_lpcstr path, _lpcstr target)
+        {
+            FILE* in, *out;
+            if ( (in = fopen(path, "rb")) == NULL) return -1;
+            if ( (out = fopen(target, "wb+")) == NULL) return -1;
+            char buf[1024] = {0};
+            int ret = 0, len = 0;
+            while ( (len = fread(buf, 1, 1024, in)) > 0 )
+                ret += fwrite(buf, 1, len, out);
+            fclose(in);
+            fclose(out);
+            return ret;
         }
 
         LSLIB_API const int copy(_lpcstr path, _lpcstr target)
         {
 #ifdef _MSC_VER
-            TCHAR szPath[MAX_PATH + 2] =
-            {   0};
+            TCHAR szPath[MAX_PATH + 2] = { 0 };
             int nLen = min(_tcsclen(path), MAX_PATH);
             memcpy(szPath, path, nLen);
 
-            TCHAR szTarget[MAX_PATH + 2] =
-            {   0};
+            TCHAR szTarget[MAX_PATH + 2] = { 0 };
             nLen = min(_tcsclen(target), MAX_PATH);
             memcpy(szTarget, target, nLen);
 
-            SHFILEOPSTRUCT fop =
-            {   0};
+            SHFILEOPSTRUCT fop = { 0 };
             fop.wFunc = FO_COPY;
             fop.pFrom = szPath;
             fop.pTo = szTarget;
             fop.fFlags = FOF_NO_UI;
             return SHFileOperation( &fop );
 #else
+
+            if (is_file(path))
+            {
+                if (is_dir(target))
+                    return copy_single_file(path, path_combine(target, path_get_name(path))) > 0;
+                else
+                    return copy_single_file(path, target) > 0;
+            }
+            else if (is_dir(path))
+            {
+                DIR* d = opendir(path);
+                if (d == NULL) return -1;
+
+                int ret = 0;
+                if (!is_exist(target)) ret = mkdir(target);
+                if (ret < 0) return ret;
+
+                lstring strpath, strtarget;
+                struct dirent* p;
+                while (ret == 0 && (p = readdir(d)) != NULL)
+                {
+                    if (strcmp(p->d_name, ".") == 0 || strcmp(p->d_name, "..") == 0)
+                        continue;
+                    strpath = path_combine(path, p->d_name);
+                    strtarget = path_combine(target, p->d_name);
+                    copy(strpath, strtarget);
+                }
+                closedir(d);
+                return ret;
+            }
 #endif
         }
 
         LSLIB_API const int move(_lpcstr path, _lpcstr target)
         {
+            if (is_empty(path) || is_empty(target)) return -1;
 #ifdef _MSC_VER
-            TCHAR szPath[MAX_PATH + 2] =
-            {   0};
+            TCHAR szPath[MAX_PATH + 2] = { 0 };
             int nLen = min(_tcsclen(path), MAX_PATH);
             memcpy(szPath, path, nLen);
 
-            TCHAR szTarget[MAX_PATH + 2] =
-            {   0};
+            TCHAR szTarget[MAX_PATH + 2] = { 0 };
             nLen = min(_tcsclen(target), MAX_PATH);
             memcpy(szTarget, target, nLen);
 
-            SHFILEOPSTRUCT fop =
-            {   0};
+            SHFILEOPSTRUCT fop = { 0 };
             fop.wFunc = FO_MOVE;
             fop.pFrom = szPath;
             fop.pTo = szTarget;
             fop.fFlags = FOF_NO_UI;
             return SHFileOperation( &fop );
 #else
+            return ::rename(path, target);
 #endif
         }
 
-        LSLIB_API const bool rename(_lpcstr path, _lpcstr target)
+        LSLIB_API const int rename(_lpcstr path, _lpcstr target)
         {
-            return ::rename(path, target);
+            if (is_empty(path) || is_empty(target)) return -1;
 #ifdef _MSC_VER
-            TCHAR szPath[MAX_PATH + 2] =
-            {   0};
+            TCHAR szPath[MAX_PATH + 2] = { 0 };
             int nLen = min(_tcsclen(path), MAX_PATH);
             memcpy(szPath, path, nLen);
 
-            TCHAR szTarget[MAX_PATH + 2] =
-            {   0};
+            TCHAR szTarget[MAX_PATH + 2] = { 0 };
             nLen = min(_tcsclen(target), MAX_PATH);
             memcpy(szTarget, target, nLen);
 
-            SHFILEOPSTRUCT fop =
-            {   0};
+            SHFILEOPSTRUCT fop = { 0 };
             fop.wFunc = FO_RENAME;
             fop.pFrom = szPath;
             fop.pTo = szTarget;
             fop.fFlags = FOF_NO_UI;
             return SHFileOperation( &fop );
 #else
+            return ::rename(path, target);
 #endif
         }
 
@@ -246,25 +298,85 @@ namespace lslib
             lstring str = path_make_absolute(path);
             return SHCreateDirectoryEx(NULL, str.c_str(), NULL);
 #else
+
+
+#ifdef WIN32
+#define MKDIR(path, mode) ::mkdir(path)
+#else
+#define MKDIR(path, mode) ::mkdir(path, mode)
+#endif
+
+            int ret = 0;
+            _lchar slash = get_slash();
+            lstring str = path_pretty(path);
+            lstring strpath;
+            {
+                size_t idx = 0;
+                if (is_absolute(str))
+                {
+                    if (str[0] == slash)    idx = str.find(slash, 1); // linux absolute path
+                    else                    idx = str.find(slash, 3); // windows absolute path
+                }
+                else idx = str.find(slash);
+
+                if (idx != string::npos)
+                {
+                    strpath = str.substr(0, idx + 1);
+                    str = str.substr(idx + 1);
+                }
+                else
+                {
+                    strpath = str + slash;
+                    str.clear();
+                }
+            }
+            if (!is_exist(strpath))
+                ret |= MKDIR(strpath, 0755);
+
+            lstring_array arr;
+            str.split(arr, lstring(slash), false);
+            for (size_t i = 0; i < arr.size(); i++)
+            {
+                strpath += arr[i] + slash;
+                if (!is_exist(strpath))
+                    ret |= MKDIR(strpath, 0755);
+            }
+            return ret;
 #endif
         }
 
         LSLIB_API const int rm(_lpcstr path)
         {
-            if (is_empty(path)) return false;
+            if (is_empty(path)) return -1;
 
 #ifdef _MSC_VER
-            TCHAR szPath[MAX_PATH + 2] =
-            {   0};
+            TCHAR szPath[MAX_PATH + 2] = { 0 };
             int nLen = min(_tcsclen(path), MAX_PATH);
             memcpy(szPath, path, nLen);
 
-            SHFILEOPSTRUCT fop =
-            {   0};
+            SHFILEOPSTRUCT fop = { 0 };
             fop.wFunc = FO_DELETE;
             fop.pFrom = szPath; // must be double-null terminated string
             fop.fFlags = FOF_NO_UI;
             return SHFileOperation(&fop);
+#else
+            if (is_file(path)) return unlink(path);
+            else if (is_dir(path))
+            {
+                DIR* d = opendir(path);
+                struct dirent* p;
+                int ret = 0;
+                lstring strpath(path);
+                while (ret == 0 && (p = readdir(d)) != NULL)
+                {
+                    if (strcmp(p->d_name, ".") == 0 || strcmp(p->d_name, "..") == 0)
+                        continue;
+                    strpath = path_combine(path, p->d_name);
+                    ret = rm(strpath);
+                }
+                closedir(d);
+                if (ret == 0) return rmdir(path);
+            }
 #endif
         }
 
@@ -274,8 +386,7 @@ namespace lslib
             return _pgmptr;
 #else
             char arg1[20];
-            char exepath[200] =
-            {   0};
+            char exepath[200] = { 0 };
 
             sprintf(arg1, "/proc/%d/exe", getpid());
             readlink(arg1, exepath, 1024);
@@ -299,8 +410,7 @@ namespace lslib
 
         LSLIB_API lstring get_special_folder_path(int csidl, bool bcreate /*= false*/)
         {
-            _lchar sz[MAX_PATH + 1] =
-            {   0};
+            _lchar sz[MAX_PATH + 1] = { 0 };
             if (SHGetSpecialFolderPath(NULL, sz, csidl, bcreate))
                 return lstring(sz) + get_slash();
             else return "";
@@ -353,11 +463,10 @@ namespace lslib
         LSLIB_API bool open_file_select_dialog(__out__ lstring_array& arr_files, _lpcstr title, _lpcstr filter, bool multi, HWND owner)
         {
 #define nBuffSize (MAX_PATH*100)
-            _lchar szFileName[nBuffSize] =
-            {   ""};
+            _lchar szFileName[nBuffSize] = {   ""};
 
             OPENFILENAME ofn =
-            {   0};
+            { 0 };
             ofn.lStructSize = sizeof(OPENFILENAME);
             ofn.hwndOwner = owner;
             ofn.hInstance = NULL;
@@ -398,16 +507,14 @@ namespace lslib
 
         LSLIB_API bool open_folder_select_dialog(__out__ lstring& target, _lpcstr title, HWND owner)
         {
-            BROWSEINFO bInfo =
-            {   0};
+            BROWSEINFO bInfo = { 0 };
             bInfo.hwndOwner = owner;
             bInfo.lpszTitle = title;
             bInfo.ulFlags = BIF_RETURNONLYFSDIRS
                             | BIF_USENEWUI /*包含一个编辑框 用户可以手动填写路径 对话框可以调整大小之类的*/
                             | BIF_UAHINT /*带TIPS提示*/
                             | BIF_NONEWFOLDERBUTTON /*不带新建文件夹按钮*/;
-            _lchar szPathName[MAX_PATH] =
-            {   0};
+            _lchar szPathName[MAX_PATH] = { 0 };
             LPITEMIDLIST lpDlist = SHBrowseForFolder(&bInfo);
             if (lpDlist != NULL)
             {
@@ -508,8 +615,7 @@ namespace lslib
 
             if (is_empty(path))
             {
-                TCHAR szAppPath[MAX_PATH] =
-                {   0};
+                TCHAR szAppPath[MAX_PATH] = { 0 };
                 ::GetModuleFileName(NULL, szAppPath, MAX_PATH);
                 strFilePath = szAppPath;
             }
@@ -538,118 +644,136 @@ namespace lslib
 
 #endif
 
-        LSLIB_API bool enumerate_files(__out__ enum_file_array& array_files, _lpcstr path, _lpcstr extention, _lpcstr filter, bool recurse/* = false*/)
+        LSLIB_API void enumerate_files(__out__ enum_file_array& array_files, _lpcstr path, _lpcstr extention, _lpcstr filter, bool recurse/* = false*/)
         {
-#ifdef _MSC_VER
-            if (is_empty(path)) return false;
-
-            lstring strpath = path_pretty(path);
-            if (strpath.find_last_of('*') == lstring::npos) // 没有通配符，按照目录处理
-                strpath += get_slash() + "*.*";
+            if (is_empty(path)) return;
+            if (!is_dir(path)) return;
 
             lstring str;
             lstring_array arr_exts;
-            if (!is_empty(extention))
-            {
-                _lpcstr p = extention;
-                while (*p != NULL)
-                {
-                    str = p;
-                    p += str.length() + 1;
-                    if (str == "*.*") continue;
-                    arr_exts.push_back(str);
-                }
-            }
-
             lstring_array arr_filters;
-            if (!is_empty(filter))
-            {
-                _lpcstr p = filter;
-                while (*p != NULL)
-                {
-                    str = p;
-                    p += str.length() + 1;
-                    arr_filters.push_back(str);
-                }
-            }
+            lstring::split(arr_exts, extention, ";", false);
+            lstring::split(arr_filters, filter, ";", false);
+
+            bool bfilter = true;
+            enum_file file_info;
+
+#define check(file_info, bfilter) \
+    {\
+        if (!arr_exts.empty())\
+        {\
+            size_t i = 0;\
+            for (; i < arr_exts.size(); i++)\
+            {\
+                if (arr_exts[i] == "*.*" || arr_exts[i] == lstring("*.") + file_info.extName)\
+                {\
+                    bfilter = true;\
+                    break;\
+                }\
+            }\
+            if (i == arr_exts.size())\
+                bfilter = false;\
+        }\
+        if (!arr_filters.empty())\
+        {\
+            size_t i = 0;\
+            for (; i < arr_filters.size(); i++)\
+            {\
+                if (file_info.fullPath.find(arr_filters[i]) != lstring::npos)\
+                {\
+                    bfilter &= true;\
+                    break;\
+                }\
+            }\
+            if (i == arr_filters.size())\
+                bfilter &= false;\
+        }\
+    }
+
+#ifdef _MSC_VER
 
             WIN32_FIND_DATA fd;
-            HANDLE hFile = FindFirstFile(strpath, &fd);
-            if (hFile == INVALID_HANDLE_VALUE) return FALSE;
+            HANDLE hFile = FindFirstFile(path_combine(path, "*.*"), &fd);
+            if (hFile == INVALID_HANDLE_VALUE) return;
 
-            enum_file file_info;
-            bool bfilter = true;
             do
             {
-                file_info.filePath = path_get_dir(strpath);
+                file_info.filePath = path;
                 if (file_info.filePath.empty())
                     file_info.filePath = ".";
                 if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) // 如果为目录
                 {
                     if (_tcscmp(fd.cFileName, _T(".")) == 0 || _tcscmp(fd.cFileName, _T("..")) == 0)
                         continue;
-
                     if (recurse)
-                        enumerate_files(array_files, file_info.filePath + get_slash() + fd.cFileName, extention, filter, recurse);
+                        enumerate_files(array_files, path_combine(path, fd.cFileName), extention, filter, recurse);
                 }
                 else
                 {
                     file_info.fileName = fd.cFileName;
-                    file_info.fullPath = file_info.filePath + get_slash() + file_info.fileName;
+                    file_info.fullPath = path_combine(file_info.filePath, file_info.fileName);
                     file_info.size = fd.nFileSizeLow - fd.nFileSizeHigh;
                     file_info.name = path_get_filename(file_info.fileName);
                     file_info.extName = path_get_ext(file_info.fileName);
 
-                    SYSTEMTIME stUTC, stLocal;
-
-                    FileTimeToSystemTime(&(fd.ftCreationTime), &stUTC);
-                    SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal);
-                    file_info.attr.createTime.format("%04d-%02d-%02d %02d:%02d:%02d", stLocal.wYear, stLocal.wMonth, stLocal.wDay, stLocal.wHour, stLocal.wMinute, stLocal.wSecond);
-
-                    FileTimeToSystemTime(&(fd.ftLastWriteTime), &stUTC);
-                    SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal);
-                    file_info.attr.writeTime.format("%04d-%02d-%02d %02d:%02d:%02d", stLocal.wYear, stLocal.wMonth, stLocal.wDay, stLocal.wHour, stLocal.wMinute, stLocal.wSecond);
-
-                    FileTimeToSystemTime(&(fd.ftLastAccessTime), &stUTC);
-                    SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal);
-                    file_info.attr.accessTime.format("%04d-%02d-%02d %02d:%02d:%02d", stLocal.wYear, stLocal.wMonth, stLocal.wDay, stLocal.wHour, stLocal.wMinute, stLocal.wSecond);
-
-                    bfilter = true;
-                    if (!arr_exts.empty())
+                    check(file_info, bfilter);
+                    if (bfilter)
                     {
-                        size_t i = 0;
-                        for (; i < arr_exts.size(); i++)
-                        {
-                            if (arr_exts[i] == lstring("*.") + file_info.extName)
-                            {
-                                bfilter = true;
-                                break;
-                            }
-                        }
-                        if (i == arr_exts.size())
-                            bfilter = false;
+                        SYSTEMTIME stUTC, stLocal;
+
+#define get_time(out, time)\
+    FileTimeToSystemTime(&(time), &stUTC);\
+    SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal);\
+    (out).format("%04d-%02d-%02d %02d:%02d:%02d", stLocal.wYear, stLocal.wMonth, stLocal.wDay, stLocal.wHour, stLocal.wMinute, stLocal.wSecond);
+
+                        get_time(file_info.attr.createTime, fd.ftCreationTime);
+                        get_time(file_info.attr.writeTime, fd.ftLastWriteTime);
+                        get_time(file_info.attr.accessTime, fd.ftLastAccessTime);
+
+                        array_files.push_back(file_info);
                     }
-                    if (!arr_filters.empty())
-                    {
-                        size_t i = 0;
-                        for (; i < arr_filters.size(); i++)
-                        {
-                            if (file_info.fileName.find(arr_filters[i]) != lstring::npos)
-                            {
-                                bfilter &= true;
-                                break;
-                            }
-                        }
-                        if (i == arr_filters.size())
-                            bfilter &= false;
-                    }
-                    if (bfilter) array_files.push_back(file_info);
                 }
             }
             while (::FindNextFile(hFile, &fd));
+            FindClose(hFile);
+
 #else
+            DIR* d = opendir(path);
+            struct dirent* p;
+            lstring curpath;
+            while ((p = readdir(d)) != NULL)
+            {
+                if (strcmp(p->d_name, ".") == 0 || strcmp(p->d_name, "..") == 0)
+                    continue;
+                curpath = path_combine(path, p->d_name);
+                struct stat statbuf;
+                if (stat(curpath, &statbuf) == 0)
+                {
+                    if (S_ISDIR(statbuf.st_mode))
+                    {
+                        if (recurse)
+                            enumerate_files(array_files, curpath,  extention,  filter, recurse);
+                    }
+                    else
+                    {
+                        file_info.filePath = path_get_dir(curpath);
+                        file_info.fileName = path_get_name(curpath);
+                        file_info.fullPath = curpath;
+                        file_info.name = path_get_filename(file_info.fileName);
+                        file_info.extName = path_get_ext(file_info.fileName);
+
+                        check(file_info, bfilter);
+                        if (bfilter)
+                        {
+                            file_info.size = get_file_size(curpath);
+                            file_info.attr = get_file_attr(curpath);
+                            array_files.push_back(file_info);
+                        }
+                    }
+                }
+            }
+            closedir(d);
 #endif
-            return true;
         }
 
         LSLIB_API _ldword get_file_size(_lpcstr file)
@@ -672,11 +796,11 @@ namespace lslib
             stat(file, &st);
             Time tm;
             tm.SetDataTime(st.st_ctime);
-            attr.createTime =  tm.GetDateTimeStr();
+            attr.createTime = tm.GetDateTimeStr();
             tm.SetDataTime(st.st_mtime);
-            attr.writeTime =  tm.GetDateTimeStr();
+            attr.writeTime = tm.GetDateTimeStr();
             tm.SetDataTime(st.st_atime);
-            attr.accessTime =  tm.GetDateTimeStr();
+            attr.accessTime = tm.GetDateTimeStr();
             return attr;
         }
 

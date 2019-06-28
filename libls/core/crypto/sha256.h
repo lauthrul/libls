@@ -19,16 +19,16 @@
 #define SHA256_H_
 
 #include <stddef.h>
-#ifdef _MSC_VER
+//#ifdef _MSC_VER
 #ifndef uint8_t
-typedef unsigned __int8 uint8_t;
+typedef unsigned char uint8_t;
 #endif
 #ifndef uint32_t
-typedef unsigned __int32 uint32_t;
+typedef unsigned int uint32_t;
 #endif
-#else
-#include <stdint.h>
-#endif
+//#else
+//#include <stdint.h>
+//#endif
 
 #define SHA256_BYTES    32
 

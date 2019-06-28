@@ -2,6 +2,14 @@
 #define __LOGGER_H__
 #pragma once
 
+#ifdef USE_LOG4CXX
+#pragma warning(disable:4231)
+#include <log4cxx/logger.h>
+using namespace log4cxx;
+#else
+#include "thread/thread.h"
+#endif
+
 namespace lslib
 {
     namespace logger
@@ -19,17 +27,9 @@ namespace lslib
         };
 
 #ifdef USE_LOG4CXX
-
-// #pragma warning(disable:4231)
-//
-// #include <log4cxx/logger.h>
-//         using namespace log4cxx;
-//
-//         typedef LoggerPtr _loggerptr;
-
+        typedef log4cxx::LoggerPtr _loggerptr;
+        LSLIB_API void Log(_loggerptr logger, ELOG_LEVEL level,  _lpcstr file, int line, _lpcstr function, int threadId, ...);
 #else
-
-#include "thread/thread.h"
 
         //////////////////////////////////////////////////////////////////////////
         struct SLogLayout
@@ -39,23 +39,33 @@ namespace lslib
         };
 
         //////////////////////////////////////////////////////////////////////////
+        enum ELogAppenderType
+        {
+            APPENDER_CONSOLE, APPENDER_FILE
+        };
+        enum ELogAppenderRoolling
+        {
+            NO_ROLLING,
+            FILE_ROLLING,
+            DAILY_ROLLING
+        };
         struct SLogAppender
         {
             lstring strName;
-            enum ELogAppenderType
-            {
-                CONSOLE, FILE
-            } eType;
+            ELogAppenderType eType;
             lstring strFile;
-            enum ELogAppenderRoolling
-            {
-                NO_ROLLING,
-                FILE_ROLLING,
-                DAILY_ROLLING
-            } eRooling;
+            ELogAppenderRoolling eRooling;
             lstring strDatePattern;
             int nMaxFileSize;
             int nMaxFileCounts;
+
+            // program data
+            lstring strLogDate;
+            int nLogFileIndex;
+            int nWritedSize;
+            FILE* fp;
+
+            SLogAppender() : nLogFileIndex(-1), nWritedSize(-1), fp(NULL) {};
         };
 
         //////////////////////////////////////////////////////////////////////////
@@ -65,14 +75,6 @@ namespace lslib
             ELOG_LEVEL eLevel;
             SLogLayout layout;
             SLogAppender appender;
-
-            // program data
-            lstring strLogDate;
-            int nLogFileIndex;
-            int nWritedSize;
-            FILE* fp;
-
-            SLogger() : nLogFileIndex(-1), nWritedSize(-1), fp(NULL) {};
         };
         typedef SLogger* _loggerptr;
 
@@ -98,38 +100,42 @@ namespace lslib
         //////////////////////////////////////////////////////////////////////////
         class CLogManager : public CThread
         {
-            public:
-                CLogManager();
-                virtual ~CLogManager();
+        public:
+            CLogManager();
+            virtual ~CLogManager();
 
-            public:
-                virtual const char* GetName() { return "CLogManager"; }
-                virtual void OnExecute();
+        public:
+            const virtual char* GetName()
+            {
+                return "CLogManager";
+            }
+            virtual void OnExecute();
 
-            public:
-                static void Init(_lpcstr configFile);
-                static bool IsInited();
-                static void Destroy();
-                static _loggerptr GetLogger(_lpcstr lpstrLoggerName);
-                static void SetLogLevel(_loggerptr pLogger, ELOG_LEVEL eLevel);
-                LSLIB_API static void Log(_loggerptr logger, ELOG_LEVEL level, _lpcstr file, int line, int threadId, _lpcstr format, ...);
+        public:
+            static void Init(_lpcstr configFile);
+            static bool IsInited();
+            static void Destroy();
+            static _loggerptr GetLogger(_lpcstr lpstrLoggerName);
+            static void SetLogLevel(_loggerptr pLogger, ELOG_LEVEL eLevel);
+            LSLIB_API static void Log(_loggerptr logger, ELOG_LEVEL level,  _lpcstr file, int line, _lpcstr function, int threadId, ...);
 
-            private:
-                static bool m_bInited;
-                static SLogConfig m_logConfig;
-                struct SLogEntity
-                {
-                    _loggerptr logger;
-                    ELOG_LEVEL level;
-                    lstring file;
-                    int line;
-                    int threadId;
-                    lstring msg;
-                };
-                static list<SLogEntity> m_lstLogEntitysTmp;
-                static list<SLogEntity> m_lstLogEntitys;
-                static CMutexLock m_mtxLogEntityTmp;
-                static CMutexLock m_mtxLogEntity;
+        private:
+            static bool m_bInited;
+            static SLogConfig m_logConfig;
+            struct SLogEntity
+            {
+                _loggerptr logger;
+                ELOG_LEVEL level;
+                lstring file;
+                int line;
+                lstring function;
+                int threadId;
+                lstring msg;
+            };
+            static list<SLogEntity> m_lstLogEntitysTmp;
+            static list<SLogEntity> m_lstLogEntitys;
+            static CMutexLock m_mtxLogEntityTmp;
+            static CMutexLock m_mtxLogEntity;
         };
 
 #endif // USE_LOG4CXX
@@ -141,29 +147,25 @@ namespace lslib
         LSLIB_API _loggerptr GetLogger(_lpcstr lpstrLoggerName);
         LSLIB_API void SetLogLevel(_loggerptr pLogger, ELOG_LEVEL eLevel);
 
-#ifdef WIN32
-#define __THREAD__ GetCurrentThreadId()
-#else
-#endif
         /*
          * params:
          *   logger: (_loggerptr) logger instance
          *   fmt: (const char*) log string format
          */
 #ifdef USE_LOG4CXX
-#define FATAL_LOG(logger, fmt, ...)             { if (logger) LOG4CXX_FATAL(logger, lstring().format(lstring("[%s] - ") + (fmt), __FUNCTION__, __VA_ARGS__)); }
-#define ERROR_LOG(logger, fmt, ...)             { if (logger) LOG4CXX_ERROR(logger, lstring().format(lstring("[%s] - ") + (fmt), __FUNCTION__, __VA_ARGS__)); }
-#define WARN_LOG(logger, fmt, ...)              { if (logger) LOG4CXX_WARN(logger, lstring().format(lstring("[%s] - ") + (fmt), __FUNCTION__, __VA_ARGS__)); }
-#define INFO_LOG(logger, fmt, ...)              { if (logger) LOG4CXX_INFO(logger, lstring().format(lstring("[%s] - ") + (fmt), __FUNCTION__, __VA_ARGS__)); }
-#define DEBUG_LOG(logger, fmt, ...)             { if (logger) LOG4CXX_DEBUG(logger, lstring().format(lstring("[%s] - ") + (fmt), __FUNCTION__, __VA_ARGS__)); }
-#define TRACE_LOG(logger, fmt, ...)             { if (logger) LOG4CXX_TRACE(logger, lstring().format(lstring("[%s] - ") + (fmt), __FUNCTION__, __VA_ARGS__)); }
+#define FATAL_LOG(logger, ...)             Log(logger, LOG_LEVEL_FATAL, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
+#define ERROR_LOG(logger, ...)             Log(logger, LOG_LEVEL_ERROR, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
+#define WARN_LOG(logger, ...)              Log(logger, LOG_LEVEL_WARN, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
+#define INFO_LOG(logger, ...)              Log(logger, LOG_LEVEL_INFO, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
+#define DEBUG_LOG(logger, ...)             Log(logger, LOG_LEVEL_DEBUG, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
+#define TRACE_LOG(logger, ...)             Log(logger, LOG_LEVEL_TRACE, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
 #else
-#define FATAL_LOG(logger, fmt, ...)             { if (logger) CLogManager::Log(logger, LOG_LEVEL_FATAL, __FUNCTION__, __LINE__, __THREAD__, fmt, __VA_ARGS__); }
-#define ERROR_LOG(logger, fmt, ...)             { if (logger) CLogManager::Log(logger, LOG_LEVEL_ERROR, __FUNCTION__, __LINE__, __THREAD__, fmt, __VA_ARGS__); }
-#define WARN_LOG(logger, fmt, ...)              { if (logger) CLogManager::Log(logger, LOG_LEVEL_WARN, __FUNCTION__, __LINE__, __THREAD__, fmt, __VA_ARGS__); }
-#define INFO_LOG(logger, fmt, ...)              { if (logger) CLogManager::Log(logger, LOG_LEVEL_INFO, __FUNCTION__, __LINE__, __THREAD__, fmt, __VA_ARGS__); }
-#define DEBUG_LOG(logger, fmt, ...)             { if (logger) CLogManager::Log(logger, LOG_LEVEL_DEBUG, __FUNCTION__, __LINE__, __THREAD__, fmt, __VA_ARGS__); }
-#define TRACE_LOG(logger, fmt, ...)             { if (logger) CLogManager::Log(logger, LOG_LEVEL_TRACE, __FUNCTION__, __LINE__, __THREAD__, fmt, __VA_ARGS__); }
+#define FATAL_LOG(logger, ...)             CLogManager::Log(logger, LOG_LEVEL_FATAL, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
+#define ERROR_LOG(logger, ...)             CLogManager::Log(logger, LOG_LEVEL_ERROR, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
+#define WARN_LOG(logger, ...)              CLogManager::Log(logger, LOG_LEVEL_WARN, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
+#define INFO_LOG(logger, ...)              CLogManager::Log(logger, LOG_LEVEL_INFO, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
+#define DEBUG_LOG(logger, ...)             CLogManager::Log(logger, LOG_LEVEL_DEBUG, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
+#define TRACE_LOG(logger, ...)             CLogManager::Log(logger, LOG_LEVEL_TRACE, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
 #endif // USE_LOG4CXX
 
 //////////////////////////////////////////////////////////////////////////

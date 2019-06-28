@@ -46,6 +46,9 @@ namespace lslib
         // 检查路径是否目录
         LSLIB_API const bool is_dir(_lpcstr path);
 
+        // 相对路径还是绝对路径
+        LSLIB_API const bool is_absolute(_lpcstr path);
+
         // 复制文件或目录
         LSLIB_API const int copy(_lpcstr path, _lpcstr target);
 
@@ -53,7 +56,7 @@ namespace lslib
         LSLIB_API const int move(_lpcstr path, _lpcstr target);
 
         // 重命名文件或目录
-        LSLIB_API const bool rename(_lpcstr path, _lpcstr target);
+        LSLIB_API const int rename(_lpcstr path, _lpcstr target);
 
         // 创建目录（可递归）
         LSLIB_API const int mkdir(_lpcstr path);
@@ -160,17 +163,14 @@ namespace lslib
         declare_stl_obj(enum_file);
         // 遍历当前目录下所有文件。
         // 参数：
-        //      array_files [out]:  文件列表；
-        //      path：              需要遍历的目录或文件通配符；
-        //      extention:          文件类型（'\0'分隔多个），以"\0\0"结束；
-        //      filter:             过滤字符串（'\0'分隔多个），以"\0\0"结束；
-        //      recurse:            是否递归子目录（针对lpstrPath为目录的情况，lpstrPath为文件通配符时子目录满足通配才有效）；
-        // 如：
-        // 递归遍历用户图片目录下所有.jpg和.png文件：
-        //      EnumerateFiles(array_files, "C:\\Users\\ituser\\Pictures", "*.jpg\0*.png\0", NULL, true);
-        // 遍历用户图片目录下所有.jpg文件（此时第5个参数bRecurse无效）：
-        //      EnumerateFiles(array_files, "C:\\Users\\ituser\\Pictures\\*.jpg", NULL, NULL, true);
-        LSLIB_API bool enumerate_files(__out__ enum_file_array& array_files, _lpcstr path, _lpcstr extention, _lpcstr filter, bool recurse/* = false*/);
+        //      array_files [out]:  文件列表
+        //      path：            需要遍历的目录或文件通配符
+        //      extention:          文件类型（多个以';'分隔）
+        //      filter:             过滤字符串（多个以';'分隔）
+        //      recurse:            是否递归子目录
+        // 如：递归遍历用户图片目录下所有包含test和picture关键字的.jpg和.png文件：
+        //      EnumerateFiles(array_files, "C:\\Users\\ituser\\Pictures", "*.jpg;*.png", "test;picture", true);
+        LSLIB_API void enumerate_files(__out__ enum_file_array& array_files, _lpcstr path, _lpcstr extention, _lpcstr filter, bool recurse/* = false*/);
 
         // 获取文件的大小
         LSLIB_API _ldword get_file_size(_lpcstr file);
