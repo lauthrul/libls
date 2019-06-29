@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="true">
+	<appender name="logapp" class="org.apache.log4j.RollingFileAppender">
+		<param name="file" value="Log/logapp.log" />
+		<param name="datePattern" value="'.'yyyy-MM-dd" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="30MB" />
+		<param name="MaxBackupIndex" value="10" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%-5p] [%d{ISO8601}] [%r] (%t, %l) - %m%n" />
+		</layout>
+	</appender>
+
+	<!-- <appender name="logdebug" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="Log/logdebug.log" />
+		<param name="datePattern" value="'.'yyyy-MM-dd" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="5120KB" />
+		<param name="MaxBackupIndex" value="10" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%-5p] [%d{ISO8601}] [%r] (%t, %l) - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="levelMin" value="debug" />
+			<param name="levelMax" value="debug" />
+		</filter>
+	</appender> -->
+	
+	<appender name="lognet" class="org.apache.log4j.RollingFileAppender">
+		<param name="file" value="Log/lognet.log" />
+		<param name="datePattern" value="'.'yyyy-MM-dd" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="30MB" />
+		<param name="MaxBackupIndex" value="10" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%-5p] [%d{ISO8601}] [%r] (%t, %l) - %m%n" />
+		</layout>
+	</appender>
+	
+	<logger name="applogger" additivity="false">
+		<priority value="all" />
+		<appender-ref  ref="logapp" />
+	</logger>
+	
+	<logger name="netlogger" additivity="false">
+		<priority value="all" />
+		<appender-ref  ref="lognet" />
+	</logger>
+
+	<root>
+		<priority value="off" />
+	</root>
+</log4j:configuration>
