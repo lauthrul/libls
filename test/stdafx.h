@@ -9,4 +9,10 @@
 
 
 // TODO: 在此处引用程序需要的其他头文件
+#ifdef __MINGW32__
+#else
+#define USE_LOG4CXX
+#define USE_LIBCURL
+#endif
+
 #include "libls.h"

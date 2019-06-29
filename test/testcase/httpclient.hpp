@@ -1,3 +1,5 @@
+#ifdef USE_LIBCURL
+
 #include "testcase.hpp"
 using namespace lslib::os;
 using namespace lslib::net;
@@ -80,8 +82,9 @@ void test_httpclient()
     for (size_t i = 0; i < sizeof(sz1) / sizeof(lstring); i++)
     {
         v.strUrl = sz1[i];
+        v.mapHeaders["Accept-Encoding"] = "gzip";
         r = CHttpClient::HttpGet(v);
-        cout << "http get: " << v.strUrl << ", code: " << r.nCode  << ", size: " << r.nDataLen << endl;
+        cout << "http get: " << v.strUrl << ", code: " << r.nCode  << ", size: " << r.nDataLen << ", spend: " << r.nTimeSpend << "ms" << endl;
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -97,7 +100,7 @@ void test_httpclient()
         vp.strUrl = sz2[i];
         vp.strPost = sz2[i + 1];
         r = CHttpClient::HttpPost(vp);
-        cout << "http post: " << vp.strUrl << ", code: " << r.nCode  << ", size: " << r.nDataLen << endl;
+        cout << "http post: " << vp.strUrl << ", code: " << r.nCode  << ", size: " << r.nDataLen << ", spend: " << r.nTimeSpend << "ms" << endl;
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -114,7 +117,9 @@ void test_httpclient()
         vd.strUrl = sz3[i];
         vd.strFile = path_combine("download_test", path_get_name(vd.strUrl));
         r = CHttpClient::DownloadFile(vd);
-        cout << "http download: " << vd.strUrl << ", code: " << r.nCode  << ", size: " << r.nDataLen << endl;
+        cout << "http download: " << vd.strUrl << ", code: " << r.nCode  << ", size: " << r.nDataLen << ", spend: " << r.nTimeSpend << "ms" << endl;
     }
 }
 declare_test_case(test_httpclient);
+
+#endif // end of USE_LIBCURL

@@ -1,7 +1,15 @@
 #include "stdafx.h"
 #include "httpclient.h"
-// using namespace lslib::logger;
-// #include "zlib.h"
+
+#ifdef USE_LIBCURL
+
+#include "openssl/crypto.h"
+using namespace lslib::logger;
+
+#ifdef WIN32
+#else
+#define stricmp     strcasecmp
+#endif
 
 namespace lslib
 {
@@ -36,110 +44,6 @@ namespace lslib
             }
             return size * nmemb;
         }
-
-        //  /* HTTP gzip decompress */
-        //  static int httpgzdecompress(Byte *zdata, uLong nzdata, Byte *data, uLong *ndata)
-        //  {
-        //      int err = 0;
-        //      z_stream d_stream = { 0 }; /* decompression stream */
-        //      static char dummy_head[2] =
-        //      {
-        //          0x8 + 0x7 * 0x10,
-        //          (((0x8 + 0x7 * 0x10) * 0x100 + 30) / 31 * 31) & 0xFF,
-        //      };
-        //      d_stream.zalloc = (alloc_func)0;
-        //      d_stream.zfree = (free_func)0;
-        //      d_stream.opaque = (voidpf)0;
-        //      d_stream.next_in = zdata;
-        //      d_stream.avail_in = 0;
-        //      d_stream.next_out = data;
-        //      //if (inflateInit2(&d_stream, -MAX_WBITS) != Z_OK) return -1;
-        //      if (inflateInit2(&d_stream, 47) != Z_OK)
-        //      {
-        //          return -1;
-        //      }
-        //      while (d_stream.total_out < *ndata && d_stream.total_in < nzdata)
-        //      {
-        //          d_stream.avail_in = d_stream.avail_out = 1; /* force small buffers */
-        //          if ((err = inflate(&d_stream, Z_NO_FLUSH)) == Z_STREAM_END)
-        //          {
-        //              break;
-        //          }
-        //          if (err != Z_OK)
-        //          {
-        //              if (err == Z_DATA_ERROR)
-        //              {
-        //                  d_stream.next_in = (Byte*)dummy_head;
-        //                  d_stream.avail_in = sizeof(dummy_head);
-        //                  if ((err = inflate(&d_stream, Z_NO_FLUSH)) != Z_OK)
-        //                  {
-        //                      return -1;
-        //                  }
-        //              }
-        //              else
-        //              {
-        //                  return -1;
-        //              }
-        //          }
-        //      }
-        //      if (inflateEnd(&d_stream) != Z_OK)
-        //      {
-        //          return -1;
-        //      }
-        //      *ndata = d_stream.total_out;
-        //      return 0;
-        //  }
-        //
-        //  static int httpgzcompress(Byte *data, uLong ndata, Byte *zdata, uLong *nzdata)
-        //  {
-        //      z_stream c_stream;
-        //      int err = 0;
-        //
-        //      if(data && ndata > 0)
-        //      {
-        //          c_stream.zalloc = (alloc_func)0;
-        //          c_stream.zfree = (free_func)0;
-        //          c_stream.opaque = (voidpf)0;
-        //          if(deflateInit2(&c_stream, Z_DEFAULT_COMPRESSION, Z_DEFLATED,
-        //              31, 8, Z_DEFAULT_STRATEGY) != Z_OK)
-        //          {
-        //              return -1;
-        //          }
-        //          c_stream.next_in  = data;
-        //          c_stream.avail_in  = ndata;
-        //          c_stream.next_out = zdata;
-        //          c_stream.avail_out  = *nzdata;
-        //          while (c_stream.avail_in != 0 && c_stream.total_out < *nzdata)
-        //          {
-        //              if(deflate(&c_stream, Z_NO_FLUSH) != Z_OK)
-        //              {
-        //                  return -1;
-        //              }
-        //          }
-        //          if(c_stream.avail_in != 0)
-        //          {
-        //              return c_stream.avail_in;
-        //          }
-        //          for (;;)
-        //          {
-        //              if((err = deflate(&c_stream, Z_FINISH)) == Z_STREAM_END)
-        //              {
-        //                  break;
-        //              }
-        //              if(err != Z_OK)
-        //              {
-        //                  return -1;
-        //              }
-        //          }
-        //          if(deflateEnd(&c_stream) != Z_OK)
-        //          {
-        //              return -1;
-        //          }
-        //          *nzdata = c_stream.total_out;
-        //          return 0;
-        //      }
-        //      return -1;
-        //  }
 
         LSLIB_API SHttpUrl CrackUrl(_lpcstr lpstrUrl)
         {
@@ -258,6 +162,40 @@ namespace lslib
         }
 
         //////////////////////////////////////////////////////////////////////////
+
+        // for https multi-thread safety
+        // https://blog.csdn.net/qq_28234213/article/details/76588627
+        // https://curl.haxx.se/libcurl/c/opensslthreadlock.html
+
+        static CMutexLock* lockarray;
+        static unsigned long id_function(void)
+        {
+            return __THREAD__;
+        }
+        static void locking_function(int mode, int n, const char* file, int line)
+        {
+            if (mode & CRYPTO_LOCK) lockarray[n].Lock();
+            else                    lockarray[n].Unlock();
+        }
+        int httpclient_thread_setup(void)
+        {
+            int counts = CRYPTO_num_locks();
+            lockarray = new CMutexLock[counts];
+
+            CRYPTO_set_id_callback(id_function);
+            CRYPTO_set_locking_callback(locking_function);
+
+            return 0;
+        }
+        int httpclient_thread_cleanup(void)
+        {
+            if (lockarray == NULL) return -1;
+            CRYPTO_set_id_callback(NULL);
+            CRYPTO_set_locking_callback(NULL);
+            delete[] lockarray;
+        }
+
+        //////////////////////////////////////////////////////////////////////////
         static CURLSH* s_shobject = NULL;
         lstring CHttpClient::m_strDefaultAgent;
         lstring CHttpClient::m_strDefaultCookieFile;
@@ -268,6 +206,7 @@ namespace lslib
                 SetDefaultCookieFile(lpstrDefaultCookieFile);
                 SetDefaultAgent(lpstrDefaultAgent);
 
+                curl_global_init(CURL_GLOBAL_ALL);
                 s_shobject = curl_share_init();
                 curl_share_setopt(s_shobject, CURLSHOPT_SHARE, CURL_LOCK_DATA_COOKIE);
             }
@@ -293,9 +232,9 @@ namespace lslib
             if (!IsInit()) Init();
 
             lstring strText = DumpParamText((SHttpParam*)&vParam);
-//            DEBUG_LOG(g_netlogger, "begin to do http get, param:[%s]", strText.c_str());
+            DEBUG_LOG(g_netlogger, "begin to do http get, param:[%s]", strText.c_str());
 
-            DWORD tmStart = Time::GetCurDateTime().GetDateTime();
+            Time tmStart;
             SHttpResult vResult;
 
             //////////////////////////////////////////////////////////////////////////
@@ -315,9 +254,9 @@ namespace lslib
             //////////////////////////////////////////////////////////////////////////
 
 label_exit:
-            vResult.nTimeSpend = Time::GetCurDateTime().GetDateTime() - tmStart;
+            vResult.nTimeSpend = Time::GetCurDateTime().BetweenAllMilliSec(tmStart);
             strText = DumpResultText(&vResult);
-//            DEBUG_LOG(g_netlogger, "finish http get[%s], result[%s]", vParam.strUrl.c_str(), strText.c_str());
+            DEBUG_LOG(g_netlogger, "finish http get[%s], result[%s]", vParam.strUrl.c_str(), strText.c_str());
 
             return vResult;
         }
@@ -327,9 +266,9 @@ label_exit:
             if (!IsInit()) Init();
 
             lstring strText = DumpParamText((SHttpParam*)&vParam);
-//            DEBUG_LOG(g_netlogger, "begin to do http post, param:[%s]", strText.c_str());
+            DEBUG_LOG(g_netlogger, "begin to do http post, param:[%s]", strText.c_str());
 
-            DWORD tmStart = Time::GetCurDateTime().GetDateTime();
+            Time tmStart;
             SHttpResult vResult;
 
             //////////////////////////////////////////////////////////////////////////
@@ -341,33 +280,7 @@ label_exit:
             }
             else
             {
-//              process post data
-//                  bool bNewBuff = false;
-//              Byte* pstrBuffOut = NULL;
-//              curl_slist *headers = NULL;
-//              lstring strPost = Convert(vParam.strPost, "GB2312", "UTF-8");
-//              uLong uLenOut = strPost.size();
-//
-//              if (vParam.bgZip && uLenOut > vParam.nThresholdSize)
-//              {
-//                  bNewBuff = true;
-//                  pstrBuffOut = new Byte[uLenOut];
-//                  memset(pstrBuffOut, 0, uLenOut);
-//                  int iRet = httpgzcompress((Byte*)(strPost.c_str()), strPost.size(), pstrBuffOut, &uLenOut);
-//
-//                  char strTemp[MAX_PATH] = {0};
-//                  sprintf(strTemp, "Content-Length: %d", uLenOut);
-//
-//                  headers = curl_slist_append(headers, strTemp);
-//                  headers = curl_slist_append(headers, "Content-Encoding: gzip");
-//                  curl_easy_setopt(pCurl, CURLOPT_HTTPHEADER, headers);
-//              }
-//              else
-//              {
-//                  pstrBuffOut = (Byte*)(strPost.c_str());
-//              }
                 curl_easy_setopt(pCurl, CURLOPT_POST, 1);
-//              curl_easy_setopt(pCurl, CURLOPT_POSTFIELDS, pstrBuffOut);
                 curl_easy_setopt(pCurl, CURLOPT_POSTFIELDS, vParam.strPost.c_str());
                 curl_easy_setopt(pCurl, CURLOPT_POSTFIELDSIZE, vParam.strPost.length());
 
@@ -375,18 +288,13 @@ label_exit:
                 Perform(pCurl, vParam, vResult);
 
                 curl_easy_cleanup(pCurl);
-//              if (bNewBuff) delete[] pstrBuffOut;
-//              if (headers != NULL) curl_slist_free_all(headers);
-//
-//              vResult.strData = Convert(vResult.strData);
-//              vResult.nDataLen = vResult.strData.length();
             }
             //////////////////////////////////////////////////////////////////////////
 
 label_exit:
-            vResult.nTimeSpend = Time::GetCurDateTime().GetDateTime() - tmStart;
+            vResult.nTimeSpend = Time::GetCurDateTime().BetweenAllMilliSec(tmStart);
             strText = DumpResultText(&vResult);
-//            DEBUG_LOG(g_netlogger, "finish http post[%s], result[%s]", vParam.strUrl.c_str(), strText.c_str());
+            DEBUG_LOG(g_netlogger, "finish http post[%s], result[%s]", vParam.strUrl.c_str(), strText.c_str());
 
             return vResult;
         }
@@ -396,9 +304,9 @@ label_exit:
             if (!IsInit()) Init();
 
             lstring strText = DumpParamText((SHttpParam*)&vParam);
-//            DEBUG_LOG(g_netlogger, "begin to do http download, param:[%s]", strText.c_str());
+            DEBUG_LOG(g_netlogger, "begin to do http download, param:[%s]", strText.c_str());
 
-            DWORD tmStart = Time::GetCurDateTime().GetDateTime();
+            Time tmStart;
             SHttpResult vResult;
             lstring strRequest = vParam.strUrl;
 
@@ -525,13 +433,13 @@ label_exit:
                         int nSize = ftell(pFile);
                         if (nSize >= infoHeader[1] && infoHeader[1] > 0) //already finished download
                         {
-//                            INFO_LOG(g_netlogger, "already finished download[%s], size: %d, file size: %d", strRequest.c_str(), nSize, infoHeader[1]);
+                            INFO_LOG(g_netlogger, "already finished download[%s], size: %d, file size: %d", strRequest.c_str(), nSize, infoHeader[1]);
 
                             vResult.nCode = CURLE_OK;
                             goto label_exit;
                         }
 
-                        char szRange[32] = {0}; sprintf_s(szRange, 31, "%d-", nSize);
+                        char szRange[32] = {0}; sprintf(szRange, "%d-", nSize);
                         curl_easy_setopt(pCurl, CURLOPT_RANGE, szRange);
                     }
 
@@ -551,7 +459,7 @@ label_exit:
                             else // unauthorized
                             {
                                 ret = (CURLcode)401;
-//                                WARN_LOG(g_netlogger, "unauthorized response from server. maybe the server was been hijacked!!![%s]", strRequest.c_str());
+                                WARN_LOG(g_netlogger, "unauthorized response from server. maybe the server was been hijacked!!![%s]", strRequest.c_str());
                                 continue;
                             }
                         }
@@ -571,7 +479,7 @@ label_exit:
 
                 if (ret != CURLE_OK)
                 {
-                    DeleteFile(vParam.strFile.c_str());
+                    os::rm(vParam.strFile.c_str());
                     vResult.strData.assign(vctRespBuf.begin(), vctRespBuf.end());
                 }
                 else
@@ -582,9 +490,9 @@ label_exit:
             //////////////////////////////////////////////////////////////////////////
 
 label_exit:
-            vResult.nTimeSpend = Time::GetCurDateTime().GetDateTime() - tmStart;
+            vResult.nTimeSpend = Time::GetCurDateTime().BetweenAllMilliSec(tmStart);
             strText = DumpResultText(&vResult);
-//            DEBUG_LOG(g_netlogger, "finish http download[%s], result[%s]", strRequest.c_str(), strText.c_str());
+            DEBUG_LOG(g_netlogger, "finish http download[%s], result[%s]", strRequest.c_str(), strText.c_str());
 
             return vResult;
         }
@@ -594,9 +502,9 @@ label_exit:
             if (!IsInit()) Init();
 
             lstring strText = DumpParamText((SHttpParam*)&vParam);
-//            DEBUG_LOG(g_netlogger, "begin to do http upload, param:[%s]", strText.c_str());
+            DEBUG_LOG(g_netlogger, "begin to do http upload, param:[%s]", strText.c_str());
 
-            DWORD tmStart = Time::GetCurDateTime().GetDateTime();
+            Time tmStart;
             SHttpResult vResult;
 
             //////////////////////////////////////////////////////////////////////////
@@ -684,9 +592,9 @@ label_exit:
             //////////////////////////////////////////////////////////////////////////
 
 label_exit:
-            vResult.nTimeSpend = Time::GetCurDateTime().GetDateTime() - tmStart;
+            vResult.nTimeSpend = Time::GetCurDateTime().BetweenAllMilliSec(tmStart);
             strText = DumpResultText(&vResult);
-//            DEBUG_LOG(g_netlogger, "finish http upload[%s], result[%s]", vParam.strUrl.c_str(), strText.c_str());
+            DEBUG_LOG(g_netlogger, "finish http upload[%s], result[%s]", vParam.strUrl.c_str(), strText.c_str());
 
             return vResult;
         }
@@ -738,7 +646,7 @@ label_exit:
                 ret = curl_easy_perform(pCurl);
                 if (ret == CURLE_OK) break;
 
-//                ERROR_LOG(g_netlogger, "http perform fail[%d], try[%d], url[%s]", ret, i, vParam.strUrl.c_str());
+                ERROR_LOG(g_netlogger, "http perform fail[%d], try[%d], url[%s]", ret, i, vParam.strUrl.c_str());
             }
 
             if (ret == CURLE_OK) ret = curl_easy_getinfo(pCurl, CURLINFO_RESPONSE_CODE, &vResult.nCode);
@@ -755,33 +663,6 @@ label_exit:
                         vctRespBuf.push_back(*pRedirect);
                 }
             }
-//          else
-//          {
-//              map<lstring, lstring>::iterator it = vResult.mapHeaders.find("Accept-Encoding");
-//              if (it == vResult.mapHeaders.end()) it = vResult.mapHeaders.find("accept-encoding");
-//              if (it != vResult.mapHeaders.end() && stricmp(it->second.c_str(), "gzip") == 0)
-//              {
-//                  uLong uLenOut = vctRespBuf.size();
-//                  Byte* pstrBuff = new Byte[uLenOut];
-//                  memset(pstrBuff, 0, uLenOut);
-//                  for (size_t i = 0; i < vctRespBuf.size(); ++i)
-//                      pstrBuff[i] = vctRespBuf[i];
-//                  uLong uLenOutZip = uLenOut * 30;
-//                  Byte* pstrBuffOut = new(nothrow) Byte[uLenOutZip];
-//                  if (pstrBuffOut != NULL)
-//                  {
-//                      memset(pstrBuffOut, 0, uLenOutZip);
-//                      if (httpgzdecompress(pstrBuff, uLenOut, pstrBuffOut, &uLenOutZip) == 0)
-//                      {
-//                          vctRespBuf.clear();
-//                          for (int i = 0; i < uLenOutZip; i++)
-//                              vctRespBuf.push_back(pstrBuffOut[i]);
-//                      }
-//                      delete pstrBuffOut;
-//                      delete pstrBuff;
-//                  }
-//              }
-//          }
 
             if (headers != NULL) curl_slist_free_all(headers);
 
@@ -849,3 +730,5 @@ label_exit:
     } // namespace net
 
 } // namespace lslib
+
+#endif // endof USE_LIBCURL

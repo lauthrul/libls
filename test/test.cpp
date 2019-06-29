@@ -5,7 +5,6 @@
 
 //////////////////////////////////////////////////////////////////////////
 #include "testcase/testcase.hpp"
-//#include "testcase/httpclient.hpp"
 #include "testcase/string.hpp"
 #include "testcase/type.hpp"
 #ifdef _MSC_VER
@@ -15,7 +14,9 @@
 //#include "testcase/math.hpp"
 #include "testcase/crypto.hpp"
 #include "testcase/logger.hpp"
-//#include "testcase/os.hpp"
+#include "testcase/os.hpp"
+#include "testcase/httpclient.hpp"
+#include "testcase/zip.hpp"
 
 extern fn_test_list test_cases;
 int main(int argc, char* argv[])

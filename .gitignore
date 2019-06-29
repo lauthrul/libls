@@ -14,4 +14,5 @@
 *bk_*
 build/
 temp/
-
+libls/3rd-party/src
+bin/

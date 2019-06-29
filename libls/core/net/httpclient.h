@@ -1,4 +1,7 @@
 #pragma once
+
+#ifdef USE_LIBCURL
+
 #include "curl/curl.h"
 
 namespace lslib
@@ -6,16 +9,16 @@ namespace lslib
     namespace net
     {
         //////////////////////////////////////////////////////////////////////////
-#define TRYCOUNT_HTTPGET                3
-#define TRYCOUNT_HTTPPOST               3
-#define TRYCOUNT_DOWNLOAD               3
-#define TRYCOUNT_UPLOAD                 3
+#define TRYCOUNT_HTTPGET                2
+#define TRYCOUNT_HTTPPOST               2
+#define TRYCOUNT_DOWNLOAD               2
+#define TRYCOUNT_UPLOAD                 2
 
-#define TIMEOUT_CONNECT                 5       //sec
-#define TIMEOUT_HTTPGET                 15      //sec
-#define TIMEOUT_HTTPPOST                60      //sec
-#define TIMEOUT_HTTPDOWNLOAD            60      //sec
-#define TIMEOUT_HTTPUPLOAD              60      //sec
+#define TIMEOUT_CONNECT                 3       //sec
+#define TIMEOUT_HTTPGET                 5       //sec
+#define TIMEOUT_HTTPPOST                15      //sec
+#define TIMEOUT_HTTPDOWNLOAD            30      //sec
+#define TIMEOUT_HTTPUPLOAD              15      //sec
 
 #define GZIP_THRESHOLD_SIZE             (100*1024)
 
@@ -183,7 +186,7 @@ namespace lslib
             map<lstring, lstring>    mapHeaders;
             lstring                 strData;
             int                     nDataLen;
-            int                     nTimeSpend; // second
+            int                     nTimeSpend; // million second
 
             SHttpResult()
             {
@@ -213,28 +216,34 @@ namespace lslib
         //////////////////////////////////////////////////////////////////////////
         class LSLIB_API CHttpClient
         {
-            public:
-                static void             Init(_lpcstr lpstrDefaultCookieFile = NULL, _lpcstr lpstrDefaultAgent = NULL);
-                static bool             IsInit();
-                static void             SetDefaultCookieFile(_lpcstr lpstrDefaultCookieFile);
-                static void             SetDefaultAgent(_lpcstr lpstrDefaultAgent);
+        public:
+            static void             Init(_lpcstr lpstrDefaultCookieFile = NULL, _lpcstr lpstrDefaultAgent = NULL);
+            static bool             IsInit();
+            static void             SetDefaultCookieFile(_lpcstr lpstrDefaultCookieFile);
+            static void             SetDefaultAgent(_lpcstr lpstrDefaultAgent);
 
-                static SHttpResult      HttpGet(const SHttpGetParam& vParam);
-                static SHttpResult      HttpPost(const SHttpPostParam& vParam);
-                static SHttpResult      DownloadFile(const SHttpDowloadParam& vParam);
-                static SHttpResult      UploadFile(const SHttpUploadParam& vParam);
+            static SHttpResult      HttpGet(const SHttpGetParam& vParam);
+            static SHttpResult      HttpPost(const SHttpPostParam& vParam);
+            static SHttpResult      DownloadFile(const SHttpDowloadParam& vParam);
+            static SHttpResult      UploadFile(const SHttpUploadParam& vParam);
 
-                // for debug print
-            protected:
-                static int              Perform(CURL* pCurl, const SHttpParam& vParam, __inout__ SHttpResult& vResult);
-                static lstring          DumpParamText(SHttpParam* pParam);
-                static lstring          DumpResultText(SHttpResult* pResult);
+            // for debug print
+        protected:
+            static int              Perform(CURL* pCurl, const SHttpParam& vParam, __inout__ SHttpResult& vResult);
+            static lstring          DumpParamText(SHttpParam* pParam);
+            static lstring          DumpResultText(SHttpResult* pResult);
 
-            private:
-                static lstring          m_strDefaultAgent;
-                static lstring          m_strDefaultCookieFile;
+        private:
+            static lstring          m_strDefaultAgent;
+            static lstring          m_strDefaultCookieFile;
         };
+
+        // for multi-thread calling CHttpClient, must call following two functions in main thread to avoid https multi-thread unsafety.
+        extern int httpclient_thread_setup(void);
+        extern int httpclient_thread_cleanup(void);
 
     } // namespace net
 
 } // namespace lslib
+
+#endif // endof USE_LIBCURL

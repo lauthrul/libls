@@ -62,9 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="log4cxx.lib libcurld.lib version.lib"
+				AdditionalDependencies="log4cxx.lib libeay32.lib libcurld.lib version.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(ProjectDir)\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(ProjectDir)\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(ProjectDir)\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;;&quot;$(ProjectDir)\3rd-party\bin\openssl\dll\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -138,9 +138,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="log4cxx.lib libcurl.lib version.lib"
+				AdditionalDependencies="log4cxx.lib libeay32.lib libcurl.lib version.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(ProjectDir)\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(ProjectDir)\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(ProjectDir)\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;;&quot;$(ProjectDir)\3rd-party\bin\openssl\dll\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -224,6 +224,90 @@
 					RelativePath=".\core\zip\zip_x.h"
 					>
 				</File>
+				<Filter
+					Name="zipunzip"
+					>
+					<File
+						RelativePath=".\core\zip\zipunzip\unzip.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\core\zip\zipunzip\unzip.h"
+						>
+					</File>
+					<File
+						RelativePath=".\core\zip\zipunzip\zip.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\core\zip\zipunzip\zip.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="miniz"
+					>
+					<File
+						RelativePath=".\core\zip\miniz\miniz.h"
+						>
+					</File>
+					<File
+						RelativePath=".\core\zip\miniz\mzip.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\core\zip\miniz\mzip.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="crypto"

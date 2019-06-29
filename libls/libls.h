@@ -83,6 +83,9 @@ using namespace std;
 #include <richedit.h>
 #include <assert.h>
 #include <crtdbg.h>
+#else
+#include <stdint.h>
+#include "unistd.h"
 #endif
 
 
@@ -116,7 +119,7 @@ using namespace std;
 #include "core/zip/zip_x.h"
 #include "xml/xml.h"
 #include "core/logger/logger.h"
-//#include "core/net/httpclient.h"
+#include "core/net/httpclient.h"
 #ifdef _MSC_VER
 #include "core/registry/registry.h"
 #include "core/process/process.h"
