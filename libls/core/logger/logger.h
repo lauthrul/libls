@@ -105,10 +105,7 @@ namespace lslib
             virtual ~CLogManager();
 
         public:
-            const virtual char* GetName()
-            {
-                return "CLogManager";
-            }
+            virtual _lpcstr GetName() { return "CLogManager"; }
             virtual void OnExecute();
 
         public:

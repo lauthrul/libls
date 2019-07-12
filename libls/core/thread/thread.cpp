@@ -52,6 +52,11 @@ namespace lslib
         return TRUE;
     }
 
+    void CThread::Run()
+    {
+        WaitFor(INFINITE);
+    }
+
     bool CThread::Stop()
     {
         if (m_eThreadState == TS_WORKING)
@@ -112,7 +117,7 @@ namespace lslib
         return true;
     }
 
-    LRESULT CThread::SendMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/)
+    int CThread::SendMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/)
     {
         return HandleMessage(uMsg, wParam, lParam);
     }
@@ -172,7 +177,7 @@ namespace lslib
     {
     }
 
-    LRESULT CThread::HandleMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/)
+    int CThread::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/)
     {
         return S_OK;
     }
@@ -192,7 +197,7 @@ namespace lslib
                 if (lpMsg != NULL)
                 {
                     *lpMsg = msg;
-                    //              DEBUG_LOG(g_logger, "get msg. level[%d], msg[%d, (0x%x, 0x%x)]", rit->first, msg.message, msg.wParam, msg.lParam);
+//                      DEBUG_LOG(g_logger, "get msg. level[%d], msg[%d, (0x%x, 0x%x)]", rit->first, msg.message, msg.wParam, msg.lParam);
                 }
                 if (msglist.empty())
                 {
@@ -217,11 +222,11 @@ namespace lslib
 
     CThread::CThread(bool bSuspend)
     {
-        pthread_mutex_init(&mutex_pause, NULL);
-        pthread_cond_init(&cond_pause, NULL);
+        pthread_mutex_init(&m_mtxPause, NULL);
+        pthread_cond_init(&m_conPause, NULL);
         m_eThreadState = TS_WORKING;
 
-        pthread_create(&th, NULL, _ThreadEntry, this);
+        pthread_create(&m_uThreadID, NULL, _ThreadEntry, this);
 
         if (bSuspend) Suspend();
     }
@@ -249,9 +254,14 @@ namespace lslib
         if (m_eThreadState == TS_SUSPENDED)
         {
             m_eThreadState = TS_WORKING;
-            pthread_cond_signal(&cond_pause);
+            pthread_cond_signal(&m_conPause);
         }
         return true;
+    }
+
+    void CThread::Run()
+    {
+        pthread_join(m_uThreadID, NULL);
     }
 
     bool CThread::Stop()
@@ -259,17 +269,17 @@ namespace lslib
         if (m_eThreadState == TS_WORKING)
         {
             PostMessage(WM_QUIT, 0, 0, MAXINT);
-            return (pthread_join(th, NULL) == 0);
+            return (pthread_join(m_uThreadID, NULL) == 0);
         }
         else
         {
-            return (pthread_cancel(th) == 0);
+            return (pthread_cancel(m_uThreadID) == 0);
         }
     }
 
     unsigned int CThread::GetThreadID() const
     {
-        return th;
+        return m_uThreadID;
     }
 
     EThreadState CThread::GetThreadState() const
@@ -321,9 +331,9 @@ namespace lslib
         {
             if (m_eThreadState == TS_SUSPENDED)
             {
-                pthread_mutex_lock(&mutex_pause);
-                pthread_cond_wait(&cond_pause, &mutex_pause);
-                pthread_mutex_unlock(&mutex_pause);
+                pthread_mutex_lock(&m_mtxPause);
+                pthread_cond_wait(&m_conPause, &m_mtxPause);
+                pthread_mutex_unlock(&m_mtxPause);
             }
             else
             {

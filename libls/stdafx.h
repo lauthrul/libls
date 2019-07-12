@@ -26,6 +26,7 @@
 #else
 #define USE_LOG4CXX
 #define USE_LIBCURL
+#define USE_LIBICONV
 #endif
 
 #include "libls.h"

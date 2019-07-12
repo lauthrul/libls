@@ -8,6 +8,9 @@
 #include "url_encode.h"
 #include <math.h>
 #include "des.h"
+#ifdef USE_LIBICONV
+#include "iconv/iconv.h"
+#endif
 
 namespace lslib
 {
@@ -219,7 +222,7 @@ namespace lslib
             return strret;
         }
 
-        LSLIB_API lstring des_encode_cbc(_lpcstr data,             // data(string or byte array) to be encrypt
+        LSLIB_API lstring des_encrypt_cbc(_lpcstr data,             // data(string or byte array) to be encrypt
                                          int data_len,             // data length in bytes
                                          _lpcstr key,              // the key must be length of 64 bits (8 bytes)
                                          crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
@@ -243,7 +246,7 @@ namespace lslib
         }
 
         // return data is a string or byte array (stored in lstring), check the length (out_len) before use.
-        LSLIB_API lstring des_decode_cbc(_lpcstr data,             // data(string or byte array) to be decrypt, data length must be multiple of 8.
+        LSLIB_API lstring des_decrypt_cbc(_lpcstr data,             // data(string or byte array) to be decrypt, data length must be multiple of 8.
                                          int data_len,             // data length in bytes, must be multiple of 8.
                                          _lpcstr key,              // the key must be length of 64 bits (8 bytes)
                                          crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
@@ -318,7 +321,7 @@ namespace lslib
             return strret;
         }
 
-        LSLIB_API lstring three_des_encode_cbc(_lpcstr data,             // data(string or byte array) to be encrypt
+        LSLIB_API lstring three_des_encrypt_cbc(_lpcstr data,             // data(string or byte array) to be encrypt
                                                int data_len,             // data length in bytes
                                                _lpcstr key,              // the key must be length of 64 bits (8 bytes)
                                                crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
@@ -341,7 +344,7 @@ namespace lslib
             return strret;
         }
 
-        LSLIB_API lstring three_des_decode_cbc(_lpcstr data,             // data(string or byte array) to be decrypt, data length must be multiple of 8.
+        LSLIB_API lstring three_des_decrypt_cbc(_lpcstr data,             // data(string or byte array) to be decrypt, data length must be multiple of 8.
                                                int data_len,             // data length in bytes, must be multiple of 8.
                                                _lpcstr key,              // the key must be length of 64 bits (8 bytes)
                                                crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
@@ -368,7 +371,7 @@ namespace lslib
         }
 
 
-        LSLIB_API lstring aes_encode(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, __out__ int* out_len)
+        LSLIB_API lstring aes_encrypt(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, __out__ int* out_len)
         {
             uint32_t key_schedule[60] = {0};
             aes_key_setup((uint8_t*)key, key_schedule, key_bits);
@@ -387,7 +390,7 @@ namespace lslib
             return strret;
         }
 
-        LSLIB_API lstring aes_decode(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, __out__ int* out_len)
+        LSLIB_API lstring aes_decrypt(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, __out__ int* out_len)
         {
             if (data_len % AES_BLOCK_SIZE != 0) return ""; // decrypt data size must be times of AES_BLOCK_SIZE
 
@@ -409,7 +412,7 @@ namespace lslib
             return strret;
         }
 
-        LSLIB_API lstring aes_encode_cbc(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, _lchar iv[16], __out__ int* out_len)
+        LSLIB_API lstring aes_encrypt_cbc(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, _lchar iv[16], __out__ int* out_len)
         {
             uint32_t key_schedule[60] = {0};
             aes_key_setup((uint8_t*)key, key_schedule, key_bits);
@@ -427,7 +430,7 @@ namespace lslib
             return strret;
         }
 
-        LSLIB_API lstring aes_decode_cbc(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, _lchar iv[16], __out__ int* out_len)
+        LSLIB_API lstring aes_decrypt_cbc(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, _lchar iv[16], __out__ int* out_len)
         {
             if (data_len % AES_BLOCK_SIZE != 0) return ""; // decrypt data size must be times of AES_BLOCK_SIZE
 
@@ -469,6 +472,32 @@ namespace lslib
             delete[] pbuf;
             return str;
         }
+
+#ifdef USE_LIBICONV
+        LSLIB_API int encoding_convert(_lpcstr from_charset, _lpcstr to_charset, _lpcstr inbuf, unsigned int inlen, __inout__ _lpstr outbuf, __inout__ unsigned int outlen)
+        {
+            iconv_t cd;
+            const char** pin = &inbuf;
+            char** pout = &outbuf;
+            cd = iconv_open(to_charset, from_charset);
+            if (cd <= 0) return -1;
+            memset(outbuf, 0, outlen);
+            int ret = iconv(cd, pin, &inlen, pout, &outlen);
+            iconv_close(cd);
+            return ret;
+        }
+
+        LSLIB_API lstring encoding_convert(_lpcstr data, _lpcstr from_charset, _lpcstr to_charset)
+        {
+            int buff_size = 4 * strlen(data);
+            _lpstr buf = (_lpstr)malloc(buff_size);
+            memset(buf, 0, buff_size);
+            encoding_convert(from_charset, to_charset, data, strlen(data), buf, buff_size);
+            lstring strret; strret.assign(buf, buff_size);
+            free(buf);
+            return strret;
+        }
+#endif
 
     } // crypto
 

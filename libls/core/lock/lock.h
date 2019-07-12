@@ -13,7 +13,7 @@ namespace lslib
 
 #include <windows.h>
 
-    class CMutexLock
+    class LSLIB_API CMutexLock
     {
     public:
         CMutexLock();
@@ -30,7 +30,7 @@ namespace lslib
 
 #include <pthread.h>
 
-    class CMutexLock
+    class LSLIB_API CMutexLock
     {
     public:
         CMutexLock();
@@ -45,7 +45,7 @@ namespace lslib
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-    class CAutoLock
+    class LSLIB_API CAutoLock
     {
     public:
         CAutoLock(CMutexLock &mtx);

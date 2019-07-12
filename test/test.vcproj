@@ -189,6 +189,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\testcase\json.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\testcase\lock.hpp"
 				>
 			</File>

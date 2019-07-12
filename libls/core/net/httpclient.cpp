@@ -29,18 +29,30 @@ namespace lslib
             return size * nmemb;
         }
 
+        static size_t OnWriteFileData(void* buffer, size_t size, size_t nmemb, void* lpVoid)
+        {
+            pair<FILE*, size_t*>* param = (pair<FILE*, size_t*>*)(lpVoid);
+            if (param == NULL || param->first == NULL || param->second == NULL)
+                return -1;
+
+            FILE* file = param->first;
+            size_t* wirte_size = param->second;
+
+            size_t s = fwrite(buffer, 1, size * nmemb, file);
+            *wirte_size += s;
+            return  s;
+        }
+
         static size_t OnGetHeaderInfo(void* ptr, size_t size, size_t nmemb, void* stream)
         {
             map<lstring, lstring>* pInfoHeader = static_cast< map<lstring, lstring>* >(stream);
             if (pInfoHeader)
             {
+                lstring_array arr;
                 lstring str = (char*)ptr;
-                size_t nPos = str.find(":");
-                if (nPos != lstring::npos)
-                {
-                    str = str.substr(nPos + 1);
-                    (*pInfoHeader)[str.substr(0, nPos)] = str.trim();
-                }
+                str.split(arr, ":", false);
+                if (arr.size() == 2)
+                    (*pInfoHeader)[arr[0].trim()] = arr[1].trim();
             }
             return size * nmemb;
         }
@@ -181,10 +193,8 @@ namespace lslib
         {
             int counts = CRYPTO_num_locks();
             lockarray = new CMutexLock[counts];
-
             CRYPTO_set_id_callback(id_function);
             CRYPTO_set_locking_callback(locking_function);
-
             return 0;
         }
         int httpclient_thread_cleanup(void)
@@ -193,6 +203,7 @@ namespace lslib
             CRYPTO_set_id_callback(NULL);
             CRYPTO_set_locking_callback(NULL);
             delete[] lockarray;
+            return 0;
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -367,12 +378,9 @@ label_exit:
                 }
 
                 struct curl_slist* headers = NULL;
-                vector<char> vctRespBuf;
                 curl_easy_setopt(pCurl, CURLOPT_URL, strRequest.c_str());
                 if (!m_strDefaultAgent.empty())
                     curl_easy_setopt(pCurl, CURLOPT_USERAGENT, m_strDefaultAgent.c_str());
-                curl_easy_setopt(pCurl, CURLOPT_WRITEDATA, (void*)&vctRespBuf);
-                curl_easy_setopt(pCurl, CURLOPT_WRITEFUNCTION, OnWriteData);
                 curl_easy_setopt(pCurl, CURLOPT_FOLLOWLOCATION, 1);
                 curl_easy_setopt(pCurl, CURLOPT_NOSIGNAL, 1);
                 curl_easy_setopt(pCurl, CURLOPT_SSL_VERIFYPEER, 0);
@@ -410,11 +418,7 @@ label_exit:
 
                 lstring strFile = vParam.strFile;
                 if (strFile.empty())
-                {
-                    int npos = vParam.strUrl.find_last_of("/");
-                    if (npos < 0) npos = vParam.strUrl.find_last_of("\\");
-                    if (npos >= 0) strFile = vParam.strUrl.substr(npos + 1);
-                }
+                    strFile = os::path_get_name(vParam.strUrl);
                 FILE* pFile = NULL;
                 if (infoHeader[0]) pFile = fopen(strFile.c_str(), "ab+" );
                 else pFile = fopen(strFile.c_str(), "wb+" );
@@ -424,6 +428,12 @@ label_exit:
                     goto label_exit;
                 }
 
+                pair<FILE*, size_t*> param;
+                param.first = pFile;
+                param.second = (size_t*)&vResult.nDataLen;
+                curl_easy_setopt(pCurl, CURLOPT_WRITEDATA, &param);
+                curl_easy_setopt(pCurl, CURLOPT_WRITEFUNCTION, OnWriteFileData);
+
                 CURLcode ret = CURLE_OK;
                 for (int i = 0; i < TRYCOUNT_DOWNLOAD; i++)
                 {
@@ -431,11 +441,13 @@ label_exit:
                     {
                         fseek(pFile, 0, SEEK_END);
                         int nSize = ftell(pFile);
-                        if (nSize >= infoHeader[1] && infoHeader[1] > 0) //already finished download
+
+                        if (nSize == infoHeader[1] && infoHeader[1] > 0) //already finished download
                         {
                             INFO_LOG(g_netlogger, "already finished download[%s], size: %d, file size: %d", strRequest.c_str(), nSize, infoHeader[1]);
 
                             vResult.nCode = CURLE_OK;
+                            fclose(pFile);
                             goto label_exit;
                         }
 
@@ -443,30 +455,7 @@ label_exit:
                         curl_easy_setopt(pCurl, CURLOPT_RANGE, szRange);
                     }
 
-                    vctRespBuf.clear();
                     ret = curl_easy_perform(pCurl);
-                    if (!vctRespBuf.empty())
-                    {
-                        int npos = 0;
-                        if (!vParam.strToken.empty()) // check token
-                        {
-                            lstring strToken;
-                            strToken.assign(&vctRespBuf[0] + strlen("--"), vParam.strToken.length());
-                            if (strToken == vParam.strToken)
-                            {
-                                npos = strlen("--") + vParam.strToken.length() + strlen("\r\n");
-                            }
-                            else // unauthorized
-                            {
-                                ret = (CURLcode)401;
-                                WARN_LOG(g_netlogger, "unauthorized response from server. maybe the server was been hijacked!!![%s]", strRequest.c_str());
-                                continue;
-                            }
-                        }
-                        fwrite(&vctRespBuf[npos], vctRespBuf.size() - npos, 1, pFile);
-                        vResult.nDataLen += vctRespBuf.size();
-                    }
-
                     if (ret == CURLE_OK) break;
                 }
 
@@ -480,7 +469,6 @@ label_exit:
                 if (ret != CURLE_OK)
                 {
                     os::rm(vParam.strFile.c_str());
-                    vResult.strData.assign(vctRespBuf.begin(), vctRespBuf.end());
                 }
                 else
                 {

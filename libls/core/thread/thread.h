@@ -1,12 +1,16 @@
 #pragma once
 
-#include "lock/lock.h"
-#include <list>
-#include <map>
-using namespace std;
+#ifdef _MSC_VER
+#include <windows.h>
+#else
+#include <stdint.h>
+#include <pthread.h>
+#include <unistd.h>
+#endif
 
 namespace lslib
 {
+    //////////////////////////////////////////////////////////////////////////
 
     enum EThreadState
     {
@@ -16,93 +20,61 @@ namespace lslib
 
 #ifdef _MSC_VER
 
-    //////////////////////////////////////////////////////////////////////////
-#include <windows.h>
+#define __THREAD__      GetCurrentThreadId()
 
-#define __THREAD__ GetCurrentThreadId()
-
-    typedef bool (*CompareMessageFunc) (MSG, int, MSG, int);
-
-    class LSLIB_API CThread
-    {
-    public :
-        CThread(bool bSuspend);
-        virtual ~CThread();
-
-    public:
-        virtual const char* GetName() = 0;
-
-        bool Suspend();
-        bool Resume();
-        virtual bool Stop(); // must call in subclass destructor firstly
-        unsigned int GetThreadID() const;
-        HANDLE GetThreadHandle() const;
-        EThreadState GetThreadState() const;
-        int GetPriority() const;
-        bool SetPriority(int nPriority);
-        bool WaitFor(DWORD dwMilliseconds);// return: [true]-OK; [false]-timeout
-        bool PostMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0, int nLevel = 0);
-        LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0);
-        bool FindMessage(MSG msg, int level, CompareMessageFunc pfunc);
-
-    protected:
-        bool GetMessage(LPMSG lpMsg);
-
-        virtual void Execute();
-        virtual void OnExecute();
-        virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-    private:
-        static unsigned __stdcall _ThreadEntry(void* pParam);
-
-    protected:
-        EThreadState m_eThreadState;
-        int m_nPriority;
-        unsigned int m_uThreadID;
-        HANDLE m_hThreadHandle;
-        CMutexLock m_mutexMsgs;
-        map<int, list<MSG> > m_mapMsgs;// <level, list<msg>>
-    };
+    typedef MSG         msg_t;
+    typedef UINT        msgid_t;
+    typedef WPARAM      wparam_t;
+    typedef LPARAM      lparam_t;
 
 #else
 
-    //////////////////////////////////////////////////////////////////////////
-#include <stdint.h>
-#include <pthread.h>
-#include <unistd.h>
+#define __THREAD__      pthread_self()
+#define WM_QUIT         0
+#define MAXINT          2147483647
 
-#define WM_QUIT 0
-#define MAXINT 2147483647
-
-#define __THREAD__ pthread_self()
-
-    typedef uint32_t msgid_t;
-    typedef uint64_t wparam_t;
-    typedef uint64_t lparam_t;
-
-    struct msg_t
+    typedef uint32_t    msgid_t;
+    typedef uint64_t    wparam_t;
+    typedef uint64_t    lparam_t;
+    typedef struct msg_t
     {
         msgid_t message;
         wparam_t wParam;
         lparam_t lParam;
     };
 
-    typedef bool (*CompareMessageFunc)(msg_t, int, msg_t, int);
+#endif // end of _MSC_VER
 
+    typedef bool (*CompareMessageFunc) (msg_t, int, msg_t, int);
+
+    //////////////////////////////////////////////////////////////////////////
     class LSLIB_API CThread
     {
-    public:
+    public :
         CThread(bool bSuspend);
         virtual ~CThread();
 
+    private:
+        CThread(const CThread& value);
+        CThread& operator = (const CThread& value);
+
     public:
-        const virtual char* GetName() = 0;
+        virtual _lpcstr GetName() = 0;
 
         bool Suspend();
         bool Resume();
+        virtual void Run();
         virtual bool Stop(); // must call in subclass destructor firstly
         unsigned int GetThreadID() const;
         EThreadState GetThreadState() const;
+
+#ifdef _MSC_VER
+        HANDLE GetThreadHandle() const;
+        int GetPriority() const;
+        bool SetPriority(int nPriority);
+        bool WaitFor(DWORD dwMilliseconds);// return: [true]-OK; [false]-timeout
+#endif
+
         bool PostMessage(msgid_t msgid, wparam_t wParam = 0, lparam_t lParam = 0, int nLevel = 0);
         int SendMessage(msgid_t msgid, wparam_t wParam = 0, lparam_t lParam = 0);
         bool FindMessage(msg_t msg, int level, CompareMessageFunc pfunc);
@@ -115,21 +87,26 @@ namespace lslib
         virtual int HandleMessage(msgid_t msgid, wparam_t wparam, lparam_t lparam);
 
     private:
+#ifdef _MSC_VER
+        static unsigned __stdcall _ThreadEntry(void* pParam);
+#else
         static void* _ThreadEntry(void* pParam);
+#endif
 
     protected:
         EThreadState m_eThreadState;
+        CMutexLock m_mutexMsgs;
+        map<int, list<msg_t> > m_mapMsgs;// <level, list<msg_t>>
+
+#ifdef _MSC_VER
         int m_nPriority;
         unsigned int m_uThreadID;
-        pthread_t th;
-        int m_hThreadHandle;
-        CMutexLock m_mutexMsgs;
-        map<int, list<msg_t> > m_mapMsgs;       // <level, list<msg_t>>
-
-        pthread_mutex_t mutex_pause;
-        pthread_cond_t cond_pause;
-    };
-
+        HANDLE m_hThreadHandle;
+#else
+        pthread_t m_uThreadID;
+        pthread_mutex_t m_mtxPause;
+        pthread_cond_t m_conPause;
 #endif
 
+    };
 }

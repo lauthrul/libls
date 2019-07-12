@@ -118,8 +118,10 @@ using namespace std;
 #include "core/thread/thread.h"
 #include "core/zip/zip_x.h"
 #include "xml/xml.h"
+#include "json/json_x.h"
 #include "core/logger/logger.h"
 #include "core/net/httpclient.h"
+#include "core/thread/idle_thread.h"
 #ifdef _MSC_VER
 #include "core/registry/registry.h"
 #include "core/process/process.h"

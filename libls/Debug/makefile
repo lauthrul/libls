@@ -21,6 +21,7 @@ RM := rm -rf
 -include core/math/subdir.mk
 -include core/logger/subdir.mk
 -include core/lock/subdir.mk
+-include core/json/subdir.mk
 -include core/crypto/subdir.mk
 -include core/base64/subdir.mk
 -include core/subdir.mk

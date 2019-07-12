@@ -25,6 +25,7 @@ C_DEPS :=
 SUBDIRS := \
 core/base64 \
 core/crypto \
+core/json \
 core/lock \
 core/logger \
 core/math \

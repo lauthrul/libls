@@ -4,12 +4,15 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../core/thread/idle_thread.cpp \
 ../core/thread/thread.cpp 
 
 OBJS += \
+./core/thread/idle_thread.o \
 ./core/thread/thread.o 
 
 CPP_DEPS += \
+./core/thread/idle_thread.d \
 ./core/thread/thread.d 
 
 

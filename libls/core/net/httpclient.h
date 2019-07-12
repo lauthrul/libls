@@ -239,8 +239,8 @@ namespace lslib
         };
 
         // for multi-thread calling CHttpClient, must call following two functions in main thread to avoid https multi-thread unsafety.
-        extern int httpclient_thread_setup(void);
-        extern int httpclient_thread_cleanup(void);
+        extern LSLIB_API int httpclient_thread_setup(void);
+        extern LSLIB_API int httpclient_thread_cleanup(void);
 
     } // namespace net
 

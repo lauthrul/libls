@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\core&quot;;&quot;$(ProjectDir)\utils&quot;;&quot;$(ProjectDir)\3rd-party\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LSLIB_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LSLIB_EXPORTS;JSON_DLL_BUILD"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,9 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="log4cxx.lib libeay32.lib libcurld.lib version.lib"
+				AdditionalDependencies="log4cxx.lib libeay32.lib libcurld.lib version.lib libiconv.lib psapi.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(ProjectDir)\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(ProjectDir)\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;;&quot;$(ProjectDir)\3rd-party\bin\openssl\dll\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(ProjectDir)\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;;&quot;$(ProjectDir)\3rd-party\bin\openssl\dll\lib&quot;;&quot;$(ProjectDir)\3rd-party\bin\iconv\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -120,7 +120,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)\core&quot;;&quot;$(ProjectDir)\utils&quot;;&quot;$(ProjectDir)\3rd-party\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LSLIB_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LSLIB_EXPORTS;JSON_DLL_BUILD"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
@@ -138,9 +138,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="log4cxx.lib libeay32.lib libcurl.lib version.lib"
+				AdditionalDependencies="log4cxx.lib libeay32.lib libcurl.lib version.lib libiconv.lib psapi.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(ProjectDir)\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(ProjectDir)\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;;&quot;$(ProjectDir)\3rd-party\bin\openssl\dll\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(ProjectDir)\3rd-party\bin\log4cxx\$(ConfigurationName)\&quot;;&quot;$(ProjectDir)\3rd-party\bin\libcurl\DLL $(ConfigurationName) - DLL OpenSSL\&quot;;&quot;$(ProjectDir)\3rd-party\bin\openssl\dll\lib&quot;;&quot;$(ProjectDir)\3rd-party\bin\iconv\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -541,6 +541,14 @@
 				Name="thread"
 				>
 				<File
+					RelativePath=".\core\thread\idle_thread.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\thread\idle_thread.h"
+					>
+				</File>
+				<File
 					RelativePath=".\core\thread\thread.cpp"
 					>
 				</File>
@@ -722,6 +730,126 @@
 				</File>
 				<File
 					RelativePath=".\core\xml\xml.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="json"
+				>
+				<File
+					RelativePath=".\core\json\autolink.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\json\config.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\json\features.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\json\forwards.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\json\json.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\json\json_batchallocator.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\json\json_internalarray.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\core\json\json_internalmap.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\core\json\json_reader.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\core\json\json_value.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\core\json\json_valueiterator.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\core\json\json_writer.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\core\json\json_x.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\json\json_x.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\json\reader.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\json\value.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\json\writer.h"
 					>
 				</File>
 			</Filter>
