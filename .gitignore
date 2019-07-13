@@ -15,4 +15,5 @@
 build/
 temp/
 libls/3rd-party/src
+libls/3rd-party/*/mysql
 bin/

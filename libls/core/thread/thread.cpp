@@ -161,7 +161,7 @@ namespace lslib
                 HandleMessage(msg.message, msg.wParam, msg.lParam);
             }
             OnExecute();
-//            Sleep(10);
+            Sleep(1);
         }
 
         int nRemains = 0;
@@ -348,7 +348,7 @@ namespace lslib
                     else HandleMessage(msg.message, msg.wParam, msg.lParam);
                 }
                 OnExecute();
-//                usleep(10000); // 10msec.  1sec = 1000msec = 1000*1000usec
+//                usleep(1000); // 1msec.  1sec = 1000msec = 1000*1000usec
             }
         }
 
