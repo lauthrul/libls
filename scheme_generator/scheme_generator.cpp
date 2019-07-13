@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #include "routine.h"
-#include "net.h"
 
 //////////////////////////////////////////////////////////////////////////
 void CustomInit()
@@ -20,11 +19,13 @@ void CustomInit()
     net::httpclient_thread_setup();
 
     // init db wrapper
+#ifndef MAKE_TEST_DATA
     g_dbWrapper.SetHost("tcp://192.168.169.215:3306");
     g_dbWrapper.SetUser("suser");
     g_dbWrapper.SetPassword("cyberuser");
     g_dbWrapper.Connect();
     g_dbWrapper.UseDB("autoservice_debug");
+#endif
 }
 
 void CustomDestory()

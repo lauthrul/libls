@@ -92,6 +92,8 @@ bool CDB::IsConnected()
 bool CDB::UseDB(_lpcstr db)
 {
     if (!IsConnected()) Connect();
+    if (!IsConnected()) return false;
+
     try
     {
         m_con->setSchema(db);
@@ -107,6 +109,7 @@ bool CDB::UseDB(_lpcstr db)
 bool CDB::Excute(_lpcstr sql)
 {
     if (!IsConnected()) Connect();
+    if (!IsConnected()) return false;
 
     bool ret = false;
     sql::Statement* stmt = NULL;
@@ -127,6 +130,7 @@ bool CDB::Excute(_lpcstr sql)
 sql::ResultSet* CDB::ExcuteQuery(_lpcstr sql)
 {
     if (!IsConnected()) Connect();
+    if (!IsConnected()) return NULL;
 
     sql::Statement* stmt = NULL;
     sql::ResultSet* res = NULL;

@@ -29,6 +29,8 @@ namespace lottery
 
         bool check_win_zx_fs(const lstring& code, const lstring& openCode, int range[2])
         {
+            // code: 123456-123456-123456-123456-123456
+            // openCode: 3,4,6,8,1
             lstring_array arr;          code.split(arr, "-");
             lstring_array arr_open;     openCode.split(arr_open, ",");
             for (size_t j = range[0]; j <= min(arr.size() - 1, range[1]); j++)
@@ -41,12 +43,17 @@ namespace lottery
 
         bool check_win_zx_ds(const lstring& code, const lstring& openCode, int range[2])
         {
-            for (size_t j = range[0]; j <= min(openCode.length() - 1, range[1]); j++)
+            // code: 12345 12456 34215 65432 98507 ...
+            // openCode: 3,4,6,8,1
+            lstring_array arr; code.split(arr, " ");
+            lstring compactOpenCode = lstring(openCode).replace(",", "");
+            compactOpenCode = compactOpenCode.substr(range[0], range[1] - range[0] + 1);
+            for (size_t j = 0; j < arr.size(); j++)
             {
-                if (code[j] != openCode[j])
-                    return false;
+                if (arr[j] == compactOpenCode)
+                    return true;
             }
-            return true;
+            return false;
         }
 
         bool CheckWin(const SchemeDetail& detail)

@@ -38,16 +38,16 @@ namespace lottery
         return false;
     }
 
-    void StatisticSubScheme(__inout SubScheme& subScheme, bool bWin)
+    void StatisticSubScheme(__inout SubScheme& subScheme, const SchemeDetail& schemeDetail)
     {
-        if (bWin)
+        if (schemeDetail.bWin)
         {
             subScheme.nWinRounds++;
             subScheme.nCombWinRounds++;
             subScheme.nCombLossRounds = 0;
             subScheme.nMaxCombWinRounds = max(subScheme.nMaxCombWinRounds, subScheme.nCombWinRounds);
         }
-        else
+        else if (schemeDetail.nRoundIndex >= schemeDetail.nRoundTotal - 1)
         {
             subScheme.nCombWinRounds = 0;
             subScheme.nCombLossRounds++;

@@ -303,7 +303,7 @@ namespace lslib
 
     __ref__ lstring& lstring::replace(_lpcstr needle, _lpcstr replacement, size_t index /*= 0*/, int counts /*= -1*/)
     {
-        if (is_empty(needle) || is_empty(replacement))
+        if (is_empty(needle))
             return *this;
         if (strcmp(needle, replacement) == 0)
             return *this;

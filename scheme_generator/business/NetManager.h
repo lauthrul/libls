@@ -23,6 +23,7 @@ public:
 public:
     int                                 GetLotteryCfgRequest();
     int                                 GetHistoryCodeRequest(_lpcstr lpstrLottery, int nIssues = 30);
+    int                                 GetIssueInfoRequest(_lpcstr lpstrLottery);
 
 protected:
     virtual void                        InitNetAgent(int nAgentCounts);

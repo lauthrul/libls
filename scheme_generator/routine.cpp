@@ -43,6 +43,7 @@ int CRoutine::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lPar
             if (pResp != NULL && pResp->nResultCode == 0)
             {
                 lstring& rfLottery = pResp->strLottery;
+                lstring& rfCurrentIssue = pResp->strCurIssue;
                 MapHistoryCode& rfHistoryResp = pResp->mapHistoryCode;
                 MapHistoryCode& rfHistory = m_mapAllHistoryCode[pResp->strLottery];
 
@@ -83,10 +84,17 @@ int CRoutine::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lPar
                             nIndex--;
                         }
                     }
+
                     for (MapHistoryCode::iterator it = newHistory.begin(); it != newHistory.end(); it++)
                         rfHistory[it->first] = it->second;
-                    PostMessage(TID_HISTORY_CODE_UPDATED, (wparam_t)new lstring(rfLottery), (lparam_t)new MapHistoryCode(newHistory)); // remember to delete
-                    INFO_LOG(g_pLogger, "彩种[%s]获取到[%d]期新的开奖号! 最新奖期[%s]", rfLottery.c_str(), newHistory.size(), newHistory.rbegin()->first.c_str());
+
+                    SHistroyCode historyCode;
+                    historyCode.strLottery = rfLottery;
+                    historyCode.strCurIssue = rfCurrentIssue;
+                    historyCode.mapHistoryCode = newHistory;
+                    PostMessage(TID_HISTORY_CODE_UPDATED, (wparam_t)new lstring(rfLottery), (lparam_t)new SHistroyCode(historyCode)); // remember to delete
+                    INFO_LOG(g_pLogger, "彩种[%s]获取到[%d]期新的开奖号! 最新开奖[%s]，当前奖期[%s]",
+                        rfLottery.c_str(), newHistory.size(), newHistory.rbegin()->first.c_str(), rfCurrentIssue.c_str());
                 }
             }
         }
@@ -94,7 +102,9 @@ int CRoutine::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lPar
     case TID_HISTORY_CODE_UPDATED:
         {
             auto_ptr<lstring> apLottery((lstring*)wParam);
-            auto_ptr<MapHistoryCode> apNewHistorys((MapHistoryCode*)lParam);
+            auto_ptr<SHistroyCode> apHistoryCode((SHistroyCode*)lParam);
+            lstring& rfCurIssue = apHistoryCode->strCurIssue;
+            MapHistoryCode& rfNewHisotrys = apHistoryCode->mapHistoryCode;
 
             map<int, SubScheme> mapSubSchemes;
             g_dbWrapper.GetSubSchemesByLottery(mapSubSchemes, apLottery->c_str());
@@ -102,35 +112,34 @@ int CRoutine::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lPar
             {
                 SubScheme& rfSubScheme = it->second;
                 map<int, SchemeDetail> mapSchemeDetails;
-                g_dbWrapper.GetSchemeDetailsBySubSchemeID(mapSchemeDetails, rfSubScheme.nID, apNewHistorys->begin()->first.c_str());
+                g_dbWrapper.GetSchemeDetailsBySubSchemeID(mapSchemeDetails, rfSubScheme.nID, rfNewHisotrys.begin()->first.c_str());
 
                 SchemeDetail* pLastSchemeDetail = NULL;
                 auto_ptr<SchemeDetail> apLastSchemeDetail;
-                MapHistoryCode::iterator it_hlast = apNewHistorys->end();
+                MapHistoryCode::iterator it_hlast = rfNewHisotrys.begin();
                 if (!mapSchemeDetails.empty())
                 {
                     SchemeDetail lastSchemeDetail = mapSchemeDetails.rbegin()->second; // 找到最后一期记录
-                    it_hlast = apNewHistorys->find(lastSchemeDetail.strIssue);
-                    if (lastSchemeDetail.strOpenCode.empty() && it_hlast != apNewHistorys->end()) // 未开奖，且在当前新奖期范围内
+                    it_hlast = rfNewHisotrys.find(lastSchemeDetail.strIssue);
+                    if (lastSchemeDetail.strOpenCode.empty() && it_hlast != rfNewHisotrys.end()) // 未开奖，且在当前新奖期范围内
                     {
                         lastSchemeDetail.strOpenCode = it_hlast->second.strCode;
                         lastSchemeDetail.bWin = lottery::CheckWin(lastSchemeDetail);
-                        lottery::StatisticSubScheme(rfSubScheme, lastSchemeDetail.bWin);
+                        lottery::StatisticSubScheme(rfSubScheme, lastSchemeDetail);
 
                         g_dbWrapper.UpdateSchemeDetail(lastSchemeDetail);
 
                         pLastSchemeDetail = new SchemeDetail(lastSchemeDetail);
-                        apLastSchemeDetail = auto_ptr<SchemeDetail>(apLastSchemeDetail);
+                        apLastSchemeDetail = auto_ptr<SchemeDetail>(pLastSchemeDetail);
 
                         it_hlast++;
                     }
                 }
-                
-                if (it_hlast == apNewHistorys->end())
-                    it_hlast = apNewHistorys->begin();
 
+                // 根据新的历史开奖生成计划详情
+                mapSchemeDetails.clear();
                 int nIndex = 0;
-                for (MapHistoryCode::iterator it_h = it_hlast; it_h != apNewHistorys->end(); it_h++)
+                for (MapHistoryCode::iterator it_h = it_hlast; it_h != rfNewHisotrys.end(); it_h++)
                 {
                     const SHistoryCodeItem& rfHistoryCode = it_h->second;
                     SchemeDetail detail;
@@ -154,17 +163,50 @@ int CRoutine::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lPar
                         detail.nRoundIndex = 0;
                         detail.strCode = lottery::GenereateCode(rfSubScheme);
                     }
-                    detail.strOpenCode = rfHistoryCode.strCode;
                     detail.nMerchantID = rfSubScheme.nMerchantID;
                     detail.nSchemeID = rfSubScheme.nSchemeID;
                     detail.nSubSchemeID = rfSubScheme.nID;
+                    detail.strOpenCode = rfHistoryCode.strCode;
                     detail.bWin = lottery::CheckWin(detail);
+                    mapSchemeDetails[detail.nID] = detail;
+                    pLastSchemeDetail = &mapSchemeDetails[detail.nID];
+
+                    // 统计子计划数据
+                    rfSubScheme.nIssues++;
+                    if (detail.nRoundIndex == 0) rfSubScheme.nRounds++;
+                    lottery::StatisticSubScheme(rfSubScheme, detail);
+                }
+                // 生成当前期的计划详情
+                {
+                    SchemeDetail detail;
+                    detail.nID = nIndex++; // no use. only used as key
+                    detail.strLottery = apLottery->c_str();
+                    detail.strIssue = rfCurIssue;
+                    detail.strPlayKind = rfSubScheme.strPlayKind;
+                    detail.strPlayName = rfSubScheme.strPlayName;
+                    detail.nDWDPos = rfSubScheme.nDWDPos;
+                    detail.nRoundTotal = rfSubScheme.nIssuesPerRound;
+                    if (pLastSchemeDetail != NULL && !pLastSchemeDetail->bWin)
+                    {
+                        detail.nRoundIndex = (pLastSchemeDetail->nRoundIndex + 1) % detail.nRoundTotal;
+                        if (detail.nRoundIndex == 0)
+                            detail.strCode = lottery::GenereateCode(rfSubScheme);
+                        else
+                            detail.strCode = pLastSchemeDetail->strCode;
+                    }
+                    else
+                    {
+                        detail.nRoundIndex = 0;
+                        detail.strCode = lottery::GenereateCode(rfSubScheme);
+                    }
+                    detail.nMerchantID = rfSubScheme.nMerchantID;
+                    detail.nSchemeID = rfSubScheme.nSchemeID;
+                    detail.nSubSchemeID = rfSubScheme.nID;
                     mapSchemeDetails[detail.nID] = detail;
                     pLastSchemeDetail = &mapSchemeDetails[detail.nID];
 
                     rfSubScheme.nIssues++;
                     if (detail.nRoundIndex == 0) rfSubScheme.nRounds++;
-                    lottery::StatisticSubScheme(rfSubScheme, detail.bWin);
                 }
                 g_dbWrapper.AddSchemeDetails(mapSchemeDetails);
                 g_dbWrapper.UpdateSubScheme(rfSubScheme);

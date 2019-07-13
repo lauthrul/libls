@@ -24,6 +24,11 @@ void CNetAgent::InitInvoker()
                    "",
                    "CNetAgent::DoGetHistoryCode",
                    (PTR_THREAD_IDLETHREAD_TASKHANDLER)&CNetAgent::DoGetHistoryCode));
+    AddInvoker(SInvoker(
+                    TID_GET_ISSUE_INFO,
+                    "",
+                    "CNetAgent::DoGetIssueInfo",
+                    (PTR_THREAD_IDLETHREAD_TASKHANDLER)&CNetAgent::DoGetIssueInfo));
 }
 
 int CNetAgent::CheckResult(int nHttpCode, _lpcstr lpstrResultText, __out SResultChecker& checker)
@@ -143,7 +148,7 @@ int CNetAgent::DoGetHistoryCode(_ldword pParam, _ldword& pResult)
     SHistoryCodeReq* pReq = (SHistoryCodeReq*)pTask->pReq;
     if (pReq == NULL) return -1;
 
-    lstring strUrl, strPost;
+    lstring strPost;
     strPost.format("gameid=%s&pageNum=1&size=%d", pReq->strLottery.c_str(), pReq->nIssueCounts);
 
     SHttpPostParam vParam(URL_GetLotteryOpenCode, strPost);
@@ -180,11 +185,77 @@ int CNetAgent::DoGetHistoryCode(_ldword pParam, _ldword& pResult)
         }
 
         INFO_LOG(g_pLogger, "[%dms]get code history success. lottery: %s, counts: %d", vResult.nTimeSpend, vResp.strLottery.c_str(), vResp.mapHistoryCode.size());
-        vResp.strResultMsg.format("[%dms]获取开奖历史成功!", vResult.nTimeSpend);
+        vResp.strResultMsg.format("[%dms]获取开奖历史成功! 彩种: %s, 期数: %d", vResult.nTimeSpend, vResp.strLottery.c_str(), vResp.mapHistoryCode.size());
     }
 
 label_exit:
     pTask->pResp = new SHistroyCodeResp(vResp); // remember to delete
+    pResult = (DWORD)pTask;
+    return vResp.nResultCode;
+}
+
+int CNetAgent::DoGetIssueInfo(_ldword pParam, _ldword& pResult)
+{
+    STask* pTask = (STask*)pParam;
+    if (pTask == NULL) return -1;
+
+    SSimpleNetReq* pReq = (SSimpleNetReq*)pTask->pReq;
+    if (pReq == NULL) return -1;
+
+    lstring strPost;
+    strPost.format("gameid=%s", pReq->strParam.c_str());
+
+    SHttpPostParam vParam(URL_GetLotteryCurrentIssue, strPost);
+    SHttpResult vResult = CHttpClient::HttpPost(vParam);
+
+    SResultChecker checker;
+    checker.strCodeField = "success";
+    checker.nSuccessCode = 1;
+    checker.strMsgField = "msg";
+
+    SIssueInfoResp vResp;
+    vResp.strLottery = pReq->strParam;
+    vResp.nResultCode = CheckResult(vResult.nCode, vResult.strData.c_str(), checker);
+    if (vResp.nResultCode != 0)
+    {
+        int nRet = reverse_mask_err(vResp.nResultCode);
+        ERROR_LOG(g_pLogger, "[%dms]get current issue fail: [%d]-%s", vResult.nTimeSpend, nRet, checker.strErrMsg.c_str());
+        vResp.strResultMsg.format("[%dms]获取当前奖期失败: [%d]-%s", vResult.nTimeSpend, nRet, checker.strErrMsg.c_str());
+        goto label_exit;
+    }
+    else
+    {
+        CJsonValue* pValue = CJsonWrapper::GetNode(&checker.jRoot, "issue");
+        if (pValue != NULL && pValue->isString())   vResp.strIssue = pValue->asString();
+        
+        Time tm;
+        pValue = CJsonWrapper::GetNode(&checker.jRoot, "salestart");
+        if (pValue != NULL && pValue->isNumeric())
+        {
+            tm.SetDataTime((int)pValue->asDouble()/1000);
+            vResp.tmStart = tm;
+        }
+
+        pValue = CJsonWrapper::GetNode(&checker.jRoot, "saleend");
+        if (pValue != NULL && pValue->isNumeric())
+        {
+            tm.SetDataTime((int)pValue->asDouble()/1000);
+            vResp.tmEnd = tm;
+        }
+
+        pValue = CJsonWrapper::GetNode(&checker.jRoot, "current");
+        if (pValue != NULL && pValue->isNumeric())
+        {
+            tm.SetDataTime((int)pValue->asDouble()/1000);
+            vResp.tmCurrent = tm;
+        }
+
+        INFO_LOG(g_pLogger, "[%dms]get issue info success. lottery: %s, issue: %s", vResult.nTimeSpend, vResp.strLottery.c_str(), vResp.strIssue.c_str());
+        vResp.strResultMsg.format("[%dms]获取奖期信息成功! 彩种: %s, 奖期: %s", vResult.nTimeSpend, vResp.strLottery.c_str(), vResp.strIssue.c_str());
+    }
+
+label_exit:
+    pTask->pResp = new SIssueInfoResp(vResp); // remember to delete
     pResult = (DWORD)pTask;
     return vResp.nResultCode;
 }

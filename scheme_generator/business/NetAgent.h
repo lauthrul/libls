@@ -29,4 +29,5 @@ public:
 public:
     int                             DoGetLotteryCfg(_ldword pParam, _ldword& pResult);
     int                             DoGetHistoryCode(_ldword pParam, _ldword& pResult);
+    int                             DoGetIssueInfo(_ldword pParam, _ldword& pResult);
 };

@@ -12,6 +12,15 @@ struct Scheme
     double dMaxAccuracy;
     int nFavorites;
     int nMerchantID;
+
+    Scheme()
+    {
+        nID = 0;
+        nSubSchemes = 0;
+        dMaxAccuracy = 0;
+        nFavorites = 0;
+        nMerchantID = 0;
+    }
 };
 
 struct SubScheme
@@ -38,6 +47,10 @@ struct SubScheme
 
     SubScheme()
     {
+        nID = 0;
+        nDWDPos = 0;
+        dExpectedAccuracy = 0;
+        nIssuesPerRound = 0;
         nIssues = 0;
         nRounds = 0;
         nWinRounds = 0;
@@ -46,6 +59,8 @@ struct SubScheme
         nCombLossRounds = 0;
         nMaxCombLossRounds = 0;
         dAccuracy = 0;
+        nMerchantID = 0;
+        nSchemeID = 0;
     }
 };
 
@@ -66,6 +81,19 @@ struct SchemeDetail
     int nMerchantID;
     int nSchemeID;
     int nSubSchemeID;
+
+    SchemeDetail()
+    {
+        nID = 0;
+        nDWDPos = 0;
+        nRoundIndex = 0;
+        nRoundTotal = 0;
+        bWin = false;
+        dAccuracy = 0;
+        nMerchantID = 0;
+        nSchemeID = 0;
+        nSubSchemeID = 0;
+    }
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,17 +106,18 @@ public:
 
 public:
     bool GetSchemeLotterys(__out lstring_list& lstLotterys);
-//     lstring GetSchemeDetailLastIssue(int subscheme_id);
-// 
-//     bool GetAllSchemes(__out__ map<int, Scheme>& mapSchemes);
-//     bool GetAllSubSchemes(__out__ map<int, SubScheme> mapSubSchemes);
-//     bool GetAllSchemeDetails(__out__ map<int, SchemeDetail> mapSchemeDetails);
-//     bool AddSchemeDetail(const SchemeDetail& detail);
-
     bool GetSubSchemesByLottery(__out map<int, SubScheme>& mapSubSchemes, _lpcstr lottery);
     bool GetSchemeDetailsBySubSchemeID(__out map<int, SchemeDetail>& mapSchemeDetails, int subscheme_id, _lpcstr from_issue);
-
     bool AddSchemeDetails(const map<int, SchemeDetail>& mapSchemeDetails);
     bool UpdateSchemeDetail(const SchemeDetail& schemeDetail);
     bool UpdateSubScheme(const SubScheme& subScheme);
+
+protected:
+#ifdef MAKE_TEST_DATA
+    void MakeTestData();
+
+    map<int, Scheme>        m_mapSchemes;
+    map<int, SubScheme>     m_mapSubSchemes;
+    map<int, SchemeDetail>  m_mapSchemeDetails;
+#endif
 };

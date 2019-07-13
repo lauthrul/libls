@@ -83,12 +83,17 @@ int CNetManager::GetHistoryCodeRequest(_lpcstr lpstrLottery, int nIssues)
     return Invoke(GetNextAgent(), TID_GET_HISTORY_CODE, new SHistoryCodeReq(lpstrLottery, nIssues)); // remember to delete
 }
 
+int CNetManager::GetIssueInfoRequest(_lpcstr lpstrLottery)
+{
+    return Invoke(GetNextAgent(), TID_GET_ISSUE_INFO, new SSimpleNetReq(lpstrLottery)); // remember to delete
+}
+
 int CNetManager::OnHandleMessage(STask* pTask, __inout bool& bRecycle, __inout bool& bNotice)
 {
+    static list<STask*> slstTaskCache;
     switch (pTask->dwTID)
     {
         case TID_GET_LOTTERY_CFG:
-        case TID_GET_HISTORY_CODE:
             if (pTask->pResp->nResultCode == ERR_SERVER_ERROR) // network error. retry get user login state 3 times
             {
                 if (pTask->nRetryTimes < NET_RETRY_MAX)
@@ -97,6 +102,64 @@ int CNetManager::OnHandleMessage(STask* pTask, __inout bool& bRecycle, __inout b
                     bNotice = false;
                     bRecycle = false;
                     pTask->nRetryTimes++;
+                }
+            }
+            break;
+        case TID_GET_HISTORY_CODE:
+            {
+                SHistroyCodeResp* pResp = (SHistroyCodeResp*)pTask->pResp;
+                if (pResp->nResultCode == 0)
+                {
+                    slstTaskCache.push_back(pTask);
+                    GetIssueInfoRequest(pResp->strLottery);
+                    bNotice = false;
+                    bRecycle = false;
+                }
+                else if (pResp->nResultCode == ERR_SERVER_ERROR) // network error. retry get user login state 3 times
+                {
+                    if (pTask->nRetryTimes < NET_RETRY_MAX)
+                    {
+                        m_lstRetryTask.push_back(pTask);
+                        bNotice = false;
+                        bRecycle = false;
+                        pTask->nRetryTimes++;
+                    }
+                }
+            }
+            break;
+        case TID_GET_ISSUE_INFO:
+            {
+                SIssueInfoResp* pResp = (SIssueInfoResp*)pTask->pResp;
+                if (pResp->nResultCode == 0)
+                {
+                    list<STask*>::iterator it = slstTaskCache.begin();
+                    while (it != slstTaskCache.end())
+                    {
+                        STask *pTaskCache = *it;
+                        if (pTaskCache == NULL) continue;
+
+                        SHistroyCodeResp* pHistoryCodeResp = (SHistroyCodeResp*)pTaskCache->pResp;
+                        if (pHistoryCodeResp->strLottery == pResp->strLottery)
+                        {
+                            pHistoryCodeResp->strCurIssue = pResp->strIssue;
+                            Notice(pTaskCache->pAgent->GetInvoker(pTaskCache->dwTID), pTaskCache->pResp->nResultCode, (LPARAM)pTaskCache); // restore get history code message out side
+                            it = slstTaskCache.erase(it);
+                            bNotice = false;
+                            bRecycle = true;
+                            Recycle(pTaskCache);
+                        }
+                        else it++;
+                    }
+                }
+                else if (pResp->nResultCode == ERR_SERVER_ERROR) // network error. retry get user login state 3 times
+                {
+                    if (pTask->nRetryTimes < NET_RETRY_MAX)
+                    {
+                        m_lstRetryTask.push_back(pTask);
+                        bNotice = false;
+                        bRecycle = false;
+                        pTask->nRetryTimes++;
+                    }
                 }
             }
             break;

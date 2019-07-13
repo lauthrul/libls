@@ -81,10 +81,26 @@ typedef map<lstring, MapHistoryCode>         MapAllHistoryCode;  // <lottery, Ma
 struct SHistroyCode
 {
     lstring                 strLottery;
+    lstring                 strCurIssue;
     MapHistoryCode          mapHistoryCode;
 };
 
 struct SHistroyCodeResp : public SNetResp, public SHistroyCode
+{
+};
+
+//////////////////////////////////////////////////////////////////////////
+// µ±Ç°½±ÆÚ
+struct SIssueInfo
+{
+    lstring                 strLottery;
+    lstring                 strIssue;
+    Time                    tmStart;
+    Time                    tmEnd;
+    Time                    tmCurrent;
+};
+
+struct SIssueInfoResp : public SNetResp, public SIssueInfo
 {
 };
 
@@ -113,9 +129,13 @@ enum
 {
     TID_GET_LOTTERY_CFG = TID_BASE + 1000,
     TID_GET_HISTORY_CODE,
+    TID_GET_ISSUE_INFO,
 };
 
 //////////////////////////////////////////////////////////////////////////
 // url defines
-#define URL_GetLotteryCfg                   "http://127.0.0.1:8000/service/scheme/get_lottery_cfg/?merchant_code=XYYL&uid=xxx"
-#define URL_GetLotteryOpenCode              "https://www.ds98.net/dscagamesclient/issue.do?method=recentlyCode"
+#define HOST_BACKEND                        "http://127.0.0.1:8000"
+#define HOST_PTLINE                         "https://www.dsn98.net"
+#define URL_GetLotteryCfg                   HOST_BACKEND "/service/scheme/get_lottery_cfg/?merchant_code=XYYL&uid=xxx"
+#define URL_GetLotteryOpenCode              HOST_PTLINE "/dscagamesclient/issue.do?method=recentlyCode"
+#define URL_GetLotteryCurrentIssue          HOST_PTLINE "/dscagamesclient/issue.do?method=current"

@@ -4,6 +4,9 @@
 //////////////////////////////////////////////////////////////////////////
 CDBWrapper::CDBWrapper()
 {
+#ifdef MAKE_TEST_DATA
+    MakeTestData();
+#endif
 }
 
 CDBWrapper::CDBWrapper(_lpcstr host, _lpcstr user, _lpcstr passowrd) : CDB(host, user, passowrd)
@@ -14,91 +17,108 @@ CDBWrapper::~CDBWrapper()
 {
 }
 
+#ifdef MAKE_TEST_DATA
+void CDBWrapper::MakeTestData()
+{
+    // 计划
+    Scheme sc;
+    sc.nID = 1;
+    sc.strName = "金鱼计划";
+    sc.strLottery = "17";
+    sc.nSubSchemes = 2;
+    sc.nMerchantID = 1;
+    m_mapSchemes[sc.nID] = sc;
+
+    sc.nID = 2;
+    sc.strName = "财神计划";
+    sc.strLottery = "29";
+    sc.nSubSchemes = 2;
+    sc.nMerchantID = 1;
+    m_mapSchemes[sc.nID] = sc;
+
+    // 子计划
+    SubScheme ssc;
+    ssc.nID = 1;
+    ssc.strName = "金鱼计划前三直选复式";
+    ssc.strLottery = "17";
+    ssc.strPlayKind = "qsm";
+    ssc.strPlayName = "qsm_zx_fs";
+    ssc.nDWDPos = 0;
+    ssc.strFormula = "fx = random()";
+    ssc.dExpectedAccuracy = 70;
+    ssc.nIssuesPerRound = 2;
+    ssc.nMerchantID = 1;
+    ssc.nSchemeID = 1;
+    m_mapSubSchemes[ssc.nID] = ssc;
+
+    ssc.nID = 2;
+    ssc.strName = "金鱼计划定位胆";
+    ssc.strLottery = "17";
+    ssc.strPlayKind = "dwd";
+    ssc.strPlayName = "dwd_dwd_dwd";
+    ssc.nDWDPos = 0;
+    ssc.strFormula = "fx = random()";
+    ssc.dExpectedAccuracy = 80;
+    ssc.nIssuesPerRound = 1;
+    ssc.nMerchantID = 1;
+    ssc.nSchemeID = 1;
+    m_mapSubSchemes[ssc.nID] = ssc;
+
+    ssc.nID = 3;
+    ssc.strName = "财神计划中三直选单式";
+    ssc.strLottery = "29";
+    ssc.strPlayKind = "zsm";
+    ssc.strPlayName = "zsm_zx_ds";
+    ssc.nDWDPos = 0;
+    ssc.strFormula = "fx = random()";
+    ssc.dExpectedAccuracy = 90;
+    ssc.nIssuesPerRound = 3;
+    ssc.nMerchantID = 1;
+    ssc.nSchemeID = 2;
+    m_mapSubSchemes[ssc.nID] = ssc;
+
+    ssc.nID = 4;
+    ssc.strName = "财神计划定位胆";
+    ssc.strLottery = "29";
+    ssc.strPlayKind = "dwd";
+    ssc.strPlayName = "dwd_dwd_dwd";
+    ssc.nDWDPos = 4;
+    ssc.strFormula = "fx = random()";
+    ssc.dExpectedAccuracy = 85;
+    ssc.nIssuesPerRound = 2;
+    ssc.nMerchantID = 1;
+    ssc.nSchemeID = 2;
+    m_mapSubSchemes[ssc.nID] = ssc;
+}
+#endif
+
 bool CDBWrapper::GetSchemeLotterys(__out lstring_list& lstLotterys)
 {
+#ifdef MAKE_TEST_DATA
+    for (map<int, Scheme>::iterator it = m_mapSchemes.begin(); it != m_mapSchemes.end(); it++)
+    {
+        const Scheme& sc = it->second;
+        if (std::find(lstLotterys.begin(), lstLotterys.end(), sc.strLottery) == lstLotterys.end())
+            lstLotterys.push_back(sc.strLottery);
+    }
+#else
     sql::ResultSet* res = ExcuteQuery("SELECT DISTINCT lottery FROM service_scheme WHERE state = 1");
     while (res != NULL && res->next())
         lstLotterys.push_back(res->getString("lottery"));
     delete res;
+#endif
     return !lstLotterys.empty();
 }
 
-// lslib::lstring CDBWrapper::GetSchemeDetailLastIssue(int subscheme_id)
-// {
-//     lstring issue;
-//     lstring stmt;
-//     stmt.format("select issue from service_schemedetail where sub_scheme_id = %d order by update_time desc limit 1", subscheme_id);
-//     sql::ResultSet* res = ExcuteQuery(stmt);
-//     if (res != NULL && res->next())
-//         issue = res->getString("issue");
-//     delete res;
-//     return issue;
-// }
-//
-// bool CDBWrapper::GetAllSchemes(__out__ map<int, Scheme>& mapSchemes)
-// {
-//     sql::ResultSet* res = ExcuteQuery("SELECT * FROM service_scheme");
-//     while (res != NULL && res->next())
-//     {
-//         Scheme sc;
-//         sc.nID = res->getInt("id");
-//         sc.strName = crypto::encoding_convert(res->getString("name").c_str(), "utf-8", "gb2312");
-//         sc.strLottery = crypto::encoding_convert(res->getString("lottery").c_str(), "utf-8", "gb2312");
-//         sc.nSubSchemes = res->getInt("sub_schemes");
-//         sc.dMaxAccuracy = res->getDouble("max_accuracy");
-//         sc.nFavorites = res->getInt("favorites");
-//         sc.nMerchantID = res->getInt("merchant_id");
-//         mapSchemes[sc.nID] = sc;
-//     }
-//     delete res;
-//     return !mapSchemes.empty();
-// }
-//
-// bool CDBWrapper::GetAllSubSchemes(__out__ map<int, SubScheme> mapSubSchemes)
-// {
-//     sql::ResultSet* res = ExcuteQuery("SELECT * FROM service_subscheme");
-//     while (res != NULL && res->next())
-//     {
-//         SubScheme sc;
-//         sc.nID = res->getInt("id");
-//         sc.strName = crypto::encoding_convert(res->getString("name").c_str(), "utf-8", "gb2312");
-//         sc.strPlayKind = crypto::encoding_convert(res->getString("play_kind").c_str(), "utf-8", "gb2312");
-//         sc.strPlayName = crypto::encoding_convert(res->getString("play_name").c_str(), "utf-8", "gb2312");
-//         sc.strFormula = crypto::encoding_convert(res->getString("formula").c_str(), "utf-8", "gb2312");
-//         sc.nIssues = res->getInt("issues");
-//         sc.nRounds = res->getInt("rounds");
-//         sc.dAccuracy = res->getDouble("accuracy");
-//         sc.nMerchantID = res->getInt("merchant_id");
-//         sc.nSchemeID = res->getInt("scheme_id");
-//         mapSubSchemes[sc.nID] = sc;
-//     }
-//     delete res;
-//     return !mapSubSchemes.empty();
-// }
-//
-// bool CDBWrapper::AddSchemeDetail(const SchemeDetail& detail)
-// {
-//     lstring stmt;
-//     stmt.format("INSERT INTO service_schemedetail(lottery, issue, play_kind, play_name, round_index, round_total, code, open_code, win, accuracy, merchant_id, scheme_id, sub_scheme_id)"
-//         "VALUES(%d, '%s', '%s', '%s', %d, %d, '%s', '%s', %d, %0.2f, %d, %d, %d)",
-//         detail.nID,
-//         detail.strIssue.c_str(),
-//         detail.strPlayKind.c_str(),
-//         detail.strPlayName.c_str(),
-//         detail.nRoundIndex,
-//         detail.nRoundTotal,
-//         detail.strCode.c_str(),
-//         detail.strOpenCode.c_str(),
-//         detail.bWin,
-//         detail.dAccuracy,
-//         detail.nMerchantID,
-//         detail.nSchemeID,
-//         detail.nSubSchemeID);
-//     return Excute(stmt);
-// }
-
 bool CDBWrapper::GetSubSchemesByLottery(__out map<int, SubScheme>& mapSubSchemes, _lpcstr lottery)
 {
+#ifdef MAKE_TEST_DATA
+    for (map<int, SubScheme>::iterator it = m_mapSubSchemes.begin(); it != m_mapSubSchemes.end(); it++)
+    {
+        if (it->second.strLottery == lottery)
+            mapSubSchemes[it->first] = it->second;
+    }
+#else
     sql::ResultSet* res = ExcuteQuery("select * from service_subscheme where scheme_id in (select id from service_scheme where lottery = 17);");
     while (res != NULL && res->next())
     {
@@ -124,11 +144,20 @@ bool CDBWrapper::GetSubSchemesByLottery(__out map<int, SubScheme>& mapSubSchemes
         mapSubSchemes[sc.nID] = sc;
     }
     delete res;
+#endif
     return !mapSubSchemes.empty();
 }
 
 bool CDBWrapper::GetSchemeDetailsBySubSchemeID(__out map<int, SchemeDetail>& mapSchemeDetails, int subscheme_id, _lpcstr from_issue)
 {
+#ifdef MAKE_TEST_DATA
+    for (map<int, SchemeDetail>::iterator it = m_mapSchemeDetails.begin(); it != m_mapSchemeDetails.end(); it++)
+    {
+        const SchemeDetail& sd = it->second;
+        if (sd.nSubSchemeID == subscheme_id && sd.strIssue >= from_issue)
+            mapSchemeDetails[it->first] = it->second;
+    }
+#else
     lstring stmt;
     stmt.format("select * from service_schemedetail where sub_scheme_id = %d and issue >= '%s'", subscheme_id, from_issue);
     sql::ResultSet* res = ExcuteQuery(stmt);
@@ -152,11 +181,23 @@ bool CDBWrapper::GetSchemeDetailsBySubSchemeID(__out map<int, SchemeDetail>& map
         mapSchemeDetails[detail.nID] = detail;
     }
     delete res;
+#endif
     return !mapSchemeDetails.empty();
 }
 
 bool CDBWrapper::AddSchemeDetails(const map<int, SchemeDetail>& mapSchemeDetails)
 {
+#ifdef MAKE_TEST_DATA
+    int nIndex = m_mapSchemeDetails.size();
+    for (map<int, SchemeDetail>::const_iterator it = mapSchemeDetails.begin(); it != mapSchemeDetails.end(); it++)
+    {
+        SchemeDetail sd = it->second;
+        sd.nID = ++nIndex;
+        if (m_mapSchemeDetails.find(sd.nID) == m_mapSchemeDetails.end())
+            m_mapSchemeDetails[sd.nID] = sd;
+    }
+    return true;
+#else
     lstring stmt;
     stmt = "begin;";
     for (map<int, SchemeDetail>::const_iterator it = mapSchemeDetails.begin(); it != mapSchemeDetails.end(); it++)
@@ -181,10 +222,20 @@ bool CDBWrapper::AddSchemeDetails(const map<int, SchemeDetail>& mapSchemeDetails
     }
     stmt.append("commit;");
     return Excute(stmt);
+#endif
 }
 
 bool CDBWrapper::UpdateSchemeDetail(const SchemeDetail& schemeDetail)
 {
+#ifdef MAKE_TEST_DATA
+    map<int, SchemeDetail>::iterator it = m_mapSchemeDetails.find(schemeDetail.nID);
+    if (it != m_mapSchemeDetails.end())
+    {
+        it->second = schemeDetail;
+        return true;
+    }
+    return false;
+#else
     lstring stmt;
     stmt.format("update service_schemedetail set \
                 lottery = '%s',\
@@ -216,11 +267,40 @@ bool CDBWrapper::UpdateSchemeDetail(const SchemeDetail& schemeDetail)
                 schemeDetail.nSubSchemeID,
                 schemeDetail.nID);
     return Excute(stmt);
+#endif
 }
 
 bool CDBWrapper::UpdateSubScheme(const SubScheme& subScheme)
 {
+#ifdef MAKE_TEST_DATA
+    map<int, SubScheme>::iterator it = m_mapSubSchemes.find(subScheme.nID);
+    if (it != m_mapSubSchemes.end())
+    {
+        it->second = subScheme;
+        return true;
+    }
+    return false;
+#else
     lstring stmt;
-
+    stmt.format("update service_schemedetail set \
+                issues = %d, \
+                rounds = %d, \
+                win_rounds = %d, \
+                comb_win_rounds = %d, \
+                max_comb_win_rounds = %d, \
+                comb_loss_rounds = %d, \
+                max_comb_loss_rounds = %d, \
+                accuracy = %d, \
+                where id = %d",
+                subScheme.nIssues,
+                subScheme.nRounds,
+                subScheme.nWinRounds,
+                subScheme.nCombWinRounds,
+                subScheme.nMaxCombWinRounds,
+                subScheme.nCombLossRounds,
+                subScheme.nMaxCombLossRounds,
+                subScheme.dAccuracy,
+                subScheme.nID);
     return Excute(stmt);
+#endif
 }
