@@ -102,7 +102,7 @@ bool CDBWrapper::GetSchemeLotterys(__out lstring_list& lstLotterys)
             lstLotterys.push_back(sc.strLottery);
     }
 #else
-    sql::ResultSet* res = ExcuteQuery("SELECT DISTINCT lottery FROM service_scheme WHERE state = 1");
+    sql::ResultSet* res = ExcuteQuery("select distinct lottery from service_scheme where state = 1 and sub_schemes > 0");
     while (res != NULL && res->next())
         lstLotterys.push_back(res->getString("lottery"));
     delete res;
@@ -119,12 +119,15 @@ bool CDBWrapper::GetSubSchemesByLottery(__out map<int, SubScheme>& mapSubSchemes
             mapSubSchemes[it->first] = it->second;
     }
 #else
-    sql::ResultSet* res = ExcuteQuery("select * from service_subscheme where scheme_id in (select id from service_scheme where lottery = 17);");
+    lstring stmt;
+    stmt.format("select * from service_subscheme where lottery = '%s';", lottery);
+    sql::ResultSet* res = ExcuteQuery(stmt);
     while (res != NULL && res->next())
     {
         SubScheme sc;
         sc.nID = res->getInt("id");
         sc.strName = res->getString("name").c_str();
+        sc.strLottery = res->getString("lottery").c_str();
         sc.strPlayKind = res->getString("play_kind").c_str();
         sc.strPlayName = res->getString("play_name").c_str();
         sc.nDWDPos = res->getInt("dwd_pos");
@@ -174,7 +177,6 @@ bool CDBWrapper::GetSchemeDetailsBySubSchemeID(__out map<int, SchemeDetail>& map
         detail.strCode = res->getString("code");
         detail.strOpenCode = res->getString("open_code");
         detail.bWin = res->getInt("win");
-        detail.dAccuracy = res->getInt("accuracy");
         detail.nMerchantID = res->getInt("merchant_id");
         detail.nSchemeID = res->getInt("scheme_id");
         detail.nSubSchemeID = res->getInt("sub_scheme_id");
@@ -198,34 +200,40 @@ bool CDBWrapper::AddSchemeDetails(const map<int, SchemeDetail>& mapSchemeDetails
     }
     return true;
 #else
+    //TODO: cannot perform multi-statements on one excute. need to be fixed!
+    bool ret = true;
     lstring stmt;
-    stmt = "begin;";
+//     stmt = "begin;";
     for (map<int, SchemeDetail>::const_iterator it = mapSchemeDetails.begin(); it != mapSchemeDetails.end(); it++)
     {
         const SchemeDetail& rfDetail = it->second;
-        stmt.append_format("insert into service_schemedetail ( \
-                           lottery, issue, play_kind, play_name, round_index, round_total, code, open_code, win, accuracy, merchant_id, scheme_id, sub_scheme_id \
-                           ) values ( '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', %d, %0.2f, %d, %d, %d );",
+        stmt./*append_*/format("insert into service_schemedetail ( \
+                           lottery, issue, play_kind, play_name, dwd_pos, round_index, round_total, code, open_code, win, merchant_id, scheme_id, sub_scheme_id, add_time, update_time \
+                           ) values ( '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s', %d, %d, %d, %d, '%s', '%s' );",
                            rfDetail.strLottery.c_str(),
                            rfDetail.strIssue.c_str(),
                            rfDetail.strPlayKind.c_str(),
                            rfDetail.strPlayName.c_str(),
+                           rfDetail.nDWDPos,
                            rfDetail.nRoundIndex,
                            rfDetail.nRoundTotal,
                            rfDetail.strCode.c_str(),
                            rfDetail.strOpenCode.c_str(),
                            rfDetail.bWin,
-                           rfDetail.dAccuracy,
                            rfDetail.nMerchantID,
                            rfDetail.nSchemeID,
-                           rfDetail.nSubSchemeID);
+                           rfDetail.nSubSchemeID,
+                           Time::GetCurDateTimeStr(true).c_str(),
+                           Time::GetCurDateTimeStr(true).c_str());
+        ret &= Excute(stmt);
     }
-    stmt.append("commit;");
-    return Excute(stmt);
+    return ret;
+//     stmt.append("commit;");
+//     return Excute(stmt);
 #endif
 }
 
-bool CDBWrapper::UpdateSchemeDetail(const SchemeDetail& schemeDetail)
+bool CDBWrapper::UpdateSchemeDetailResult(const SchemeDetail& schemeDetail)
 {
 #ifdef MAKE_TEST_DATA
     map<int, SchemeDetail>::iterator it = m_mapSchemeDetails.find(schemeDetail.nID);
@@ -238,39 +246,17 @@ bool CDBWrapper::UpdateSchemeDetail(const SchemeDetail& schemeDetail)
 #else
     lstring stmt;
     stmt.format("update service_schemedetail set \
-                lottery = '%s',\
-                issue = '%s', \
-                play_kind = '%s', \
-                play_name = '%s', \
-                round_index = %d, \
-                round_total = %d, \
-                code = '%s', \
                 open_code = '%s', \
-                win = %d, \
-                accuracy = %0.2f, \
-                merchant_id = %d, \
-                scheme_id = %d, \
-                sub_scheme_id = %d \
+                win = %d \
                 where id = %d",
-                schemeDetail.strLottery.c_str(),
-                schemeDetail.strIssue.c_str(),
-                schemeDetail.strPlayKind.c_str(),
-                schemeDetail.strPlayName.c_str(),
-                schemeDetail.nRoundIndex,
-                schemeDetail.nRoundTotal,
-                schemeDetail.strCode.c_str(),
                 schemeDetail.strOpenCode.c_str(),
                 schemeDetail.bWin,
-                schemeDetail.dAccuracy,
-                schemeDetail.nMerchantID,
-                schemeDetail.nSchemeID,
-                schemeDetail.nSubSchemeID,
                 schemeDetail.nID);
     return Excute(stmt);
 #endif
 }
 
-bool CDBWrapper::UpdateSubScheme(const SubScheme& subScheme)
+bool CDBWrapper::UpdateSubSchemeStatistic(const SubScheme& subScheme)
 {
 #ifdef MAKE_TEST_DATA
     map<int, SubScheme>::iterator it = m_mapSubSchemes.find(subScheme.nID);
@@ -282,7 +268,7 @@ bool CDBWrapper::UpdateSubScheme(const SubScheme& subScheme)
     return false;
 #else
     lstring stmt;
-    stmt.format("update service_schemedetail set \
+    stmt.format("update service_subscheme set \
                 issues = %d, \
                 rounds = %d, \
                 win_rounds = %d, \
@@ -290,7 +276,7 @@ bool CDBWrapper::UpdateSubScheme(const SubScheme& subScheme)
                 max_comb_win_rounds = %d, \
                 comb_loss_rounds = %d, \
                 max_comb_loss_rounds = %d, \
-                accuracy = %d, \
+                accuracy = %0.2f \
                 where id = %d",
                 subScheme.nIssues,
                 subScheme.nRounds,

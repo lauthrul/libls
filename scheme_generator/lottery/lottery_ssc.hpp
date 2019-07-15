@@ -32,10 +32,11 @@ namespace lottery
             // code: 123456-123456-123456-123456-123456
             // openCode: 3,4,6,8,1
             lstring_array arr;          code.split(arr, "-");
-            lstring_array arr_open;     openCode.split(arr_open, ",");
-            for (size_t j = range[0]; j <= min(arr.size() - 1, range[1]); j++)
+            lstring compactOpenCode = lstring(openCode).replace(",", "");
+            compactOpenCode = compactOpenCode.substr(range[0], range[1] - range[0] + 1);
+            for (size_t j = 0; j < arr.size(); j++)
             {
-                if (arr[j].find(arr_open[j]) == string::npos)
+                if (arr[j].find(compactOpenCode[j]) == string::npos)
                     return false;
             }
             return true;

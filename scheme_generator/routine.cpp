@@ -127,7 +127,7 @@ int CRoutine::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lPar
                         lastSchemeDetail.bWin = lottery::CheckWin(lastSchemeDetail);
                         lottery::StatisticSubScheme(rfSubScheme, lastSchemeDetail);
 
-                        g_dbWrapper.UpdateSchemeDetail(lastSchemeDetail);
+                        g_dbWrapper.UpdateSchemeDetailResult(lastSchemeDetail);
 
                         pLastSchemeDetail = new SchemeDetail(lastSchemeDetail);
                         apLastSchemeDetail = auto_ptr<SchemeDetail>(pLastSchemeDetail);
@@ -209,7 +209,7 @@ int CRoutine::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lPar
                     if (detail.nRoundIndex == 0) rfSubScheme.nRounds++;
                 }
                 g_dbWrapper.AddSchemeDetails(mapSchemeDetails);
-                g_dbWrapper.UpdateSubScheme(rfSubScheme);
+                g_dbWrapper.UpdateSubSchemeStatistic(rfSubScheme);
             }
         }
         break;

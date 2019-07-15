@@ -77,7 +77,6 @@ struct SchemeDetail
     lstring strCode;
     lstring strOpenCode;
     bool bWin;
-    double dAccuracy;
     int nMerchantID;
     int nSchemeID;
     int nSubSchemeID;
@@ -89,7 +88,6 @@ struct SchemeDetail
         nRoundIndex = 0;
         nRoundTotal = 0;
         bWin = false;
-        dAccuracy = 0;
         nMerchantID = 0;
         nSchemeID = 0;
         nSubSchemeID = 0;
@@ -109,8 +107,8 @@ public:
     bool GetSubSchemesByLottery(__out map<int, SubScheme>& mapSubSchemes, _lpcstr lottery);
     bool GetSchemeDetailsBySubSchemeID(__out map<int, SchemeDetail>& mapSchemeDetails, int subscheme_id, _lpcstr from_issue);
     bool AddSchemeDetails(const map<int, SchemeDetail>& mapSchemeDetails);
-    bool UpdateSchemeDetail(const SchemeDetail& schemeDetail);
-    bool UpdateSubScheme(const SubScheme& subScheme);
+    bool UpdateSchemeDetailResult(const SchemeDetail& schemeDetail);
+    bool UpdateSubSchemeStatistic(const SubScheme& subScheme);
 
 protected:
 #ifdef MAKE_TEST_DATA

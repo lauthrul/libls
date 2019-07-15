@@ -120,7 +120,7 @@
 				Optimization="0"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(SolutionDir)\libls&quot;;&quot;$(SolutionDir)\libls\core&quot;;&quot;$(SolutionDir)\libls\utils&quot;;&quot;$(SolutionDir)\libls\3rd-party\include&quot;;&quot;$(ProjectDir)\3rd-party\mysql-connector-c++-noinstall-1.0.5-win32\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;MAKE_TEST_DATA"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"

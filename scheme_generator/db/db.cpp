@@ -58,6 +58,25 @@ bool CDB::Connect()
     try
     {
         m_con = m_driver->connect(m_strHost.c_str(), m_strUser.c_str(), m_strPassword.c_str());
+
+//         sql::ConnectPropertyVal  val;
+//         map<string, sql::ConnectPropertyVal> options;
+// 
+//         val.str.val = m_strHost.c_str();
+//         val.str.len = m_strHost.length();
+//         options["hostName"] = val;
+// 
+//         val.str.val = m_strUser.c_str();
+//         val.str.len = m_strUser.length();
+//         options["userName"] = val;
+// 
+//         val.str.val = m_strPassword.c_str();
+//         val.str.len = m_strPassword.length();
+//         options["password"] = val;
+// 
+//         val.dval = true;
+//         options["CLIENT_MULTI_STATEMENTS"] = val;
+//         m_con = m_driver->connect(options);
     }
     catch (sql::SQLException& e)
     {
@@ -100,7 +119,7 @@ bool CDB::UseDB(_lpcstr db)
     }
     catch (sql::SQLException& e)
     {
-        ERROR_LOG(g_pLogger, "use db[%s] fail. exception: %d-%s", db, e.getErrorCode(), e.getSQLState());
+        ERROR_LOG(g_pLogger, "use db[%s] fail. exception: %d-%s-%s", db, e.getErrorCode(), e.getSQLState(), e.what());
         return false;
     }
     return true;
@@ -121,7 +140,7 @@ bool CDB::Excute(_lpcstr sql)
     }
     catch (sql::SQLException& e)
     {
-        ERROR_LOG(g_pLogger, "execute statement[%s] fail. exception: %d-%s", sql, e.getErrorCode(), e.getSQLState());
+        ERROR_LOG(g_pLogger, "execute statement[%s] fail. exception: %d-%s-%s", sql, e.getErrorCode(), e.getSQLState(), e.what());
     }
     delete stmt;
     return ret;
@@ -141,7 +160,7 @@ sql::ResultSet* CDB::ExcuteQuery(_lpcstr sql)
     }
     catch (sql::SQLException& e)
     {
-        ERROR_LOG(g_pLogger, "execute query statement[%s] fail. exception: %d-%s", sql, e.getErrorCode(), e.getSQLState());
+        ERROR_LOG(g_pLogger, "execute query statement[%s] fail. exception: %d-%s-%s", sql, e.getErrorCode(), e.getSQLState(), e.what());
     }
     delete stmt;
     return res;
