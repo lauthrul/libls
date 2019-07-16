@@ -102,7 +102,7 @@ bool CDBWrapper::GetSchemeLotterys(__out lstring_list& lstLotterys)
             lstLotterys.push_back(sc.strLottery);
     }
 #else
-    sql::ResultSet* res = ExcuteQuery("select distinct lottery from service_scheme where state = 1 and sub_schemes > 0");
+    sql::ResultSet* res = ExcuteQuery("select distinct lottery from service_subscheme where state = 1 and lottery in ( select  distinct lottery from service_scheme where state = 1)");
     while (res != NULL && res->next())
         lstLotterys.push_back(res->getString("lottery"));
     delete res;
