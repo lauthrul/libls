@@ -16,15 +16,15 @@ namespace lslib
 {
     namespace crypto
     {
-        LSLIB_API lstring hex_to_str(_lpbyte data, size_t len)
+        LSLIB_API string hex_to_str(_lpbyte data, size_t len)
         {
-            lstring strret;
+            string strret;
             for (size_t i = 0; i < len; i++)
-                strret.append_format("%02x", data[i]);
+                strret += strtool::format("%02x", data[i]);
             return strret;
         }
 
-        LSLIB_API lstring md5(_lpbyte data, size_t len)
+        LSLIB_API string md5(_lpbyte data, size_t len)
         {
             MD5_CTX ctx;
             MD5Init(&ctx);
@@ -33,16 +33,16 @@ namespace lslib
             return hex_to_str(ctx.digest, 16);
         }
 
-        LSLIB_API lstring file_md5(_lpcstr pfile)
+        LSLIB_API string file_md5(_lpcstr pfile)
         {
             _ldword size = 0;
             _lpbyte data = os::get_file_buffer(pfile, &size);
-            lstring strret = md5(data, size);
+            string strret = md5(data, size);
             os::release_file_buffer(data);
             return strret;
         }
 
-        LSLIB_API lstring sha1(_lpbyte data, size_t len)
+        LSLIB_API string sha1(_lpbyte data, size_t len)
         {
             SHA1_CTX ctx;
             SHA1Init(&ctx);
@@ -51,79 +51,79 @@ namespace lslib
             return hex_to_str(ctx.digest, 20);
         }
 
-        LSLIB_API lstring file_sha1(_lpcstr pfile)
+        LSLIB_API string file_sha1(_lpcstr pfile)
         {
             _ldword size = 0;
             _lpbyte data = os::get_file_buffer(pfile, &size);
-            lstring strret = sha1(data, size);
+            string strret = sha1(data, size);
             os::release_file_buffer(data);
             return strret;
         }
 
-        LSLIB_API lstring sha224(_lpbyte data, size_t len)
+        LSLIB_API string sha224(_lpbyte data, size_t len)
         {
             return "";
         }
 
-        LSLIB_API lstring file_sha224(_lpcstr pfile)
+        LSLIB_API string file_sha224(_lpcstr pfile)
         {
             _ldword size = 0;
             _lpbyte data = os::get_file_buffer(pfile, &size);
-            lstring strret = sha224(data, size);
+            string strret = sha224(data, size);
             os::release_file_buffer(data);
             return strret;
         }
 
-        LSLIB_API lstring sha256(_lpbyte data, size_t len)
+        LSLIB_API string sha256(_lpbyte data, size_t len)
         {
             uint8_t hash[SHA256_BYTES] = {0};
             ::sha256(data, len, hash);
             return hex_to_str(hash, SHA256_BYTES);
         }
 
-        LSLIB_API lstring file_sha256(_lpcstr pfile)
+        LSLIB_API string file_sha256(_lpcstr pfile)
         {
             _ldword size = 0;
             _lpbyte data = os::get_file_buffer(pfile, &size);
-            lstring strret = sha256(data, size);
+            string strret = sha256(data, size);
             os::release_file_buffer(data);
             return strret;
         }
 
-        LSLIB_API lstring sha384(_lpbyte data, size_t len)
+        LSLIB_API string sha384(_lpbyte data, size_t len)
         {
             return "";
         }
 
-        LSLIB_API lstring file_sha384(_lpcstr pfile)
+        LSLIB_API string file_sha384(_lpcstr pfile)
         {
             _ldword size = 0;
             _lpbyte data = os::get_file_buffer(pfile, &size);
-            lstring strret = sha384(data, size);
+            string strret = sha384(data, size);
             os::release_file_buffer(data);
             return strret;
         }
 
-        LSLIB_API lstring sha512(_lpbyte data, size_t len)
+        LSLIB_API string sha512(_lpbyte data, size_t len)
         {
             return "";
         }
 
-        LSLIB_API lstring file_sha512(_lpcstr pfile)
+        LSLIB_API string file_sha512(_lpcstr pfile)
         {
             _ldword size = 0;
             _lpbyte data = os::get_file_buffer(pfile, &size);
-            lstring strret = sha512(data, size);
+            string strret = sha512(data, size);
             os::release_file_buffer(data);
             return strret;
         }
 
-        LSLIB_API lstring base64_encode(_lpbyte data, size_t len)
+        LSLIB_API string base64_encode(_lpbyte data, size_t len)
         {
             int outlen = estimate_base64_encode_len(len);
             _lpbyte pbuf = lsalloc(outlen + 1);
             outlen = ::base64_encode(data, len, (char*)pbuf);
-            lstring strrect;
+            string strrect;
             if (outlen > 0) strrect.assign((_lpcstr)pbuf, outlen);
             lsfree(pbuf);
             return strrect;
@@ -173,7 +173,7 @@ namespace lslib
             return data_buf;
         }
 
-        LSLIB_API lstring des_encrypt(_lpcstr data,                 // data(string or byte array) to be encrypt
+        LSLIB_API string des_encrypt(_lpcstr data,                 // data(string or byte array) to be encrypt
                                       int data_len,                 // data length in bytes
                                       _lpcstr key,                  // the key must be length of 64 bits (8 bytes)
                                       crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
@@ -189,14 +189,14 @@ namespace lslib
             for (int i = 0; i < data_len; i += DES_BLOCK_SIZE)
                 ::des_crypt(data_buf + i, data_buf + i, key_schedule);
 
-            lstring strret;
+            string strret;
             strret.assign((_lpcstr)data_buf, data_len);
             free(data_buf);
             if (out_len) *out_len = data_len;
             return strret;
         }
 
-        LSLIB_API lstring des_decrypt(_lpcstr data,                 // data(string or byte array) to be decrypt, data length must be multiple of 8.
+        LSLIB_API string des_decrypt(_lpcstr data,                 // data(string or byte array) to be decrypt, data length must be multiple of 8.
                                       int data_len,                 // data length in bytes
                                       _lpcstr key,                  // the key must be length of 64 bits (8 bytes)
                                       crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
@@ -215,14 +215,14 @@ namespace lslib
 
             crypto_unpadding(data_buf, data_len, mode);
 
-            lstring strret;
+            string strret;
             strret.assign((_lpcstr)data_buf, data_len);
             free(data_buf);
             if (out_len) *out_len = data_len;
             return strret;
         }
 
-        LSLIB_API lstring des_encrypt_cbc(_lpcstr data,             // data(string or byte array) to be encrypt
+        LSLIB_API string des_encrypt_cbc(_lpcstr data,             // data(string or byte array) to be encrypt
                                          int data_len,             // data length in bytes
                                          _lpcstr key,              // the key must be length of 64 bits (8 bytes)
                                          crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
@@ -238,15 +238,15 @@ namespace lslib
 
             ::des_encrypt_cbc(data_buf, data_len, data_buf, key_schedule, (uint8_t*)iv);
 
-            lstring strret;
+            string strret;
             strret.assign((_lpcstr)data_buf, data_len);
             free(data_buf);
             if (out_len) *out_len = data_len;
             return strret;
         }
 
-        // return data is a string or byte array (stored in lstring), check the length (out_len) before use.
-        LSLIB_API lstring des_decrypt_cbc(_lpcstr data,             // data(string or byte array) to be decrypt, data length must be multiple of 8.
+        // return data is a string or byte array (stored in string), check the length (out_len) before use.
+        LSLIB_API string des_decrypt_cbc(_lpcstr data,             // data(string or byte array) to be decrypt, data length must be multiple of 8.
                                          int data_len,             // data length in bytes, must be multiple of 8.
                                          _lpcstr key,              // the key must be length of 64 bits (8 bytes)
                                          crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
@@ -265,14 +265,14 @@ namespace lslib
 
             crypto_unpadding(data_buf, data_len, mode);
 
-            lstring strret;
+            string strret;
             strret.assign((_lpcstr)data_buf, data_len);
             free(data_buf);
             if (out_len) *out_len = data_len;
             return strret;
         }
 
-        LSLIB_API lstring three_des_encrypt(_lpcstr data,                 // data(string or byte array) to be encrypt
+        LSLIB_API string three_des_encrypt(_lpcstr data,                 // data(string or byte array) to be encrypt
                                             int data_len,                 // data length in bytes
                                             _lpcstr key,                  // the key must be length of 192 bits (24 bytes)
                                             crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
@@ -288,14 +288,14 @@ namespace lslib
             for (int i = 0; i < data_len; i += DES_BLOCK_SIZE)
                 ::three_des_crypt(data_buf + i, data_buf + i, key_schedule);
 
-            lstring strret;
+            string strret;
             strret.assign((_lpcstr)data_buf, data_len);
             free(data_buf);
             if (out_len) *out_len = data_len;
             return strret;
         }
 
-        LSLIB_API lstring three_des_decrypt(_lpcstr data,                 // data(string or byte array) to be decrypt, data length must be multiple of 8.
+        LSLIB_API string three_des_decrypt(_lpcstr data,                 // data(string or byte array) to be decrypt, data length must be multiple of 8.
                                             int data_len,                 // data length in bytes
                                             _lpcstr key,                  // the key must be length of 192 bits (24 bytes)
                                             crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
@@ -314,14 +314,14 @@ namespace lslib
 
             crypto_unpadding(data_buf, data_len, mode);
 
-            lstring strret;
+            string strret;
             strret.assign((_lpcstr)data_buf, data_len);
             free(data_buf);
             if (out_len) *out_len = data_len;
             return strret;
         }
 
-        LSLIB_API lstring three_des_encrypt_cbc(_lpcstr data,             // data(string or byte array) to be encrypt
+        LSLIB_API string three_des_encrypt_cbc(_lpcstr data,             // data(string or byte array) to be encrypt
                                                int data_len,             // data length in bytes
                                                _lpcstr key,              // the key must be length of 64 bits (8 bytes)
                                                crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
@@ -337,14 +337,14 @@ namespace lslib
 
             ::three_des_encrypt_cbc(data_buf, data_len, data_buf, key_schedule, (uint8_t*)iv);
 
-            lstring strret;
+            string strret;
             strret.assign((_lpcstr)data_buf, data_len);
             free(data_buf);
             if (out_len) *out_len = data_len;
             return strret;
         }
 
-        LSLIB_API lstring three_des_decrypt_cbc(_lpcstr data,             // data(string or byte array) to be decrypt, data length must be multiple of 8.
+        LSLIB_API string three_des_decrypt_cbc(_lpcstr data,             // data(string or byte array) to be decrypt, data length must be multiple of 8.
                                                int data_len,             // data length in bytes, must be multiple of 8.
                                                _lpcstr key,              // the key must be length of 64 bits (8 bytes)
                                                crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
@@ -363,7 +363,7 @@ namespace lslib
 
             crypto_unpadding(data_buf, data_len, mode);
 
-            lstring strret;
+            string strret;
             strret.assign((_lpcstr)data_buf, data_len);
             free(data_buf);
             if (out_len) *out_len = data_len;
@@ -371,7 +371,7 @@ namespace lslib
         }
 
 
-        LSLIB_API lstring aes_encrypt(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, __out__ int* out_len)
+        LSLIB_API string aes_encrypt(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, __out__ int* out_len)
         {
             uint32_t key_schedule[60] = {0};
             aes_key_setup((uint8_t*)key, key_schedule, key_bits);
@@ -383,14 +383,14 @@ namespace lslib
             for (int i = 0; i < data_len; i += AES_BLOCK_SIZE)
                 ::aes_encrypt(data_buf + i, data_buf + i, key_schedule, key_bits);
 
-            lstring strret;
+            string strret;
             strret.assign((_lpcstr)data_buf, data_len);
             free(data_buf);
             if (out_len) *out_len = data_len;
             return strret;
         }
 
-        LSLIB_API lstring aes_decrypt(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, __out__ int* out_len)
+        LSLIB_API string aes_decrypt(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, __out__ int* out_len)
         {
             if (data_len % AES_BLOCK_SIZE != 0) return ""; // decrypt data size must be times of AES_BLOCK_SIZE
 
@@ -405,14 +405,14 @@ namespace lslib
 
             crypto_unpadding(data_buf, data_len, mode);
 
-            lstring strret;
+            string strret;
             strret.assign((_lpcstr)data_buf, data_len);
             free(data_buf);
             if (out_len) *out_len = data_len;
             return strret;
         }
 
-        LSLIB_API lstring aes_encrypt_cbc(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, _lchar iv[16], __out__ int* out_len)
+        LSLIB_API string aes_encrypt_cbc(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, _lchar iv[16], __out__ int* out_len)
         {
             uint32_t key_schedule[60] = {0};
             aes_key_setup((uint8_t*)key, key_schedule, key_bits);
@@ -423,14 +423,14 @@ namespace lslib
 
             ::aes_encrypt_cbc(data_buf, data_len, data_buf, key_schedule, key_bits, (uint8_t*)iv);
 
-            lstring strret;
+            string strret;
             strret.assign((_lpcstr)data_buf, data_len);
             free(data_buf);
             if (out_len) *out_len = data_len;
             return strret;
         }
 
-        LSLIB_API lstring aes_decrypt_cbc(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, _lchar iv[16], __out__ int* out_len)
+        LSLIB_API string aes_decrypt_cbc(_lpcstr data, int data_len, _lpcstr key, crypto_key_bits key_bits, crypto_padding_mode mode, _lchar iv[16], __out__ int* out_len)
         {
             if (data_len % AES_BLOCK_SIZE != 0) return ""; // decrypt data size must be times of AES_BLOCK_SIZE
 
@@ -444,31 +444,31 @@ namespace lslib
 
             crypto_unpadding(data_buf, data_len, mode);
 
-            lstring strret;
+            string strret;
             strret.assign((_lpcstr)data_buf, data_len);
             free(data_buf);
             if (out_len) *out_len = data_len;
             return strret;
         }
 
-        LSLIB_API lstring url_encode(_lpcstr data, int len)
+        LSLIB_API string url_encode(_lpcstr data, int len)
         {
             int out_len = ::url_encode(data, len, NULL, 0);
             char* pbuf = new char[out_len + 1];
             memset(pbuf, 0, out_len + 1);
             ::url_encode(data, len, pbuf, out_len);
-            lstring str; str.assign(pbuf, out_len);
+            string str; str.assign(pbuf, out_len);
             delete[] pbuf;
             return str;
         }
 
-        LSLIB_API lstring url_decode(_lpcstr data, int len)
+        LSLIB_API string url_decode(_lpcstr data, int len)
         {
             char* pbuf = new char[len + 1];
             memset(pbuf, 0, len + 1);
             memcpy(pbuf, data, len);
             int out_len = ::url_decode(pbuf, len);
-            lstring str; str.assign(pbuf, out_len);
+            string str; str.assign(pbuf, out_len);
             delete[] pbuf;
             return str;
         }
@@ -487,13 +487,13 @@ namespace lslib
             return ret;
         }
 
-        LSLIB_API lstring encoding_convert(_lpcstr data, _lpcstr from_charset, _lpcstr to_charset)
+        LSLIB_API string encoding_convert(_lpcstr data, _lpcstr from_charset, _lpcstr to_charset)
         {
             int buff_size = 4 * strlen(data);
             _lpstr buf = (_lpstr)malloc(buff_size);
             memset(buf, 0, buff_size);
             encoding_convert(from_charset, to_charset, data, strlen(data), buf, buff_size);
-            lstring strret; strret.assign(buf, buff_size);
+            string strret; strret.assign(buf, buff_size);
             free(buf);
             return strret;
         }

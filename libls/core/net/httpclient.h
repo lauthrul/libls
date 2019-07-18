@@ -30,7 +30,7 @@ namespace lslib
             HTTP_DOWNLOAD,
             HTTP_UPLOAD,
         };
-        inline lstring GetHttpMethodStr(EHttpMethod eMethod)
+        inline string GetHttpMethodStr(EHttpMethod eMethod)
         {
             switch (eMethod)
             {
@@ -46,8 +46,8 @@ namespace lslib
         struct SHttpParam
         {
             EHttpMethod             eMethod;
-            lstring                 strUrl;
-            map<lstring, lstring>   mapHeaders;
+            string                 strUrl;
+            map<string, string>   mapHeaders;
             int                     nConnetTimeout;
             int                     nPerformTimeout;
             int                     nTryCount;
@@ -94,7 +94,7 @@ namespace lslib
 
         struct SHttpPostParam : public SHttpParam
         {
-            lstring                 strPost;
+            string                 strPost;
             bool                    bgZip;
             int                     nThresholdSize;     // above this value, data will be gzip
 
@@ -124,8 +124,8 @@ namespace lslib
 
         struct SHttpDowloadParam : public SHttpParam
         {
-            lstring                 strFile;
-            lstring                 strToken;
+            string                 strFile;
+            string                 strToken;
             bool                    bBreakPointSupport;
             DownloadFileCallback    cb;
             void*                   clientp;
@@ -156,8 +156,8 @@ namespace lslib
 
         struct SHttpUploadParam : public SHttpParam
         {
-            lstring                 strFile;
-            lstring                 strRemoteFile;
+            string                 strFile;
+            string                 strRemoteFile;
 
             SHttpUploadParam()
             {
@@ -183,8 +183,8 @@ namespace lslib
         struct SHttpResult
         {
             int                     nCode;
-            map<lstring, lstring>    mapHeaders;
-            lstring                 strData;
+            map<string, string>    mapHeaders;
+            string                 strData;
             int                     nDataLen;
             int                     nTimeSpend; // million second
 
@@ -203,15 +203,15 @@ namespace lslib
 
         struct SHttpUrl
         {
-            lstring strScheme;
-            lstring strHostName;
+            string strScheme;
+            string strHostName;
             int nPort;
-            lstring strPath;
-            map<lstring, lstring> mapQuerys;
-            lstring strTag;
+            string strPath;
+            map<string, string> mapQuerys;
+            string strTag;
         };
         LSLIB_API SHttpUrl          CrackUrl(_lpcstr lpstrUrl);
-        LSLIB_API lstring           ReverseUrl(const SHttpUrl& vUrl);
+        LSLIB_API string           ReverseUrl(const SHttpUrl& vUrl);
 
         //////////////////////////////////////////////////////////////////////////
         class LSLIB_API CHttpClient
@@ -230,12 +230,12 @@ namespace lslib
             // for debug print
         protected:
             static int              Perform(CURL* pCurl, const SHttpParam& vParam, __inout__ SHttpResult& vResult);
-            static lstring          DumpParamText(SHttpParam* pParam);
-            static lstring          DumpResultText(SHttpResult* pResult);
+            static string          DumpParamText(SHttpParam* pParam);
+            static string          DumpResultText(SHttpResult* pResult);
 
         private:
-            static lstring          m_strDefaultAgent;
-            static lstring          m_strDefaultCookieFile;
+            static string          m_strDefaultAgent;
+            static string          m_strDefaultCookieFile;
         };
 
         // for multi-thread calling CHttpClient, must call following two functions in main thread to avoid https multi-thread unsafety.

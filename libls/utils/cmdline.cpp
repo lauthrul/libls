@@ -6,9 +6,9 @@ namespace lslib
 {
     namespace utils
     {
-        int ICmdRuntine::ParserCmdLine(_lpcstr cmd, __out__ lstring_array& outarr)
+        int ICmdRuntine::ParserCmdLine(_lpcstr cmd, __out__ string_array& outarr)
         {
-            if (is_empty(cmd)) return 0;
+            if (strtool::is_empty(cmd)) return 0;
 
             _lchar buf[MAX_PATH + 1] = {0};
             _lpcstr p = cmd;
@@ -21,7 +21,7 @@ namespace lslib
                 p = q;
                 if (*p == '\"' || *p == '\'')
                 {
-                    q = strstr(p + 1, lstring(*p));
+                    q = strstr(p + 1, string(1, *p).c_str());
                     p++;
                 }
                 else

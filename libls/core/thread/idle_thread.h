@@ -34,7 +34,7 @@ namespace lslib
     {
         _ldword                     m_dwUniqueID;
         _ldword                       m_dwTID;
-        lstring                     m_strTaskName;
+        string                     m_strTaskName;
         _ldword                       m_pParam;  // parameter data
         _ldword                       m_pResult; // result data
         bool                        m_bKeepSingle;

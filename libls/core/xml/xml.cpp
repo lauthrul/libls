@@ -32,10 +32,9 @@ namespace lslib
     {
         if (pParent == NULL) return NULL;
 
-        lstring_array arr;
-        lstring strPath = lpstrPath;
-        strPath.replace('\\', '/');
-        strPath.split(arr, "/");
+        string_array arr;
+        string strPath = strtool::replace(lpstrPath, '\\', '/');
+        strtool::split(arr, strPath.c_str(), "/");
         if (arr.empty()) return pParent;
 
         XmlNode* pNode = pParent;
@@ -76,20 +75,20 @@ namespace lslib
         return NULL;
     }
 
-    lstring Xml::GetAttribute(const XmlNode& node, _lpcstr lpstrAttri)
+    string Xml::GetAttribute(const XmlNode& node, _lpcstr lpstrAttri)
     {
         const char* attr = node.Attribute(lpstrAttri);
         return attr != NULL ? attr : "";
     }
 
-    lstring Xml::GetValue(const XmlNode& node)
+    string Xml::GetValue(const XmlNode& node)
     {
         const XmlNode* pNode =  node.FirstChildElement();
         if (pNode == NULL) return node.Value();
         else return Dumps(*pNode);
     }
 
-    lstring Xml::Dumps(const XmlNode& node, bool bPretty /*= false*/)
+    string Xml::Dumps(const XmlNode& node, bool bPretty /*= false*/)
     {
         return "";
     }

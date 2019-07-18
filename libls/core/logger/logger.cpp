@@ -122,7 +122,7 @@ namespace lslib
                 m_mapLayouts[layout.strName] = layout;
             }
 
-            lstring str;
+            string str;
             pNode = xml.m_xmlRoot->FirstChildElement("appender");
             for (; pNode != NULL; pNode = pNode->NextSiblingElement("appender"))
             {
@@ -170,7 +170,7 @@ namespace lslib
 
                     if (appender.strLogDate.empty())
                     {
-                        lstring writeTime = os::get_file_attr(appender.strFile).writeTime;
+                        string writeTime = os::get_file_attr(appender.strFile).writeTime;
                         if (!writeTime.empty())
                         {
                             Time tm; tm.Parser(writeTime);
@@ -231,21 +231,21 @@ namespace lslib
 
         SLogLayout* SLogConfig::GetLayout(_lpcstr name)
         {
-            map<lstring, SLogLayout>::iterator it = m_mapLayouts.find(name);
+            map<string, SLogLayout>::iterator it = m_mapLayouts.find(name);
             if (it != m_mapLayouts.end()) return &it->second;
             return NULL;
         }
 
         SLogAppender* SLogConfig::GetAppender(_lpcstr name)
         {
-            map<lstring, SLogAppender>::iterator it = m_mapAppenders.find(name);
+            map<string, SLogAppender>::iterator it = m_mapAppenders.find(name);
             if (it != m_mapAppenders.end()) return &it->second;
             return NULL;
         }
 
         SLogger* SLogConfig::GetLogger(_lpcstr name)
         {
-            map<lstring, SLogger>::iterator it = m_mapLogger.find(name);
+            map<string, SLogger>::iterator it = m_mapLogger.find(name);
             if (it != m_mapLogger.end()) return &it->second;
             return NULL;
         }
@@ -291,7 +291,7 @@ namespace lslib
 
         void CLogManager::Destroy()
         {
-            for (map<lstring, SLogAppender>::iterator it = m_logConfig.m_mapAppenders.begin(); it != m_logConfig.m_mapAppenders.end(); it++)
+            for (map<string, SLogAppender>::iterator it = m_logConfig.m_mapAppenders.begin(); it != m_logConfig.m_mapAppenders.end(); it++)
             {
                 SLogAppender& appender = it->second;
                 if (appender.fp != NULL)
@@ -351,7 +351,7 @@ namespace lslib
             }
             m_mtxLogEntityTmp.Unlock();
 
-            lstring str;
+            string str;
             m_mtxLogEntity.Lock();
             it = m_lstLogEntitys.begin();
             while (!m_lstLogEntitys.empty())
@@ -396,15 +396,15 @@ namespace lslib
                                         {
                                             if (appender.fp != NULL) fclose(appender.fp);
                                             for (int i = appender.nMaxFileCounts - 1; i <= appender.nLogFileIndex; i++)
-                                                os::rm(appender.strFile + lstring().format(".%d", i));
+                                                os::rm(appender.strFile + string().format(".%d", i));
                                             for (int i = appender.nLogFileIndex; i >= 0; i--)
                                             {
                                                 if (i == 0)
                                                     os::rename(appender.strFile,
-                                                               appender.strFile + lstring().format(".%d", i + 1));
+                                                               appender.strFile + string().format(".%d", i + 1));
                                                 else
-                                                    os::rename(appender.strFile + lstring().format(".%d", i),
-                                                               appender.strFile + lstring().format(".%d", i + 1));
+                                                    os::rename(appender.strFile + string().format(".%d", i),
+                                                               appender.strFile + string().format(".%d", i + 1));
                                             }
                                             appender.fp = NULL;
                                             appender.nLogFileIndex = min(appender.nLogFileIndex + 1, appender.nMaxFileCounts - 1);
@@ -438,14 +438,14 @@ namespace lslib
                     Time tm;
                     str.replace("%d", tm.GetDateStr().c_str());
                     str.replace("%t", tm.GetTimeStr().c_str());
-                    str.replace("%ms", lstring().format("%d", tm.GetMilliSec()).c_str());
+                    str.replace("%ms", string().format("%d", tm.GetMilliSec()).c_str());
                     str.replace("%T", tm.GetDateTimeStr(true).c_str());
                     str.replace("%f", entity.file);
-                    str.replace("%l", lstring().format("%d", entity.line).c_str());
+                    str.replace("%l", string().format("%d", entity.line).c_str());
                     str.replace("%F", entity.function);
                     str.replace("%L", strlvl);
-                    str.replace("%p", lstring().format("0x%08x", entity.threadId).c_str());
-                    str.replace("%r", lstring().format("%d", tm.BetweenAllMilliSec(m_tmStart)).c_str());
+                    str.replace("%p", string().format("0x%08x", entity.threadId).c_str());
+                    str.replace("%r", string().format("%d", tm.BetweenAllMilliSec(m_tmStart)).c_str());
                     str.replace("%m", entity.msg);
                     str.append("\n");
 
@@ -462,7 +462,7 @@ namespace lslib
         //////////////////////////////////////////////////////////////////////////
         LSLIB_API void InitLogger(_lpcstr lpstrCfgXml)
         {
-            if (is_empty(lpstrCfgXml)) return;
+            if (strtool::is_empty(lpstrCfgXml)) return;
 #ifdef USE_LOG4CXX
             log4cxx::xml::DOMConfigurator::configure(lpstrCfgXml);
 #else
@@ -482,7 +482,7 @@ namespace lslib
 
         LSLIB_API _loggerptr GetLogger(_lpcstr lpstrLoggerName)
         {
-            if (is_empty(lpstrLoggerName)) return (int)NULL;
+            if (strtool::is_empty(lpstrLoggerName)) return (int)NULL;
 #ifdef USE_LOG4CXX
             return Logger::getLogger(lpstrLoggerName);
 #else

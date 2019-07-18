@@ -311,7 +311,6 @@ namespace lslib
         list<SIdleThreadTask*>::iterator it;
         bool bret = false;
 
-        lstring strLog;
         m_mutexTmpTasks.Lock();
         it = m_lstTmpTasks.begin();
         while (it != m_lstTmpTasks.end())

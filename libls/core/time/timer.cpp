@@ -43,10 +43,10 @@ namespace lslib
 
     Time Time::Parser(const char* datetime, const char* fmt /*= "%04d-%02d-%02d %02d:%02d:%02d"*/)
     {
-        lstring strFmt = is_empty(fmt) ? "%04d-%02d-%02d %02d:%02d:%02d" : fmt;
+        string strFmt = strtool::is_empty(fmt) ? "%04d-%02d-%02d %02d:%02d:%02d" : fmt;
         Time tm;
         int year, month, day, hour, minute, second;
-        if ( sscanf(datetime, strFmt, &year, &month, &day, &hour, &minute, &second) > 0)
+        if ( sscanf(datetime, strFmt.c_str(), &year, &month, &day, &hour, &minute, &second) > 0)
         {
             tm.SetYear(year);
             tm.SetMonth(month);

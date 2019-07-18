@@ -38,56 +38,55 @@ namespace lslib
             return false;
         }
 
-        LSLIB_API lstring path_get_dir(_lpcstr path)
+        LSLIB_API string path_get_dir(_lpcstr path)
         {
-            if (is_empty(path)) return "";
+            if (strtool::is_empty(path)) return "";
 
-            lstring str = path_pretty(path);
+            string str = path_pretty(path);
             while (*str.rbegin() == get_slash())
                 str.erase((str.rbegin() + 1).base());
             size_t pos = str.find_last_of(get_slash());
-            if (pos == lstring::npos) return "";
+            if (pos == string::npos) return "";
             return str.substr(0, pos);
         }
 
-        LSLIB_API lstring path_get_name(_lpcstr path)
+        LSLIB_API string path_get_name(_lpcstr path)
         {
-            if (is_empty(path)) return "";
+            if (strtool::is_empty(path)) return "";
 
-            lstring str = path_pretty(path);
+            string str = path_pretty(path);
             while (*str.rbegin() == get_slash())
                 str.erase((str.rbegin() + 1).base());
             size_t pos = str.find_last_of(get_slash());
             return str.substr(pos + 1);
         }
 
-        LSLIB_API lstring path_get_filename(_lpcstr path)
+        LSLIB_API string path_get_filename(_lpcstr path)
         {
-            if (is_empty(path)) return "";
+            if (strtool::is_empty(path)) return "";
 
-            lstring str = path_get_name(path);
+            string str = path_get_name(path);
             size_t pos = str.find_last_of('.');
             return str.substr(0, pos);
         }
 
-        LSLIB_API lstring path_get_ext(_lpcstr path)
+        LSLIB_API string path_get_ext(_lpcstr path)
         {
-            if (is_empty(path)) return "";
+            if (strtool::is_empty(path)) return "";
 
-            lstring str = path_get_name(path);
+            string str = path_get_name(path);
             size_t pos = str.find_last_of('.');
-            if (pos == lstring::npos) return "";
+            if (pos == string::npos) return "";
             return str.substr(pos + 1);
         }
 
-        LSLIB_API lstring path_pretty(_lpcstr path)
+        LSLIB_API string path_pretty(_lpcstr path)
         {
-            if (is_empty(path)) return "";
+            if (strtool::is_empty(path)) return "";
 
-            lstring str = path;
-            str.trim();
+            string str = strtool::trim(path);
             for (size_t i = 0; i < sizeof(s_slashs); i++)
-                str.replace(s_slashs[i], get_slash());
+                str = strtool::replace(str.c_str(), s_slashs[i], get_slash());
             _lchar buf[MAX_PATH] = { 0 };
             strncpy(buf, str.c_str(), min(MAX_PATH, str.length()));
 #ifdef _MSC_VER
@@ -108,25 +107,25 @@ namespace lslib
             return str;
         }
 
-        LSLIB_API lstring path_combine(_lpcstr path, _lpcstr join)
+        LSLIB_API string path_combine(_lpcstr path, _lpcstr join)
         {
 #ifdef _MSC_VER
             _lchar szbuf[MAX_PATH + 1] = { 0 };
-            PathCombine(szbuf, path_pretty(path), path_pretty(join));
+            PathCombine(szbuf, path_pretty(path).c_str(), path_pretty(join).c_str());
             return szbuf;
 #else
-            if (is_empty(path) || is_absolute(join))
+            if (strtool::is_empty(path) || is_absolute(join))
                 return path_pretty(join);
 
-            return path_pretty(lstring(path) + get_slash() + join);
+            return path_pretty(string(path) + get_slash() + join);
 #endif
         }
 
-        LSLIB_API lstring path_make_absolute(_lpcstr path)
+        LSLIB_API string path_make_absolute(_lpcstr path)
         {
-            if (is_empty(path)) return "";
+            if (strtool::is_empty(path)) return "";
 
-            lstring str = path_pretty(path);
+            string str = path_pretty(path);
 
             _lchar resolved_path[MAX_PATH + 1] = { 0 };
 #ifdef _WIN32
@@ -139,7 +138,7 @@ namespace lslib
 
         LSLIB_API const bool is_exist(_lpcstr path)
         {
-            if (is_empty(path)) return false;
+            if (strtool::is_empty(path)) return false;
 #ifdef _MSC_VER
             return PathFileExists(path);
 #else
@@ -149,7 +148,7 @@ namespace lslib
 
         LSLIB_API const bool is_file(_lpcstr path)
         {
-            if (is_empty(path)) return false;
+            if (strtool::is_empty(path)) return false;
             struct stat s;
             if (stat(path, &s) == 0) return s.st_mode & S_IFREG;
             return false;
@@ -157,20 +156,20 @@ namespace lslib
 
         LSLIB_API const bool is_dir(_lpcstr path)
         {
-            if (is_empty(path)) return false;
-            lstring str = path_pretty(path);
-            str.trim_right(get_slash());
+            if (strtool::is_empty(path)) return false;
+            string str = path_pretty(path);
+            str = strtool::trim_right(str.c_str(), get_slash());
             struct stat s;
-            if (stat(str, &s) == 0) return s.st_mode & S_IFDIR;
+            if (stat(str.c_str(), &s) == 0) return s.st_mode & S_IFDIR;
             return false;
         }
 
         LSLIB_API const bool is_absolute(_lpcstr path)
         {
-            if (is_empty(path)) return false;
+            if (strtool::is_empty(path)) return false;
 
-            lstring str = path_pretty(path);
-            str.to_lower();
+            string str = path_pretty(path);
+            str = strtool::lower(str.c_str());
             if (str[0] == get_slash()) return true;
             else if (str[0] == '.') return false;
 #ifdef _WIN32
@@ -229,7 +228,7 @@ namespace lslib
                 if (!is_exist(target)) ret = mkdir(target);
                 if (ret < 0) return ret;
 
-                lstring strpath, strtarget;
+                string strpath, strtarget;
                 struct dirent* p;
                 while (ret == 0 && (p = readdir(d)) != NULL)
                 {
@@ -247,7 +246,7 @@ namespace lslib
 
         LSLIB_API const int move(_lpcstr path, _lpcstr target)
         {
-            if (is_empty(path) || is_empty(target)) return -1;
+            if (strtool::is_empty(path) || strtool::is_empty(target)) return -1;
 #ifdef _MSC_VER
             TCHAR szPath[MAX_PATH + 2] = { 0 };
             int nLen = min(_tcsclen(path), MAX_PATH);
@@ -270,7 +269,7 @@ namespace lslib
 
         LSLIB_API const int rename(_lpcstr path, _lpcstr target)
         {
-            if (is_empty(path) || is_empty(target)) return -1;
+            if (strtool::is_empty(path) || strtool::is_empty(target)) return -1;
 #ifdef _MSC_VER
             TCHAR szPath[MAX_PATH + 2] = { 0 };
             int nLen = min(_tcsclen(path), MAX_PATH);
@@ -293,9 +292,9 @@ namespace lslib
 
         LSLIB_API const int mkdir(_lpcstr path)
         {
-            if (is_empty(path)) return false;
+            if (strtool::is_empty(path)) return false;
 #ifdef _MSC_VER
-            lstring str = path_make_absolute(path);
+            string str = path_make_absolute(path);
             return SHCreateDirectoryEx(NULL, str.c_str(), NULL);
 #else
 
@@ -308,8 +307,8 @@ namespace lslib
 
             int ret = 0;
             _lchar slash = get_slash();
-            lstring str = path_pretty(path);
-            lstring strpath;
+            string str = path_pretty(path);
+            string strpath;
             {
                 size_t idx = 0;
                 if (is_absolute(str))
@@ -333,8 +332,8 @@ namespace lslib
             if (!is_exist(strpath))
                 ret |= MKDIR(strpath, 0755);
 
-            lstring_array arr;
-            str.split(arr, lstring(slash), false);
+            string_array arr;
+            str.split(arr, string(slash), false);
             for (size_t i = 0; i < arr.size(); i++)
             {
                 strpath += arr[i] + slash;
@@ -347,7 +346,7 @@ namespace lslib
 
         LSLIB_API const int rm(_lpcstr path)
         {
-            if (is_empty(path)) return -1;
+            if (strtool::is_empty(path)) return -1;
 
 #ifdef _MSC_VER
             TCHAR szPath[MAX_PATH + 2] = { 0 };
@@ -366,7 +365,7 @@ namespace lslib
                 DIR* d = opendir(path);
                 struct dirent* p;
                 int ret = 0;
-                lstring strpath(path);
+                string strpath(path);
                 while (ret == 0 && (p = readdir(d)) != NULL)
                 {
                     if (strcmp(p->d_name, ".") == 0 || strcmp(p->d_name, "..") == 0)
@@ -380,7 +379,7 @@ namespace lslib
 #endif
         }
 
-        LSLIB_API lstring get_module_file_path()
+        LSLIB_API string get_module_file_path()
         {
 #ifdef _WIN32
             return _pgmptr;
@@ -394,73 +393,73 @@ namespace lslib
 #endif
         }
 
-        LSLIB_API lstring get_module_path()
+        LSLIB_API string get_module_path()
         {
-            lstring str = get_module_file_path();
-            return path_get_dir(str) + get_slash();
+            string str = get_module_file_path();
+            return path_get_dir(str.c_str()) + get_slash();
         }
 
-        LSLIB_API lstring get_module_name()
+        LSLIB_API string get_module_name()
         {
-            lstring str = get_module_file_path();
-            return path_get_filename(str);
+            string str = get_module_file_path();
+            return path_get_filename(str.c_str());
         }
 
 #ifdef _MSC_VER
 
-        LSLIB_API lstring get_special_folder_path(int csidl, bool bcreate /*= false*/)
+        LSLIB_API string get_special_folder_path(int csidl, bool bcreate /*= false*/)
         {
             _lchar sz[MAX_PATH + 1] = { 0 };
             if (SHGetSpecialFolderPath(NULL, sz, csidl, bcreate))
-                return lstring(sz) + get_slash();
+                return string(sz) + get_slash();
             else return "";
         }
 
-        LSLIB_API lstring get_app_data_path()
+        LSLIB_API string get_app_data_path()
         {
             return get_special_folder_path(CSIDL_COMMON_APPDATA, true);
         }
 
-        LSLIB_API lstring get_module_app_data_path(bool bcreate /*= false*/)
+        LSLIB_API string get_module_app_data_path(bool bcreate /*= false*/)
         {
-            lstring str = get_app_data_path();
+            string str = get_app_data_path();
             if (!str.empty())
             {
-                str += path_get_filename(get_module_name()) + get_slash();
-                if (bcreate) mkdir(str);
+                str += path_get_filename(get_module_name().c_str()) + get_slash();
+                if (bcreate) mkdir(str.c_str());
             }
             return str;
         }
 
-        LSLIB_API lstring get_desktop_path()
+        LSLIB_API string get_desktop_path()
         {
             return get_special_folder_path(CSIDL_DESKTOP, true);
         }
 
-        LSLIB_API lstring get_quick_launch_path()
+        LSLIB_API string get_quick_launch_path()
         {
-            lstring str = get_special_folder_path(CSIDL_APPDATA);
+            string str = get_special_folder_path(CSIDL_APPDATA);
             if (!str.empty())
                 str += "Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar\\";
             return str;
         }
 
-        LSLIB_API lstring get_program_files_path()
+        LSLIB_API string get_program_files_path()
         {
             return get_special_folder_path(CSIDL_PROGRAM_FILES, true);
         }
 
         LSLIB_API void open_dir(_lpcstr path, _lpcstr file)
         {
-            if (is_empty(path)) return;
+            if (strtool::is_empty(path)) return;
 
-            lstring str = path_pretty(path);
-            if (!is_empty(file))
-                str = lstring("/e,/select, ") + path_combine(path, file);
-            ShellExecute(NULL, _T("open"), _T("explorer.exe"), str, NULL, SW_SHOWNORMAL);
+            string str = path_pretty(path);
+            if (!strtool::is_empty(file))
+                str = string("/e,/select, ") + path_combine(path, file);
+            ShellExecute(NULL, _T("open"), _T("explorer.exe"), str.c_str(), NULL, SW_SHOWNORMAL);
         }
 
-        LSLIB_API bool open_file_select_dialog(__out__ lstring_array& arr_files, _lpcstr title, _lpcstr filter, bool multi, HWND owner)
+        LSLIB_API bool open_file_select_dialog(__out__ string_array& arr_files, _lpcstr title, _lpcstr filter, bool multi, HWND owner)
         {
 #define nBuffSize (MAX_PATH*100)
             _lchar szFileName[nBuffSize] = {   ""};
@@ -491,12 +490,12 @@ namespace lslib
                 // For Explorer-style dialog boxes, the directory and file name strings are NULL separated, with an extra NULL character after the last file name.
                 _lpcstr p = szFileName;
 
-                lstring strPath = p;
+                string strPath = p;
                 p += strPath.length() + 1;
 
                 while (*p != NULL)
                 {
-                    lstring strName = p;
+                    string strName = p;
                     arr_files.push_back(strPath + _T("\\") + strName);
                     p += strName.length() + 1;
                 }
@@ -505,7 +504,7 @@ namespace lslib
             return false;
         }
 
-        LSLIB_API bool open_folder_select_dialog(__out__ lstring& target, _lpcstr title, HWND owner)
+        LSLIB_API bool open_folder_select_dialog(__out__ string& target, _lpcstr title, HWND owner)
         {
             BROWSEINFO bInfo = { 0 };
             bInfo.hwndOwner = owner;
@@ -609,24 +608,24 @@ namespace lslib
             return os_unknown;
         }
 
-        LSLIB_API lstring get_product_version(_lpcstr path)
+        LSLIB_API string get_product_version(_lpcstr path)
         {
-            lstring strFilePath = path;
+            string strFilePath = path;
 
-            if (is_empty(path))
+            if (strtool::is_empty(path))
             {
                 TCHAR szAppPath[MAX_PATH] = { 0 };
                 ::GetModuleFileName(NULL, szAppPath, MAX_PATH);
                 strFilePath = szAppPath;
             }
 
-            lstring strVersion = "";
+            string strVersion = "";
             VS_FIXEDFILEINFO* vsInfo;
             int ma, mj, r, b;
-            UINT i = ::GetFileVersionInfoSize(strFilePath, 0);
+            UINT i = ::GetFileVersionInfoSize(strFilePath.c_str(), 0);
             char* szBuf = new char[i];
 
-            if (::GetFileVersionInfo(strFilePath, 0, i, szBuf) == TRUE)
+            if (::GetFileVersionInfo(strFilePath.c_str(), 0, i, szBuf) == TRUE)
             {
                 if (::VerQueryValue(szBuf, _T("\\"), (LPVOID*)&vsInfo, &i))
                 {
@@ -634,7 +633,7 @@ namespace lslib
                     mj = vsInfo->dwProductVersionMS & 0xffff;
                     r = vsInfo->dwProductVersionLS >> 16;
                     b = vsInfo->dwProductVersionLS & 0xffff;
-                    strVersion.format(_T("%d.%d.%d.%d"), ma, mj, r, b);
+                    strVersion = strtool::format(_T("%d.%d.%d.%d"), ma, mj, r, b);
                 }
             }
             delete[] szBuf;
@@ -646,14 +645,14 @@ namespace lslib
 
         LSLIB_API void enumerate_files(__out__ enum_file_array& array_files, _lpcstr path, _lpcstr extention, _lpcstr filter, bool recurse/* = false*/)
         {
-            if (is_empty(path)) return;
+            if (strtool::is_empty(path)) return;
             if (!is_dir(path)) return;
 
-            lstring str;
-            lstring_array arr_exts;
-            lstring_array arr_filters;
-            lstring::split(arr_exts, extention, ";", false);
-            lstring::split(arr_filters, filter, ";", false);
+            string str;
+            string_array arr_exts;
+            string_array arr_filters;
+            strtool::split(arr_exts, extention, ";", false);
+            strtool::split(arr_filters, filter, ";", false);
 
             bool bfilter = true;
             enum_file file_info;
@@ -665,7 +664,7 @@ namespace lslib
             size_t i = 0;\
             for (; i < arr_exts.size(); i++)\
             {\
-                if (arr_exts[i] == "*.*" || arr_exts[i] == lstring("*.") + file_info.extName)\
+                if (arr_exts[i] == "*.*" || arr_exts[i] == string("*.") + file_info.extName)\
                 {\
                     bfilter = true;\
                     break;\
@@ -679,7 +678,7 @@ namespace lslib
             size_t i = 0;\
             for (; i < arr_filters.size(); i++)\
             {\
-                if (file_info.fullPath.find(arr_filters[i]) != lstring::npos)\
+                if (file_info.fullPath.find(arr_filters[i]) != string::npos)\
                 {\
                     bfilter &= true;\
                     break;\
@@ -693,7 +692,7 @@ namespace lslib
 #ifdef _MSC_VER
 
             WIN32_FIND_DATA fd;
-            HANDLE hFile = FindFirstFile(path_combine(path, "*.*"), &fd);
+            HANDLE hFile = FindFirstFile(path_combine(path, "*.*").c_str(), &fd);
             if (hFile == INVALID_HANDLE_VALUE) return;
 
             do
@@ -706,15 +705,15 @@ namespace lslib
                     if (_tcscmp(fd.cFileName, _T(".")) == 0 || _tcscmp(fd.cFileName, _T("..")) == 0)
                         continue;
                     if (recurse)
-                        enumerate_files(array_files, path_combine(path, fd.cFileName), extention, filter, recurse);
+                        enumerate_files(array_files, path_combine(path, fd.cFileName).c_str(), extention, filter, recurse);
                 }
                 else
                 {
                     file_info.fileName = fd.cFileName;
-                    file_info.fullPath = path_combine(file_info.filePath, file_info.fileName);
+                    file_info.fullPath = path_combine(file_info.filePath.c_str(), file_info.fileName.c_str());
                     file_info.size = fd.nFileSizeLow - fd.nFileSizeHigh;
-                    file_info.name = path_get_filename(file_info.fileName);
-                    file_info.extName = path_get_ext(file_info.fileName);
+                    file_info.name = path_get_filename(file_info.fileName.c_str());
+                    file_info.extName = path_get_ext(file_info.fileName.c_str());
 
                     check(file_info, bfilter);
                     if (bfilter)
@@ -724,7 +723,7 @@ namespace lslib
 #define get_time(out, time)\
     FileTimeToSystemTime(&(time), &stUTC);\
     SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal);\
-    (out).format("%04d-%02d-%02d %02d:%02d:%02d", stLocal.wYear, stLocal.wMonth, stLocal.wDay, stLocal.wHour, stLocal.wMinute, stLocal.wSecond);
+    out = strtool::format("%04d-%02d-%02d %02d:%02d:%02d", stLocal.wYear, stLocal.wMonth, stLocal.wDay, stLocal.wHour, stLocal.wMinute, stLocal.wSecond);
 
                         get_time(file_info.attr.createTime, fd.ftCreationTime);
                         get_time(file_info.attr.writeTime, fd.ftLastWriteTime);
@@ -740,7 +739,7 @@ namespace lslib
 #else
             DIR* d = opendir(path);
             struct dirent* p;
-            lstring curpath;
+            string curpath;
             while ((p = readdir(d)) != NULL)
             {
                 if (strcmp(p->d_name, ".") == 0 || strcmp(p->d_name, "..") == 0)

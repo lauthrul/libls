@@ -22,9 +22,9 @@ namespace lslib
             static XmlNode* GetNode(XmlNode* pParent, _lpcstr lpstrPath); // path separated by "/", like "module/section/key"
             static XmlNode* GetChildNode(XmlNode* pParent, _lpcstr lpKeyOrIndex); // get direct child node by key(objectValue) or index(arrayValue)
             static XmlNode* GetSublingChildNode(XmlNode* pParent, int nIndex, _lpcstr lpKey); // for arrayValue, get direct child node by target key from the specified index array node
-            static lstring GetAttribute(const XmlNode& node, _lpcstr lpstrAttri);
-            static lstring GetValue(const XmlNode& node);
-            static lstring Dumps(const XmlNode& node, bool bPretty = false);
+            static string GetAttribute(const XmlNode& node, _lpcstr lpstrAttri);
+            static string GetValue(const XmlNode& node);
+            static string Dumps(const XmlNode& node, bool bPretty = false);
 
         public:
             TiXmlDocument   m_xmlDoc;

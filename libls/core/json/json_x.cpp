@@ -30,9 +30,9 @@ namespace lslib
     {
         if (pParent == NULL) return NULL;
 
-        lstring_array arrays;
-        if (lstring::split(arrays, lpstrPath, "/", false) <= 0)
-            lstring::split(arrays, lpstrPath, "\\", false);
+        string_array arrays;
+        if (strtool::split(arrays, lpstrPath, "/", false) <= 0)
+            strtool::split(arrays, lpstrPath, "\\", false);
         if (arrays.empty()) return pParent;
 
         CJsonValue* pNode = pParent;

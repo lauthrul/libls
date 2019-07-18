@@ -16,25 +16,25 @@ namespace lslib
         LSLIB_API const bool is_slash(_lchar c);
 
         // 从路径中获取目录
-        LSLIB_API lstring path_get_dir(_lpcstr path);
+        LSLIB_API string path_get_dir(_lpcstr path);
 
         // 从路径中获取最后一段名称
-        LSLIB_API lstring path_get_name(_lpcstr path);
+        LSLIB_API string path_get_name(_lpcstr path);
 
         // 从路径中获取文件名称（不包含后缀）
-        LSLIB_API lstring path_get_filename(_lpcstr path);
+        LSLIB_API string path_get_filename(_lpcstr path);
 
         // 从路径中获取文件后缀（不包含'.'）
-        LSLIB_API lstring path_get_ext(_lpcstr path);
+        LSLIB_API string path_get_ext(_lpcstr path);
 
         // 美化路径(转为小写，并去除多余分隔符)
-        LSLIB_API lstring path_pretty(_lpcstr path);
+        LSLIB_API string path_pretty(_lpcstr path);
 
         // 组合路径
-        LSLIB_API lstring path_combine(_lpcstr path, _lpcstr join);
+        LSLIB_API string path_combine(_lpcstr path, _lpcstr join);
 
         // 获取绝对路径
-        LSLIB_API lstring path_make_absolute(_lpcstr path);
+        LSLIB_API string path_make_absolute(_lpcstr path);
 
 
         // 检查文件或目录是否存在
@@ -65,33 +65,33 @@ namespace lslib
         LSLIB_API const int rm(_lpcstr path);
 
         // 获取程序完整路径
-        LSLIB_API lstring get_module_file_path();
+        LSLIB_API string get_module_file_path();
 
         // 获取程序路径
-        LSLIB_API lstring get_module_path();
+        LSLIB_API string get_module_path();
 
         // 获取程序名称
-        LSLIB_API lstring get_module_name();
+        LSLIB_API string get_module_name();
 
 #ifdef _MSC_VER
 
         // 获取特殊路径，csidl参考：https://msdn.microsoft.com/en-us/library/bb762494(VS.85).aspx
-        LSLIB_API lstring get_special_folder_path(int csidl, bool bcreate = false);
+        LSLIB_API string get_special_folder_path(int csidl, bool bcreate = false);
 
         // 获取%appdata%路径
-        LSLIB_API lstring get_app_data_path();
+        LSLIB_API string get_app_data_path();
 
         // 获取%appdata%下当前程序路径
-        LSLIB_API lstring get_module_app_data_path(bool bcreate /*= false*/);
+        LSLIB_API string get_module_app_data_path(bool bcreate /*= false*/);
 
         // 获取桌面路径
-        LSLIB_API lstring get_desktop_path();
+        LSLIB_API string get_desktop_path();
 
         // 获取快速启动栏路径
-        LSLIB_API lstring get_quick_launch_path();
+        LSLIB_API string get_quick_launch_path();
 
         // 获取系统程序安装路径
-        LSLIB_API lstring get_program_files_path();
+        LSLIB_API string get_program_files_path();
 
         // 在资源管理器中打开一个路径并选中一个文件
         LSLIB_API void open_dir(_lpcstr path, _lpcstr file);
@@ -104,10 +104,10 @@ namespace lslib
                 " BMP图片(*.bmp)\0*.bmp\0"
                 " 所有文件(*.*)\0*.*\0");
         */
-        LSLIB_API bool open_file_select_dialog(__out__ lstring_array& arr_files, _lpcstr title, _lpcstr filter, bool multi, HWND owner);
+        LSLIB_API bool open_file_select_dialog(__out__ string_array& arr_files, _lpcstr title, _lpcstr filter, bool multi, HWND owner);
 
         // 打开目录选择对话框。 [out] target：选择的路径； title:对话框标题； owner: 父窗口
-        LSLIB_API bool open_folder_select_dialog(__out__ lstring& target, _lpcstr title, HWND owner);
+        LSLIB_API bool open_folder_select_dialog(__out__ string& target, _lpcstr title, HWND owner);
 
         enum os_type
         {
@@ -139,24 +139,24 @@ namespace lslib
         LSLIB_API os_type get_os_type();
 
         // 获取文件版本号
-        LSLIB_API lstring get_product_version(_lpcstr path);
+        LSLIB_API string get_product_version(_lpcstr path);
 
 #endif
 
         struct file_attr
         {
-            lstring createTime;
-            lstring writeTime;
-            lstring accessTime;
+            string createTime;
+            string writeTime;
+            string accessTime;
         };
 
         struct enum_file
         {
-            lstring fullPath;
-            lstring filePath;
-            lstring fileName;
-            lstring name;
-            lstring extName;
+            string fullPath;
+            string filePath;
+            string fileName;
+            string name;
+            string extName;
             file_attr attr;
             int     size;
         };

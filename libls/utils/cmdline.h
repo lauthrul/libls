@@ -34,8 +34,8 @@ namespace lslib
         class LSLIB_API ICmdRuntine
         {
         public:
-            static int ParserCmdLine(_lpcstr cmd, __out__ lstring_array& outarr);
-            virtual ERuntine RunCmdLine(const lstring_array& arr) = 0;
+            static int ParserCmdLine(_lpcstr cmd, __out__ string_array& outarr);
+            virtual ERuntine RunCmdLine(const string_array& arr) = 0;
         };
 
     } // utils

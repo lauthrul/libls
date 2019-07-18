@@ -6,7 +6,7 @@ namespace lslib
     // 注册表相关操作
     namespace registry
     {
-        LSLIB_API lstring registry_get_str(HKEY hKeyRoot, _lpcstr lpSubKey, _lpcstr lpValueName);
+        LSLIB_API string registry_get_str(HKEY hKeyRoot, _lpcstr lpSubKey, _lpcstr lpValueName);
 
         LSLIB_API DWORD registry_get_dword(HKEY hKeyRoot, _lpcstr lpSubKey, _lpcstr lpValueName);
 

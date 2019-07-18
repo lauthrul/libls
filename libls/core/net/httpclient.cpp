@@ -45,14 +45,13 @@ namespace lslib
 
         static size_t OnGetHeaderInfo(void* ptr, size_t size, size_t nmemb, void* stream)
         {
-            map<lstring, lstring>* pInfoHeader = static_cast< map<lstring, lstring>* >(stream);
+            map<string, string>* pInfoHeader = static_cast< map<string, string>* >(stream);
             if (pInfoHeader)
             {
-                lstring_array arr;
-                lstring str = (char*)ptr;
-                str.split(arr, ":", false);
+                string_array arr;
+                strtool::split(arr, (char*)ptr, ":", false);
                 if (arr.size() == 2)
-                    (*pInfoHeader)[arr[0].trim()] = arr[1].trim();
+                    (*pInfoHeader)[strtool::trim(arr[0].c_str())] = strtool::trim(arr[1].c_str());
             }
             return size * nmemb;
         }
@@ -60,13 +59,13 @@ namespace lslib
         LSLIB_API SHttpUrl CrackUrl(_lpcstr lpstrUrl)
         {
             SHttpUrl sUrl;
-            lstring strUrl = lpstrUrl;
+            string strUrl = lpstrUrl;
             size_t p = 0;
             size_t q = string::npos;
 
             // scheme
             q = strUrl.find("://", p);
-            if (q != lstring::npos)
+            if (q != string::npos)
             {
                 sUrl.strScheme = strUrl.substr(p, q - p);
                 p = q + 3;
@@ -91,7 +90,8 @@ namespace lslib
             size_t r = sUrl.strHostName.find_last_of(':');
             if (r != string::npos)
             {
-                sUrl.nPort = lstring(sUrl.strHostName.substr(r + 1, sUrl.strHostName.length())).to_int();
+                string strPort = sUrl.strHostName.substr(r + 1, sUrl.strHostName.length());
+                sUrl.nPort = strtool::to_int(strPort.c_str());
                 sUrl.strHostName = sUrl.strHostName.substr(0, r);
             }
             else
@@ -120,7 +120,7 @@ namespace lslib
             if (strUrl[p] == '?')
             {
                 p += 1;
-                lstring strQuery;
+                string strQuery;
                 for (i = 2; i < cnt; i++)
                 {
                     q = strUrl.find(split[i], p);
@@ -132,11 +132,11 @@ namespace lslib
                     }
                 }
                 if (strQuery.empty()) strQuery = strUrl.substr(p);
-                lstring_array arr_querys;
-                strQuery.split(arr_querys, "&");
+                string_array arr_querys;
+                strtool::split(arr_querys, strQuery.c_str(), "&");
                 for (size_t j = 0; j < arr_querys.size(); j++)
                 {
-                    const lstring& query = arr_querys[j];
+                    const string& query = arr_querys[j];
                     r = query.find("=");
                     sUrl.mapQuerys[query.substr(0, r)] = query.substr(r + 1);
                 }
@@ -150,21 +150,21 @@ namespace lslib
             return sUrl;
         }
 
-        LSLIB_API lstring ReverseUrl(const SHttpUrl& vUrl)
+        LSLIB_API string ReverseUrl(const SHttpUrl& vUrl)
         {
-            lstring strUrl;
-            strUrl.append_format("%s://%s:%d", vUrl.strScheme.c_str(), vUrl.strHostName.c_str(), vUrl.nPort);
-            if (vUrl.strPath)
+            string strUrl;
+            strUrl += strtool::format("%s://%s:%d", vUrl.strScheme.c_str(), vUrl.strHostName.c_str(), vUrl.nPort);
+            if (!vUrl.strPath.empty())
                 strUrl += vUrl.strPath;
             if (!vUrl.mapQuerys.empty())
             {
                 strUrl += "?";
-                for (map<lstring, lstring>::const_iterator it = vUrl.mapQuerys.begin();
+                for (map<string, string>::const_iterator it = vUrl.mapQuerys.begin();
                         it != vUrl.mapQuerys.end(); it++)
                 {
-                    strUrl.append_format("%s=%s&", it->first.c_str(), it->second.c_str());
+                    strUrl += strtool::format("%s=%s&", it->first.c_str(), it->second.c_str());
                 }
-                strUrl.trim_right('&');
+                strUrl = strtool::trim_right(strUrl.c_str(), '&');
             }
             if (!vUrl.strTag.empty())
             {
@@ -208,8 +208,8 @@ namespace lslib
 
         //////////////////////////////////////////////////////////////////////////
         static CURLSH* s_shobject = NULL;
-        lstring CHttpClient::m_strDefaultAgent;
-        lstring CHttpClient::m_strDefaultCookieFile;
+        string CHttpClient::m_strDefaultAgent;
+        string CHttpClient::m_strDefaultCookieFile;
         void CHttpClient::Init(_lpcstr lpstrDefaultCookieFile /*= NULL*/, _lpcstr lpstrDefaultAgent /*= NULL*/)
         {
             if (s_shobject == NULL)
@@ -242,7 +242,7 @@ namespace lslib
         {
             if (!IsInit()) Init();
 
-            lstring strText = DumpParamText((SHttpParam*)&vParam);
+            string strText = DumpParamText((SHttpParam*)&vParam);
             DEBUG_LOG(g_netlogger, "begin to do http get, param:[%s]", strText.c_str());
 
             Time tmStart;
@@ -276,7 +276,7 @@ label_exit:
         {
             if (!IsInit()) Init();
 
-            lstring strText = DumpParamText((SHttpParam*)&vParam);
+            string strText = DumpParamText((SHttpParam*)&vParam);
             DEBUG_LOG(g_netlogger, "begin to do http post, param:[%s]", strText.c_str());
 
             Time tmStart;
@@ -314,12 +314,12 @@ label_exit:
         {
             if (!IsInit()) Init();
 
-            lstring strText = DumpParamText((SHttpParam*)&vParam);
+            string strText = DumpParamText((SHttpParam*)&vParam);
             DEBUG_LOG(g_netlogger, "begin to do http download, param:[%s]", strText.c_str());
 
             Time tmStart;
             SHttpResult vResult;
-            lstring strRequest = vParam.strUrl;
+            string strRequest = vParam.strUrl;
 
             //////////////////////////////////////////////////////////////////////////
             CURL* pCurl = curl_easy_init();
@@ -332,7 +332,7 @@ label_exit:
             {
                 if (!vParam.strToken.empty())
                 {
-                    if (strRequest.find("?") != lstring::npos)
+                    if (strRequest.find("?") != string::npos)
                         strRequest += "&token=" + vParam.strToken;
                     else
                         strRequest += "?token=" + vParam.strToken;
@@ -341,7 +341,7 @@ label_exit:
                 long infoHeader[2] = {0, 0}; // [0] = accept ranges or not, [1] = file size
                 if (vParam.bBreakPointSupport)
                 {
-                    map<lstring, lstring> mapHeader;
+                    map<string, string> mapHeader;
                     curl_easy_setopt(pCurl, CURLOPT_URL, strRequest.c_str());
                     if (!m_strDefaultAgent.empty())
                         curl_easy_setopt(pCurl, CURLOPT_USERAGENT, m_strDefaultAgent.c_str());
@@ -358,7 +358,7 @@ label_exit:
                     curl_easy_perform(pCurl);
                     curl_easy_cleanup(pCurl);
 
-                    map<lstring, lstring>::iterator it = mapHeader.find("Accept-Ranges");
+                    map<string, string>::iterator it = mapHeader.find("Accept-Ranges");
                     if (it == mapHeader.end()) it = mapHeader.find("accept-ranges");
                     if (it != mapHeader.end() && stricmp(it->second.c_str(), "bytes") == 0)
                         infoHeader[0] = 1;
@@ -396,8 +396,8 @@ label_exit:
                 if (vParam.nPerformTimeout > 0)     curl_easy_setopt(pCurl, CURLOPT_TIMEOUT, vParam.nPerformTimeout);
                 if (!vParam.mapHeaders.empty()) // request header
                 {
-                    lstring strHeader;
-                    for (map<lstring, lstring>::const_iterator it = vParam.mapHeaders.begin();
+                    string strHeader;
+                    for (map<string, string>::const_iterator it = vParam.mapHeaders.begin();
                             it != vParam.mapHeaders.end(); it++)
                     {
                         strHeader = it->first + ": " + it->second;
@@ -416,9 +416,9 @@ label_exit:
                     curl_easy_setopt(pCurl, CURLOPT_PROGRESSDATA, vParam.clientp);
                 }
 
-                lstring strFile = vParam.strFile;
+                string strFile = vParam.strFile;
                 if (strFile.empty())
-                    strFile = os::path_get_name(vParam.strUrl);
+                    strFile = os::path_get_name(vParam.strUrl.c_str());
                 FILE* pFile = NULL;
                 if (infoHeader[0]) pFile = fopen(strFile.c_str(), "ab+" );
                 else pFile = fopen(strFile.c_str(), "wb+" );
@@ -489,7 +489,7 @@ label_exit:
         {
             if (!IsInit()) Init();
 
-            lstring strText = DumpParamText((SHttpParam*)&vParam);
+            string strText = DumpParamText((SHttpParam*)&vParam);
             DEBUG_LOG(g_netlogger, "begin to do http upload, param:[%s]", strText.c_str());
 
             Time tmStart;
@@ -528,7 +528,7 @@ label_exit:
                 int nContentLength = 0;
 
                 //
-                lstring strRemoteFileName;
+                string strRemoteFileName;
                 if (!vParam.strRemoteFile.empty())
                 {
                     strRemoteFileName = vParam.strRemoteFile;
@@ -540,7 +540,7 @@ label_exit:
                     if (npos >= 0) strRemoteFileName = vParam.strFile.substr(npos + 1);
                 }
 
-                lstring strBoundary = ""; //GenGUID();
+                string strBoundary = ""; //GenGUID();
                 strText = "--" + strBoundary + "\r\n";
                 strText += "Content-Disposition: form-data; name=\"file\"; filename=\"" + strRemoteFileName + "\"\r\n";
                 strText += "Content-Type: application/octet-stream\r\n\r\n";
@@ -613,11 +613,11 @@ label_exit:
             if (vParam.nPerformTimeout > 0)     curl_easy_setopt(pCurl, CURLOPT_TIMEOUT, vParam.nPerformTimeout);
             if (!vParam.mapHeaders.empty()) // request header
             {
-                lstring strHeader;
-                for (map<lstring, lstring>::const_iterator it = vParam.mapHeaders.begin();
+                string strHeader;
+                for (map<string, string>::const_iterator it = vParam.mapHeaders.begin();
                         it != vParam.mapHeaders.end(); it++)
                 {
-                    strHeader.format("%s: %s", it->first.c_str(), it->second.c_str());
+                    strHeader = strtool::format("%s: %s", it->first.c_str(), it->second.c_str());
                     headers = curl_slist_append(headers, strHeader.c_str());
                 }
                 curl_easy_setopt(pCurl, CURLOPT_HTTPHEADER, headers);
@@ -660,21 +660,21 @@ label_exit:
             return vResult.nCode;
         }
 
-        lstring CHttpClient::DumpParamText(SHttpParam* pParam)
+        string CHttpClient::DumpParamText(SHttpParam* pParam)
         {
-            lstring strText;
-            strText.append_format("method: %s, ", GetHttpMethodStr(pParam->eMethod).c_str());
-            strText.append_format("url: %s, ", pParam->strUrl.c_str());
-            strText.append_format("connettimeout: %d, ", pParam->nConnetTimeout);
-            strText.append_format("performtimeout: %d, ", pParam->nPerformTimeout);
-            strText.append_format("trycount: %d, ", pParam->nTryCount);
+            string strText;
+            strText += strtool::format("method: %s, ", GetHttpMethodStr(pParam->eMethod).c_str());
+            strText += strtool::format("url: %s, ", pParam->strUrl.c_str());
+            strText += strtool::format("connettimeout: %d, ", pParam->nConnetTimeout);
+            strText += strtool::format("performtimeout: %d, ", pParam->nPerformTimeout);
+            strText += strtool::format("trycount: %d, ", pParam->nTryCount);
             if (!pParam->mapHeaders.empty())
             {
                 strText += "header:{";
-                for (map<lstring, lstring>::iterator it = pParam->mapHeaders.begin();
+                for (map<string, string>::iterator it = pParam->mapHeaders.begin();
                         it != pParam->mapHeaders.end(); it++)
                 {
-                    strText.append_format("%s: %s, ", it->first.c_str(), it->second.c_str());
+                    strText += strtool::format("%s: %s, ", it->first.c_str(), it->second.c_str());
                 }
                 strText = strText.substr(0, strText.length() - 1);
                 strText += "}, ";
@@ -685,33 +685,33 @@ label_exit:
                 case HTTP_GET:
                     break;
                 case HTTP_POST:
-                    strText.append_format("post: %s ", ((SHttpPostParam*)pParam)->strPost.c_str());
-                    strText.append_format("gzip: %d, ", ((SHttpPostParam*)pParam)->bgZip);
-                    strText.append_format("thresholdsize: %d", ((SHttpPostParam*)pParam)->nThresholdSize);
+                    strText += strtool::format("post: %s ", ((SHttpPostParam*)pParam)->strPost.c_str());
+                    strText += strtool::format("gzip: %d, ", ((SHttpPostParam*)pParam)->bgZip);
+                    strText += strtool::format("thresholdsize: %d", ((SHttpPostParam*)pParam)->nThresholdSize);
                     break;
                 case HTTP_DOWNLOAD:
-                    strText.append_format("file: %s, ", ((SHttpDowloadParam*)pParam)->strFile.c_str());
-                    strText.append_format("token: %s, ", ((SHttpDowloadParam*)pParam)->strToken.c_str());
-                    strText.append_format("breakpointsupport: %d, ", ((SHttpDowloadParam*)pParam)->bBreakPointSupport);
-                    strText.append_format("callback: 0x%x, ", ((SHttpDowloadParam*)pParam)->cb);
-                    strText.append_format("clientp: 0x%x", ((SHttpDowloadParam*)pParam)->clientp);
+                    strText += strtool::format("file: %s, ", ((SHttpDowloadParam*)pParam)->strFile.c_str());
+                    strText += strtool::format("token: %s, ", ((SHttpDowloadParam*)pParam)->strToken.c_str());
+                    strText += strtool::format("breakpointsupport: %d, ", ((SHttpDowloadParam*)pParam)->bBreakPointSupport);
+                    strText += strtool::format("callback: 0x%x, ", ((SHttpDowloadParam*)pParam)->cb);
+                    strText += strtool::format("clientp: 0x%x", ((SHttpDowloadParam*)pParam)->clientp);
                     break;
                 case HTTP_UPLOAD:
-                    strText.append_format("file: %s, ", ((SHttpDowloadParam*)pParam)->strFile.c_str());
-                    strText.append_format("remotefile: %s", ((SHttpUploadParam*)pParam)->strRemoteFile.c_str());
+                    strText += strtool::format("file: %s, ", ((SHttpDowloadParam*)pParam)->strFile.c_str());
+                    strText += strtool::format("remotefile: %s", ((SHttpUploadParam*)pParam)->strRemoteFile.c_str());
                     break;
             }
 
             return strText;
         }
 
-        lstring CHttpClient::DumpResultText(SHttpResult* pResult)
+        string CHttpClient::DumpResultText(SHttpResult* pResult)
         {
-            lstring strText;
-            strText.append_format("code: %d, ", pResult->nCode);
-            strText.append_format("data: %s, ", pResult->strData.c_str());
-            strText.append_format("datalen: %d, ", pResult->nDataLen);
-            strText.append_format("timespend: %d", pResult->nTimeSpend);
+            string strText;
+            strText += strtool::format("code: %d, ", pResult->nCode);
+            strText += strtool::format("data: %s, ", pResult->strData.c_str());
+            strText += strtool::format("datalen: %d, ", pResult->nDataLen);
+            strText += strtool::format("timespend: %d", pResult->nTimeSpend);
             return strText;
         }
 

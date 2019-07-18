@@ -109,7 +109,7 @@ using namespace std;
 
 #include "core/type.h"
 #include "core/mmr.h"
-#include "core/string/string.h"
+#include "core/string/strtool.h"
 #include "core/crypto/crypto.h"
 #include "core/math/math.h"
 #include "core/lock/lock.h"

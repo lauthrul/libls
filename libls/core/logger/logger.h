@@ -34,8 +34,8 @@ namespace lslib
         //////////////////////////////////////////////////////////////////////////
         struct SLogLayout
         {
-            lstring strName;
-            lstring strFormat;
+            string strName;
+            string strFormat;
         };
 
         //////////////////////////////////////////////////////////////////////////
@@ -51,16 +51,16 @@ namespace lslib
         };
         struct SLogAppender
         {
-            lstring strName;
+            string strName;
             ELogAppenderType eType;
-            lstring strFile;
+            string strFile;
             ELogAppenderRoolling eRooling;
-            lstring strDatePattern;
+            string strDatePattern;
             int nMaxFileSize;
             int nMaxFileCounts;
 
             // program data
-            lstring strLogDate;
+            string strLogDate;
             int nLogFileIndex;
             int nWritedSize;
             FILE* fp;
@@ -71,7 +71,7 @@ namespace lslib
         //////////////////////////////////////////////////////////////////////////
         struct SLogger
         {
-            lstring strName;
+            string strName;
             ELOG_LEVEL eLevel;
             SLogLayout layout;
             SLogAppender appender;
@@ -81,10 +81,10 @@ namespace lslib
         //////////////////////////////////////////////////////////////////////////
         struct SLogConfig
         {
-            lstring m_strFile;
-            map<lstring, SLogLayout> m_mapLayouts;
-            map<lstring, SLogAppender> m_mapAppenders;
-            map<lstring, SLogger> m_mapLogger;
+            string m_strFile;
+            map<string, SLogLayout> m_mapLayouts;
+            map<string, SLogAppender> m_mapAppenders;
+            map<string, SLogger> m_mapLogger;
 
             SLogConfig();
             SLogConfig(_lpcstr lpstrFilePath);
@@ -123,11 +123,11 @@ namespace lslib
             {
                 _loggerptr logger;
                 ELOG_LEVEL level;
-                lstring file;
+                string file;
                 int line;
-                lstring function;
+                string function;
                 int threadId;
-                lstring msg;
+                string msg;
             };
             static list<SLogEntity> m_lstLogEntitysTmp;
             static list<SLogEntity> m_lstLogEntitys;
