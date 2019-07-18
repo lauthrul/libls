@@ -11,20 +11,20 @@ public:
 
 public:
     // implement from CThread
-    virtual LPCTSTR                 GetName() { return "CNetAgent"; };
+    virtual const char*             GetName() { return "CNetAgent"; };
 
     // implement from CTaskAgent
     virtual void                    InitInvoker();
 
     struct SResultChecker
     {
-        __in lstring                strCodeField;
-        __in int                    nSuccessCode;
-        __in lstring                strMsgField;
-        __out lstring               strErrMsg;
-        __out CJsonValue            jRoot;
+        __in__ string              strCodeField;
+        __in__ int                  nSuccessCode;
+        __in__ string              strMsgField;
+        __out__ string             strErrMsg;
+        __out__ CJsonValue          jRoot;
     };
-    virtual int                     CheckResult(int nHttpCode, _lpcstr lpstrResultText, __out SResultChecker& checker);
+    virtual int                     CheckResult(int nHttpCode, _lpcstr lpstrResultText, __out__ SResultChecker& checker);
 
 public:
     int                             DoGetLotteryCfg(_ldword pParam, _ldword& pResult);

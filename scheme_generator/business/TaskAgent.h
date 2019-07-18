@@ -4,8 +4,8 @@
 struct SInvoker
 {
     int         nID;
-    lstring     strTaskName;
-    lstring     strNotifyMsg;
+    string     strTaskName;
+    string     strNotifyMsg;
     PTR_THREAD_IDLETHREAD_TASKHANDLER       ptrHandler;
 
     SInvoker() {}
@@ -24,7 +24,7 @@ public:
 
 public:
     // implement from CThread
-    virtual _lpcstr                 GetName() { return "CTaskAgent"; };
+    virtual const char*             GetName() { return "CTaskAgent"; };
     virtual int                     HandleMessage(msgid_t uMsg, wparam_t wParam, lparam_t lParam);
 
     virtual void                    InitInvoker() = 0;

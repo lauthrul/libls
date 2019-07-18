@@ -57,11 +57,11 @@ protected:
     virtual void                        CleanTasks();
 
     void                                Recycle(STask* pTask);
-    void                                Notice(SInvoker* pInvoker, WPARAM wParam = 0, LPARAM lParam = 0);
+    void                                Notice(SInvoker* pInvoker, wparam_t wParam = 0, lparam_t lParam = 0);
 
     virtual int                         HandleCustomMessage(msgid_t uMsg, wparam_t wParam, lparam_t lParam, bool& bHandled);
     virtual int                         HandleMessage(msgid_t uMsg, wparam_t wParam, lparam_t lParam);
-    virtual int                         OnHandleMessage(STask* pTask, __inout bool& bRecycle, __inout bool& bNotice);
+    virtual int                         OnHandleMessage(STask* pTask, __inout__ bool& bRecycle, __inout__ bool& bNotice);
 
 protected:
     list<CThread*>                      m_lstCBThreads;             // callback thread handler

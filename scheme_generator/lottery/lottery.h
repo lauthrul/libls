@@ -3,8 +3,8 @@
 //////////////////////////////////////////////////////////////////////////
 namespace lottery
 {
-    lstring GetLotteryTemplate(_lpcstr lotteryID);
+    string GetLotteryTemplate(_lpcstr lotteryID);
     bool CheckWin(const SchemeDetail& detail);
-    void StatisticSubScheme(__inout SubScheme& subScheme, const SchemeDetail& schemeDetail);
-    lstring GenereateCode(const SubScheme& subScheme);
+    void StatisticSubScheme(__inout__ SubScheme& subScheme, const SchemeDetail& schemeDetail);
+    string GenereateCode(const SubScheme& subScheme);
 }

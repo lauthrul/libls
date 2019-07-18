@@ -5,7 +5,7 @@ namespace lottery
 {
     namespace pl35
     {
-        lstring ConvertDStoFS(const lstring& ds)
+        string ConvertDStoFS(const string& ds)
         {
             return "";
         }
@@ -15,7 +15,7 @@ namespace lottery
             return false;
         }
 
-        lstring GenereateCode(const lstring& playName, const lstring& formula, double expectedAccuracy)
+        string GenereateCode(const string& playName, const string& formula, double expectedAccuracy)
         {
             return "";
         }

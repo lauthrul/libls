@@ -17,7 +17,7 @@ struct STaskResp
 {
     long                    lRespTime;      // program use. response time
     int                     nResultCode;    // program use
-    lstring                 strResultMsg;   // program use
+    string                 strResultMsg;   // program use
     void*                   pResultData;    // result data
 
     STaskResp() : lRespTime(Time::GetCurDateTime().GetDateTime()), nResultCode(0), pResultData(NULL) {}

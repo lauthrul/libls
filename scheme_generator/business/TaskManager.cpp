@@ -175,7 +175,7 @@ void CTaskManager::DealTask()
                 vIdleTask.m_ptrThreadTask = pInvoker->ptrHandler;
                 vIdleTask.m_pcbThread = pTask->pAgent; //
                 vIdleTask.m_bSyncCallback = true; // self thread callback, so set sync as true, in case other task pending callback
-                vIdleTask.m_pParam = (DWORD)pTask;
+                vIdleTask.m_pParam = (_ldword)pTask;
 
                 if (pTask->pReq != NULL)
                     pTask->pReq->lDealTime = Time::GetCurDateTime().GetDateTime();
@@ -227,7 +227,7 @@ void CTaskManager::DealMemClean(bool bForce /*= false*/)
 {
     long lNow = Time::GetCurDateTime().GetDateTime();
 
-    DWORD dwSize = 0;
+    _ldword dwSize = 0;
     list<STask*>::iterator it = m_lstTrashbin.begin();
     while (it != m_lstTrashbin.end())
     {
@@ -295,7 +295,7 @@ void CTaskManager::Recycle(STask* pTask)
     m_lstTrashbin.push_back(pTask);
 }
 
-void CTaskManager::Notice(SInvoker* pInvoker, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/)
+void CTaskManager::Notice(SInvoker* pInvoker, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/)
 {
     if (pInvoker == NULL) return;
 
@@ -307,7 +307,7 @@ void CTaskManager::Notice(SInvoker* pInvoker, WPARAM wParam /*= 0*/, LPARAM lPar
     }
 }
 
-int CTaskManager::HandleCustomMessage(msgid_t uMsg, wparam_t wParam, lparam_t lParam, __inout bool& bHandled)
+int CTaskManager::HandleCustomMessage(msgid_t uMsg, wparam_t wParam, lparam_t lParam, __inout__ bool& bHandled)
 {
     return 0;
 }
@@ -339,7 +339,7 @@ int CTaskManager::HandleMessage(msgid_t uMsg, wparam_t wParam, lparam_t lParam)
     return ret;
 }
 
-int CTaskManager::OnHandleMessage(STask* pTask, __inout bool& bRecycle, __inout bool& bNotice)
+int CTaskManager::OnHandleMessage(STask* pTask, __inout__ bool& bRecycle, __inout__ bool& bNotice)
 {
     return 0;
 }

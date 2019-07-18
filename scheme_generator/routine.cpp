@@ -42,8 +42,8 @@ int CRoutine::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lPar
             SHistroyCodeResp* pResp = (SHistroyCodeResp*)pTask->pResp;
             if (pResp != NULL && pResp->nResultCode == 0)
             {
-                lstring& rfLottery = pResp->strLottery;
-                lstring& rfCurrentIssue = pResp->strCurIssue;
+                string& rfLottery = pResp->strLottery;
+                string& rfCurrentIssue = pResp->strCurIssue;
                 MapHistoryCode& rfHistoryResp = pResp->mapHistoryCode;
                 MapHistoryCode& rfHistory = m_mapAllHistoryCode[pResp->strLottery];
 
@@ -92,7 +92,7 @@ int CRoutine::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lPar
                     historyCode.strLottery = rfLottery;
                     historyCode.strCurIssue = rfCurrentIssue;
                     historyCode.mapHistoryCode = newHistory;
-                    PostMessage(TID_HISTORY_CODE_UPDATED, (wparam_t)new lstring(rfLottery), (lparam_t)new SHistroyCode(historyCode)); // remember to delete
+                    PostMessage(TID_HISTORY_CODE_UPDATED, (wparam_t)new string(rfLottery), (lparam_t)new SHistroyCode(historyCode)); // remember to delete
                     INFO_LOG(g_pLogger, "彩种[%s]获取到[%d]期新的开奖号! 最新开奖[%s]，当前奖期[%s]",
                         rfLottery.c_str(), newHistory.size(), newHistory.rbegin()->first.c_str(), rfCurrentIssue.c_str());
                 }
@@ -101,9 +101,9 @@ int CRoutine::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lPar
         break;
     case TID_HISTORY_CODE_UPDATED:
         {
-            auto_ptr<lstring> apLottery((lstring*)wParam);
+            auto_ptr<string> apLottery((string*)wParam);
             auto_ptr<SHistroyCode> apHistoryCode((SHistroyCode*)lParam);
-            lstring& rfCurIssue = apHistoryCode->strCurIssue;
+            string& rfCurIssue = apHistoryCode->strCurIssue;
             MapHistoryCode& rfNewHisotrys = apHistoryCode->mapHistoryCode;
 
             map<int, SubScheme> mapSubSchemes;
@@ -226,10 +226,10 @@ void CRoutine::Routine()
     INFO_LOG(g_pLogger, "正在获取开奖... 上次获取时间: %ld", lnow);
     tm = lnow;
 
-    lstring_list lostterys;
+    string_list lostterys;
     g_dbWrapper.GetSchemeLotterys(lostterys);
 
     int issues = (m_mapAllHistoryCode.empty()) ? 50 : 1;
-    for (lstring_list::iterator it = lostterys.begin(); it != lostterys.end(); it++)
-        g_netManager.GetHistoryCodeRequest(*it, issues);
+    for (string_list::iterator it = lostterys.begin(); it != lostterys.end(); it++)
+        g_netManager.GetHistoryCodeRequest(it->c_str(), issues);
 }

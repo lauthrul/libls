@@ -1,14 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libls", "libls\libls.vcproj", "{E5ED28A0-B1E6-4C14-A4F9-F8E47F7B882E}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libls", "libls\libls.vcxproj", "{E5ED28A0-B1E6-4C14-A4F9-F8E47F7B882E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcproj", "{7FE694F2-FB22-4C54-81EF-0AEE99AB4514}"
-	ProjectSection(ProjectDependencies) = postProject
-		{E5ED28A0-B1E6-4C14-A4F9-F8E47F7B882E} = {E5ED28A0-B1E6-4C14-A4F9-F8E47F7B882E}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{7FE694F2-FB22-4C54-81EF-0AEE99AB4514}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "scheme_generator", "scheme_generator\scheme_generator.vcproj", "{8E244D48-24A6-4D1A-BFEA-51C11843FCE0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "scheme_generator", "scheme_generator\scheme_generator.vcxproj", "{8E244D48-24A6-4D1A-BFEA-51C11843FCE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -31,54 +31,55 @@ void CNetAgent::InitInvoker()
                     (PTR_THREAD_IDLETHREAD_TASKHANDLER)&CNetAgent::DoGetIssueInfo));
 }
 
-int CNetAgent::CheckResult(int nHttpCode, _lpcstr lpstrResultText, __out SResultChecker& checker)
+int CNetAgent::CheckResult(int nHttpCode, _lpcstr lpstrResultText, __out__ SResultChecker& checker)
 {
     int nRet = 0;
-    lstring strResultText;
-    lstring strMsg;
+    string strResultText;
+    string strMsg;
     CJsonValue jRoot;
+    CJsonValue *pjCode, *pjMsg;
+    int nCode = 0;
 
     if ((nHttpCode < 200 || nHttpCode >= 300))
     {
-        strMsg.format("请求服务器错误【%d】", nHttpCode);
+        strMsg = strtool::format("请求服务器错误【%d】", nHttpCode);
         nRet = ERR_SERVER_ERROR;
         goto label_exit;
     }
 
-    if (is_empty(lpstrResultText))
+    if (strtool::is_empty(lpstrResultText))
     {
-        strMsg.format("服务器未返回数据");
+        strMsg = strtool::format("服务器未返回数据");
         nRet = ERR_SERVER_DATA_EMTYP;
         goto label_exit;
     }
 
     strResultText = crypto::encoding_convert(lpstrResultText, "utf-8", "gb2312");
-    if (!CJsonWrapper::Parse(strResultText, &jRoot))
+    if (!CJsonWrapper::Parse(strResultText.c_str(), &jRoot))
     {
-        strMsg.format("服务器返回数据错误：数据无法解析【%s】", strResultText.c_str());
+        strMsg = strtool::format("服务器返回数据错误：数据无法解析【%s】", strResultText.c_str());
         nRet = ERR_SERVER_DATA_INVALID;
         goto label_exit;
     }
 
-    CJsonValue* pjCode = CJsonWrapper::GetNode(&jRoot, checker.strCodeField);
+    pjCode = CJsonWrapper::GetNode(&jRoot, checker.strCodeField.c_str());
     if (pjCode == NULL)
     {
-        strMsg.format("服务器返回数据错误：字段错误【%s】", strResultText.c_str());
+        strMsg = strtool::format("服务器返回数据错误：字段错误【%s】", strResultText.c_str());
         nRet = ERR_SERVER_DATA_INVALID;
         goto label_exit;
     }
 
-    CJsonValue* pjMsg = CJsonWrapper::GetNode(&jRoot, checker.strMsgField);
+    pjMsg = CJsonWrapper::GetNode(&jRoot, checker.strMsgField.c_str());
     if (pjMsg != NULL && pjMsg->isString())
-        strMsg.format("%s", pjMsg->asString().c_str());
+        strMsg = strtool::format("%s", pjMsg->asString().c_str());
 
-    int nCode = 0;
     if (pjCode->isInt()) nCode = pjCode->asInt();
     else if (pjCode->isString()) nCode = atoi(pjCode->asCString());
 
     if (nCode == -1)
     {
-        strMsg.format("您已掉线或未登录！");
+        strMsg = strtool::format("您已掉线或未登录！");
         nRet = ERR_SERVER_OFFLINE;
         goto label_exit;
     }
@@ -113,7 +114,7 @@ int CNetAgent::DoGetLotteryCfg(_ldword pParam, _ldword& pResult)
     {
         int nRet = reverse_mask_err(vResp.nResultCode);
         ERROR_LOG(g_pLogger, "[%dms]get lottery cfg fail: [%d]-%s", vResult.nTimeSpend, nRet, checker.strErrMsg.c_str());
-        vResp.strResultMsg.format("[%dms]获取彩种配置失败: [%d]-%s", vResult.nTimeSpend, nRet, checker.strErrMsg.c_str());
+        vResp.strResultMsg = strtool::format("[%dms]获取彩种配置失败: [%d]-%s", vResult.nTimeSpend, nRet, checker.strErrMsg.c_str());
         goto label_exit;
     }
     else
@@ -131,7 +132,7 @@ int CNetAgent::DoGetLotteryCfg(_ldword pParam, _ldword& pResult)
         }
 
         INFO_LOG(g_pLogger, "[%dms]get lottery cfg success. counts: %d", vResult.nTimeSpend, vResp.mapLotteryCfg.size());
-        vResp.strResultMsg.format("[%dms]获取奖彩种配置成功! 彩种数：%d", vResult.nTimeSpend, vResp.mapLotteryCfg.size());
+        vResp.strResultMsg = strtool::format("[%dms]获取奖彩种配置成功! 彩种数：%d", vResult.nTimeSpend, vResp.mapLotteryCfg.size());
     }
 
 label_exit:
@@ -148,10 +149,10 @@ int CNetAgent::DoGetHistoryCode(_ldword pParam, _ldword& pResult)
     SHistoryCodeReq* pReq = (SHistoryCodeReq*)pTask->pReq;
     if (pReq == NULL) return -1;
 
-    lstring strPost;
-    strPost.format("gameid=%s&pageNum=1&size=%d", pReq->strLottery.c_str(), pReq->nIssueCounts);
+    string strPost;
+    strPost = strtool::format("gameid=%s&pageNum=1&size=%d", pReq->strLottery.c_str(), pReq->nIssueCounts);
 
-    SHttpPostParam vParam(URL_GetLotteryOpenCode, strPost);
+    SHttpPostParam vParam(URL_GetLotteryOpenCode, strPost.c_str());
     SHttpResult vResult = CHttpClient::HttpPost(vParam);
 
     SResultChecker checker;
@@ -166,7 +167,7 @@ int CNetAgent::DoGetHistoryCode(_ldword pParam, _ldword& pResult)
     {
         int nRet = reverse_mask_err(vResp.nResultCode);
         ERROR_LOG(g_pLogger, "[%dms]get code history fail: [%d]-%s", vResult.nTimeSpend, nRet, checker.strErrMsg.c_str());
-        vResp.strResultMsg.format("[%dms]获取开奖历史失败: [%d]-%s", vResult.nTimeSpend, nRet, checker.strErrMsg.c_str());
+        vResp.strResultMsg = strtool::format("[%dms]获取开奖历史失败: [%d]-%s", vResult.nTimeSpend, nRet, checker.strErrMsg.c_str());
         goto label_exit;
     }
     else
@@ -185,12 +186,12 @@ int CNetAgent::DoGetHistoryCode(_ldword pParam, _ldword& pResult)
         }
 
         INFO_LOG(g_pLogger, "[%dms]get code history success. lottery: %s, counts: %d", vResult.nTimeSpend, vResp.strLottery.c_str(), vResp.mapHistoryCode.size());
-        vResp.strResultMsg.format("[%dms]获取开奖历史成功! 彩种: %s, 期数: %d", vResult.nTimeSpend, vResp.strLottery.c_str(), vResp.mapHistoryCode.size());
+        vResp.strResultMsg = strtool::format("[%dms]获取开奖历史成功! 彩种: %s, 期数: %d", vResult.nTimeSpend, vResp.strLottery.c_str(), vResp.mapHistoryCode.size());
     }
 
 label_exit:
     pTask->pResp = new SHistroyCodeResp(vResp); // remember to delete
-    pResult = (DWORD)pTask;
+    pResult = (_ldword)pTask;
     return vResp.nResultCode;
 }
 
@@ -202,10 +203,10 @@ int CNetAgent::DoGetIssueInfo(_ldword pParam, _ldword& pResult)
     SSimpleNetReq* pReq = (SSimpleNetReq*)pTask->pReq;
     if (pReq == NULL) return -1;
 
-    lstring strPost;
-    strPost.format("gameid=%s", pReq->strParam.c_str());
+    string strPost;
+    strPost = strtool::format("gameid=%s", pReq->strParam.c_str());
 
-    SHttpPostParam vParam(URL_GetLotteryCurrentIssue, strPost);
+    SHttpPostParam vParam(URL_GetLotteryCurrentIssue, strPost.c_str());
     SHttpResult vResult = CHttpClient::HttpPost(vParam);
 
     SResultChecker checker;
@@ -220,14 +221,14 @@ int CNetAgent::DoGetIssueInfo(_ldword pParam, _ldword& pResult)
     {
         int nRet = reverse_mask_err(vResp.nResultCode);
         ERROR_LOG(g_pLogger, "[%dms]get current issue fail: [%d]-%s", vResult.nTimeSpend, nRet, checker.strErrMsg.c_str());
-        vResp.strResultMsg.format("[%dms]获取当前奖期失败: [%d]-%s", vResult.nTimeSpend, nRet, checker.strErrMsg.c_str());
+        vResp.strResultMsg = strtool::format("[%dms]获取当前奖期失败: [%d]-%s", vResult.nTimeSpend, nRet, checker.strErrMsg.c_str());
         goto label_exit;
     }
     else
     {
         CJsonValue* pValue = CJsonWrapper::GetNode(&checker.jRoot, "issue");
         if (pValue != NULL && pValue->isString())   vResp.strIssue = pValue->asString();
-        
+
         Time tm;
         pValue = CJsonWrapper::GetNode(&checker.jRoot, "salestart");
         if (pValue != NULL && pValue->isNumeric())
@@ -251,11 +252,11 @@ int CNetAgent::DoGetIssueInfo(_ldword pParam, _ldword& pResult)
         }
 
         INFO_LOG(g_pLogger, "[%dms]get issue info success. lottery: %s, issue: %s", vResult.nTimeSpend, vResp.strLottery.c_str(), vResp.strIssue.c_str());
-        vResp.strResultMsg.format("[%dms]获取奖期信息成功! 彩种: %s, 奖期: %s", vResult.nTimeSpend, vResp.strLottery.c_str(), vResp.strIssue.c_str());
+        vResp.strResultMsg = strtool::format("[%dms]获取奖期信息成功! 彩种: %s, 奖期: %s", vResult.nTimeSpend, vResp.strLottery.c_str(), vResp.strIssue.c_str());
     }
 
 label_exit:
     pTask->pResp = new SIssueInfoResp(vResp); // remember to delete
-    pResult = (DWORD)pTask;
+    pResult = (_ldword)pTask;
     return vResp.nResultCode;
 }

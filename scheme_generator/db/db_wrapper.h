@@ -6,8 +6,8 @@
 struct Scheme
 {
     int nID;
-    lstring strName;
-    lstring strLottery;
+    string strName;
+    string strLottery;
     int nSubSchemes;
     double dMaxAccuracy;
     int nFavorites;
@@ -26,12 +26,12 @@ struct Scheme
 struct SubScheme
 {
     int nID;
-    lstring strName;
-    lstring strLottery;
-    lstring strPlayKind;
-    lstring strPlayName;
+    string strName;
+    string strLottery;
+    string strPlayKind;
+    string strPlayName;
     int nDWDPos;
-    lstring strFormula;
+    string strFormula;
     double dExpectedAccuracy;
     int nIssuesPerRound;
     int nIssues;                // for statistic. total issues
@@ -67,15 +67,15 @@ struct SubScheme
 struct SchemeDetail
 {
     int nID;
-    lstring strLottery;
-    lstring strIssue;
-    lstring strPlayKind;
-    lstring strPlayName;
+    string strLottery;
+    string strIssue;
+    string strPlayKind;
+    string strPlayName;
     int nDWDPos;
     int nRoundIndex;
     int nRoundTotal;
-    lstring strCode;
-    lstring strOpenCode;
+    string strCode;
+    string strOpenCode;
     bool bWin;
     int nMerchantID;
     int nSchemeID;
@@ -99,13 +99,13 @@ class CDBWrapper : public CDB
 {
 public:
     CDBWrapper();
-    CDBWrapper(_lpcstr host, _lpcstr user, _lpcstr passowrd);
+    CDBWrapper(_lpcstr host, _lpcstr user, _lpcstr passowrd, _lpcstr db);
     ~CDBWrapper();
 
 public:
-    bool GetSchemeLotterys(__out lstring_list& lstLotterys);
-    bool GetSubSchemesByLottery(__out map<int, SubScheme>& mapSubSchemes, _lpcstr lottery);
-    bool GetSchemeDetailsBySubSchemeID(__out map<int, SchemeDetail>& mapSchemeDetails, int subscheme_id, _lpcstr from_issue);
+    bool GetSchemeLotterys(__out__ string_list& lstLotterys);
+    bool GetSubSchemesByLottery(__out__ map<int, SubScheme>& mapSubSchemes, _lpcstr lottery);
+    bool GetSchemeDetailsBySubSchemeID(__out__ map<int, SchemeDetail>& mapSchemeDetails, int subscheme_id, _lpcstr from_issue);
     bool AddSchemeDetails(const map<int, SchemeDetail>& mapSchemeDetails);
     bool UpdateSchemeDetailResult(const SchemeDetail& schemeDetail);
     bool UpdateSubSchemeStatistic(const SubScheme& subScheme);

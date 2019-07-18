@@ -1,38 +1,37 @@
 #pragma once
 
-#include "mysql_connection.h"
-#include <cppconn/driver.h>
-#include <cppconn/exception.h>
-#include <cppconn/resultset.h>
-#include <cppconn/statement.h>
-#include <cppconn/prepared_statement.h>
+#include <mysql.h>
 
 //////////////////////////////////////////////////////////////////////////
 class CDB
 {
 public:
     CDB();
-    CDB(_lpcstr host, _lpcstr user, _lpcstr passowrd);
+    CDB(_lpcstr host, _lpcstr user, _lpcstr passowrd, _lpcstr db);
     ~CDB();
 
 public:
     void SetHost(_lpcstr host);
     void SetUser(_lpcstr user);
     void SetPassword(_lpcstr password);
+    void SetDB(_lpcstr db);
 
-    bool Init();
     bool Connect();
     bool DisConnect();
     bool IsConnected();
-    bool UseDB(_lpcstr db);
-    bool Excute(_lpcstr sql);
-    sql::ResultSet* ExcuteQuery(_lpcstr sql);
+    bool ExCuteNoQuery(_lpcstr sql);
+    MYSQL_RES* ExcuteQuery(_lpcstr sql);
 
 protected:
-    lstring m_strHost;
-    lstring m_strUser;
-    lstring m_strPassword;
+    bool Init();
+    bool Excute(_lpcstr sql);
 
-    sql::Driver* m_driver;
-    sql::Connection* m_con;
+protected:
+    string m_strHost;
+    string m_strUser;
+    string m_strPassword;
+    string m_strDB;
+
+    bool m_bConnected;
+    MYSQL* m_con;
 };

@@ -17,7 +17,7 @@
 
 namespace lottery
 {
-    lstring GetLotteryTemplate(const lstring& lotteryID)
+    string GetLotteryTemplate(const string& lotteryID)
     {
         //TODO: test
         return LOTTERY_TEMPLATE_SSC;
@@ -28,7 +28,7 @@ namespace lottery
         if (detail.strOpenCode.empty())
             return false;
 
-        lstring tempate = GetLotteryTemplate(detail.strLottery);
+        string tempate = GetLotteryTemplate(detail.strLottery);
         if (tempate == LOTTERY_TEMPLATE_SSC)            return lottery::ssc::CheckWin(detail);
         else if (tempate == LOTTERY_TEMPLATE_11X5)      return lottery::n11x5::CheckWin(detail);
         else if (tempate == LOTTERY_TEMPLATE_K3)        return lottery::k3::CheckWin(detail);
@@ -38,7 +38,7 @@ namespace lottery
         return false;
     }
 
-    void StatisticSubScheme(__inout SubScheme& subScheme, const SchemeDetail& schemeDetail)
+    void StatisticSubScheme(__inout__ SubScheme& subScheme, const SchemeDetail& schemeDetail)
     {
         if (schemeDetail.bWin)
         {
@@ -56,9 +56,9 @@ namespace lottery
         subScheme.dAccuracy = (double)subScheme.nWinRounds / subScheme.nRounds * 100;
     }
 
-    lstring GenereateCode(const SubScheme& subScheme)
+    string GenereateCode(const SubScheme& subScheme)
     {
-        lstring tempate = GetLotteryTemplate(subScheme.strLottery);
+        string tempate = GetLotteryTemplate(subScheme.strLottery);
         if (tempate == LOTTERY_TEMPLATE_SSC)            return lottery::ssc::GenereateCode(subScheme.strPlayName, subScheme.strFormula, subScheme.dExpectedAccuracy);
         else if (tempate == LOTTERY_TEMPLATE_11X5)      return lottery::n11x5::GenereateCode(subScheme.strPlayName, subScheme.strFormula, subScheme.dExpectedAccuracy);
         else if (tempate == LOTTERY_TEMPLATE_K3)        return lottery::k3::GenereateCode(subScheme.strPlayName, subScheme.strFormula, subScheme.dExpectedAccuracy);

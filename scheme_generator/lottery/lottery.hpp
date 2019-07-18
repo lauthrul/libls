@@ -3,7 +3,7 @@
 
 namespace lottery
 {
-    bool GenNumRandom(__out vector<int>& vctNum, __inout int& nCounts, int nNumLen, int pRange[2], bool bCheckDumplicate, const vector<int> *pvctExclude /*= NULL*/)
+    bool GenNumRandom(__out__ vector<int>& vctNum, __inout__ int& nCounts, int nNumLen, int pRange[2], bool bCheckDumplicate, const vector<int> *pvctExclude /*= NULL*/)
     {
         if (nCounts <= 0 || nNumLen <= 0 || nNumLen > 9) // nNumLen最大为9，因为int类型最大支持10^9位数的数字, 10^10以上将溢出
             return false;
@@ -68,12 +68,12 @@ namespace lottery
         return true;
     }
 
-    lstring FormatNumbers(const vector<int>& vctNums, const lstring& strFormat, const lstring& strSplit)
+    string FormatNumbers(const vector<int>& vctNums, const string& strFormat, const string& strSplit)
     {
-        lstring strOut;
+        string strOut;
         for (size_t i = 0; i < vctNums.size(); i++)
         {
-            strOut.append_format(strFormat.c_str(), vctNums[i]);
+            strOut += strtool::format(strFormat.c_str(), vctNums[i]);
             strOut += strSplit;
         }
         if (strSplit.length() > 0)

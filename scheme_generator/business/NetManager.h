@@ -29,5 +29,5 @@ protected:
     virtual void                        InitNetAgent(int nAgentCounts);
     virtual void                        ReleaseNetAgent();
     virtual bool                        IsSameTask(STask* plhs, STask* prhs);
-    virtual int                         OnHandleMessage(STask* pTask, __inout bool& bRecycle, __inout bool& bNotice);
+    virtual int                         OnHandleMessage(STask* pTask, __inout__ bool& bRecycle, __inout__ bool& bNotice);
 };

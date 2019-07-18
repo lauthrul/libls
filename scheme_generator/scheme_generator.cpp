@@ -20,11 +20,11 @@ void CustomInit()
 
     // init db wrapper
 #ifndef MAKE_TEST_DATA
-    g_dbWrapper.SetHost("tcp://192.168.169.215:3306");
+    g_dbWrapper.SetHost("192.168.169.215");
     g_dbWrapper.SetUser("suser");
     g_dbWrapper.SetPassword("cyberuser");
+    g_dbWrapper.SetDB("autoservice_debug");
     g_dbWrapper.Connect();
-    g_dbWrapper.UseDB("autoservice_debug");
 #endif
 }
 

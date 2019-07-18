@@ -88,7 +88,7 @@ int CNetManager::GetIssueInfoRequest(_lpcstr lpstrLottery)
     return Invoke(GetNextAgent(), TID_GET_ISSUE_INFO, new SSimpleNetReq(lpstrLottery)); // remember to delete
 }
 
-int CNetManager::OnHandleMessage(STask* pTask, __inout bool& bRecycle, __inout bool& bNotice)
+int CNetManager::OnHandleMessage(STask* pTask, __inout__ bool& bRecycle, __inout__ bool& bNotice)
 {
     static list<STask*> slstTaskCache;
     switch (pTask->dwTID)
@@ -111,7 +111,7 @@ int CNetManager::OnHandleMessage(STask* pTask, __inout bool& bRecycle, __inout b
                 if (pResp->nResultCode == 0)
                 {
                     slstTaskCache.push_back(pTask);
-                    GetIssueInfoRequest(pResp->strLottery);
+                    GetIssueInfoRequest(pResp->strLottery.c_str());
                     bNotice = false;
                     bRecycle = false;
                 }
@@ -142,7 +142,7 @@ int CNetManager::OnHandleMessage(STask* pTask, __inout bool& bRecycle, __inout b
                         if (pHistoryCodeResp->strLottery == pResp->strLottery)
                         {
                             pHistoryCodeResp->strCurIssue = pResp->strIssue;
-                            Notice(pTaskCache->pAgent->GetInvoker(pTaskCache->dwTID), pTaskCache->pResp->nResultCode, (LPARAM)pTaskCache); // restore get history code message out side
+                            Notice(pTaskCache->pAgent->GetInvoker(pTaskCache->dwTID), pTaskCache->pResp->nResultCode, (lparam_t)pTaskCache); // restore get history code message out side
                             it = slstTaskCache.erase(it);
                             bNotice = false;
                             bRecycle = true;

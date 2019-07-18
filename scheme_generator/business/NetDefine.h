@@ -14,9 +14,9 @@ typedef STaskResp       SNetResp;
 
 struct SSimpleNetReq : public SNetReq
 {
-    lstring                 strParam;
+    string                 strParam;
     SSimpleNetReq() {}
-    SSimpleNetReq(const lstring& param) : strParam(param) {}
+    SSimpleNetReq(const string& param) : strParam(param) {}
     bool operator== (const SSimpleNetReq& rhs)
     {
         if (strParam == rhs.strParam)
@@ -27,22 +27,22 @@ struct SSimpleNetReq : public SNetReq
 
 struct SSimpleNetResp : public SNetResp
 {
-    lstring                  strData;
+    string                  strData;
     SSimpleNetResp() {}
-    SSimpleNetResp(const lstring& data) : strData(data) {}
+    SSimpleNetResp(const string& data) : strData(data) {}
 };
 
 //////////////////////////////////////////////////////////////////////////
 // 彩种配置
 struct SLotteryCfg
 {
-    lstring strLotteryID;
-    lstring strName;
+    string strLotteryID;
+    string strName;
 
     SLotteryCfg() {};
     SLotteryCfg(_lpcstr id, _lpcstr name) : strLotteryID(id), strName(name) {};
 };
-typedef map<lstring, SLotteryCfg>       MapLotteryCfg;     // <lottery id, SLotteryCfg>
+typedef map<string, SLotteryCfg>       MapLotteryCfg;     // <lottery id, SLotteryCfg>
 
 struct SLotteryCfgResp : public SNetResp
 {
@@ -53,11 +53,11 @@ struct SLotteryCfgResp : public SNetResp
 // 获取历史开奖号
 struct SHistoryCodeReq : public SNetReq
 {
-    lstring                 strLottery;
+    string                 strLottery;
     int                     nIssueCounts;
 
     SHistoryCodeReq() {}
-    SHistoryCodeReq(lstring lottery, int counts) : strLottery(lottery), nIssueCounts(counts) {}
+    SHistoryCodeReq(string lottery, int counts) : strLottery(lottery), nIssueCounts(counts) {}
     bool operator== (const SHistoryCodeReq& rhs)
     {
         if (strLottery == rhs.strLottery && nIssueCounts == rhs.nIssueCounts)
@@ -68,20 +68,20 @@ struct SHistoryCodeReq : public SNetReq
 
 struct SHistoryCodeItem
 {
-    lstring                  strCode;
-    lstring                  strIssue;
+    string                  strCode;
+    string                  strIssue;
 
     SHistoryCodeItem() {}
-    SHistoryCodeItem(const lstring& issue, const lstring& code) : strIssue(issue), strCode(code) {}
+    SHistoryCodeItem(const string& issue, const string& code) : strIssue(issue), strCode(code) {}
 };
-typedef map<lstring, SHistoryCodeItem>       MapHistoryCode;     // <issue, SHistoryCodeItem>
-typedef map<lstring, MapHistoryCode>         MapAllHistoryCode;  // <lottery, MapHistoryCode>
+typedef map<string, SHistoryCodeItem>       MapHistoryCode;     // <issue, SHistoryCodeItem>
+typedef map<string, MapHistoryCode>         MapAllHistoryCode;  // <lottery, MapHistoryCode>
 
 
 struct SHistroyCode
 {
-    lstring                 strLottery;
-    lstring                 strCurIssue;
+    string                 strLottery;
+    string                 strCurIssue;
     MapHistoryCode          mapHistoryCode;
 };
 
@@ -93,8 +93,8 @@ struct SHistroyCodeResp : public SNetResp, public SHistroyCode
 // 当前奖期
 struct SIssueInfo
 {
-    lstring                 strLottery;
-    lstring                 strIssue;
+    string                 strLottery;
+    string                 strIssue;
     Time                    tmStart;
     Time                    tmEnd;
     Time                    tmCurrent;

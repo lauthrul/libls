@@ -5,34 +5,34 @@ namespace lottery
 {
     namespace ssc
     {
-        lstring ConvertDStoFS(const lstring& playname, int len, const lstring& ds)
+        string ConvertDStoFS(const string& playname, int len, const string& ds)
         {
             typedef set<char> pos_t;
 
             pos_t pos[5];
-            lstring_array arr;
-            ds.split(arr, " ", false);
+            string_array arr;
+            strtool::split(arr, ds.c_str(), " ", false);
             for (size_t i = 0; i < arr.size(); i++)
             {
                 for (size_t j = 0; j < min(arr[i].length(), 5); j++)
                 {
-                    const lstring& num = arr[i];
+                    const string& num = arr[i];
                     pos[j].insert(num[j]);
                 }
             }
 
-            lstring strret;
+            string strret;
             for (size_t j = 0; j < len; j++)
-                strret += lstring().assign(pos[j].begin(), pos[j].end()) + "-";
-            return strret.trim_right('-');
+                strret += string().assign(pos[j].begin(), pos[j].end()) + "-";
+            return strtool::trim_right(strret.c_str(), '-');
         }
 
-        bool check_win_zx_fs(const lstring& code, const lstring& openCode, int range[2])
+        bool check_win_zx_fs(const string& code, const string& openCode, int range[2])
         {
             // code: 123456-123456-123456-123456-123456
             // openCode: 3,4,6,8,1
-            lstring_array arr;          code.split(arr, "-");
-            lstring compactOpenCode = lstring(openCode).replace(",", "");
+            string_array arr;        strtool::split(arr, code.c_str(), "-");
+            string compactOpenCode = strtool::replace(openCode.c_str(), ",", "");
             compactOpenCode = compactOpenCode.substr(range[0], range[1] - range[0] + 1);
             for (size_t j = 0; j < arr.size(); j++)
             {
@@ -42,12 +42,12 @@ namespace lottery
             return true;
         }
 
-        bool check_win_zx_ds(const lstring& code, const lstring& openCode, int range[2])
+        bool check_win_zx_ds(const string& code, const string& openCode, int range[2])
         {
             // code: 12345 12456 34215 65432 98507 ...
             // openCode: 3,4,6,8,1
-            lstring_array arr; code.split(arr, " ");
-            lstring compactOpenCode = lstring(openCode).replace(",", "");
+            string_array arr;        strtool::split(arr, code.c_str(), " ");
+            string compactOpenCode = strtool::replace(openCode.c_str(), ",", "");
             compactOpenCode = compactOpenCode.substr(range[0], range[1] - range[0] + 1);
             for (size_t j = 0; j < arr.size(); j++)
             {
@@ -141,12 +141,12 @@ namespace lottery
             return false;
         }
 
-        lstring gen_zx_ds_random(int nLen, double expectedAccuracy)
+        string gen_zx_ds_random(int nLen, double expectedAccuracy)
         {
             int nTotalCounts = pow((double)10, nLen);
             int nCounts = expectedAccuracy * nTotalCounts / 100;
             int nRange[2] = {0, nTotalCounts - 1};
-            lstring strFormat; strFormat.format("%%0%dd", nLen);
+            string strFormat = strtool::format("%%0%dd", nLen);
 
             vector<int> vct;
             GenNumRandom(vct, nCounts, nLen, nRange, true, NULL);
@@ -154,13 +154,13 @@ namespace lottery
             return FormatNumbers(vct, strFormat, " ");
         }
 
-        lstring gen_zx_fs_random(int nLen, double expectedAccuracy)
+        string gen_zx_fs_random(int nLen, double expectedAccuracy)
         {
             int nTotalCounts = 10;
             int nCounts = expectedAccuracy * nTotalCounts / 100;
             int nRange[2] = {0, nTotalCounts - 1};
 
-            lstring strret;
+            string strret;
             for (int i = 0; i < nLen; i++)
             {
                 vector<int> vct;
@@ -168,22 +168,22 @@ namespace lottery
                 sort(vct.begin(), vct.end());
                 strret += FormatNumbers(vct, "%d", "") + "-";
             }
-            return strret.trim_right('-');
+            return strtool::trim_right(strret.c_str(), '-');
         }
 
-        lstring GenereateCode(const lstring& playName, const lstring& formula, double expectedAccuracy)
+        string GenereateCode(const string& playName, const string& formula, double expectedAccuracy)
         {
             int nCounts = 0;
             int nTotalCounts = 0;
             int nLen = 0;
-            lstring strFormat;
+            string strFormat;
 
             // 五星
             if (playName == "wx_zx_ds" && playName == "wx_zx_fs") // 五星直选单式、复式
             {
                 if (formula == "fx = random()")
                 {
-                    if (playName.find("ds") != lstring::npos)           return gen_zx_ds_random(5, expectedAccuracy);
+                    if (playName.find("ds") != string::npos)           return gen_zx_ds_random(5, expectedAccuracy);
                     else                                                return gen_zx_fs_random(5, expectedAccuracy);
                 }
             }
@@ -193,7 +193,7 @@ namespace lottery
             {
                 if (formula == "fx = random()")
                 {
-                    if (playName.find("ds") != lstring::npos)           return gen_zx_ds_random(4, expectedAccuracy);
+                    if (playName.find("ds") != string::npos)           return gen_zx_ds_random(4, expectedAccuracy);
                     else                                                return gen_zx_fs_random(4, expectedAccuracy);
                 }
             }
@@ -203,7 +203,7 @@ namespace lottery
             {
                 if (formula == "fx = random()")
                 {
-                    if (playName.find("ds") != lstring::npos)           return gen_zx_ds_random(3, expectedAccuracy);
+                    if (playName.find("ds") != string::npos)           return gen_zx_ds_random(3, expectedAccuracy);
                     else                                                return gen_zx_fs_random(3, expectedAccuracy);
                 }
             }
@@ -213,7 +213,7 @@ namespace lottery
             {
                 if (formula == "fx = random()")
                 {
-                    if (playName.find("ds") != lstring::npos)           return gen_zx_ds_random(2, expectedAccuracy);
+                    if (playName.find("ds") != string::npos)           return gen_zx_ds_random(2, expectedAccuracy);
                     else                                                return gen_zx_fs_random(2, expectedAccuracy);
                 }
             }
