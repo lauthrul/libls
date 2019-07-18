@@ -75,9 +75,9 @@
                                     									
                                     <listOptionValue builtIn="false" value="../../libls/core"/>
                                     									
-                                    <listOptionValue builtIn="false" value="../test"/>
+                                    <listOptionValue builtIn="false" value="../"/>
                                     									
-                                    <listOptionValue builtIn="false" value="../test/testcase"/>
+                                    <listOptionValue builtIn="false" value="../testcase"/>
                                     								
                                 </option>
                                 								

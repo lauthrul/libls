@@ -12,7 +12,7 @@ void test_enum()
 {
     cout << "enum enum_test { ea, eb, ec}" << endl;
 
-    lstring str = enum_str(enum_test, ea);
+    string str = enum_str(enum_test, ea);
     cout << "enum_str(enum_test, ea) = \"" << str << "\"" << endl;
 
     enum_test e = enum_from_str(enum_test, "eb");

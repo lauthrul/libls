@@ -54,7 +54,7 @@ void test_efficiency()
     cout << "------------------" << endl;
 };
 
-// void produce_next(const lstring& pattern, int next[], int len)
+// void produce_next(const string& pattern, int next[], int len)
 // {
 //     int j = 0;
 //     next[j] = j;
@@ -68,7 +68,7 @@ void test_efficiency()
 // 
 //     }
 // }
-// bool KMP(const lstring& str, const string& pattern, int* index = NULL)
+// bool KMP(const string& str, const string& pattern, int* index = NULL)
 // {
 //     if (str.size() == 0 || pattern.size() == 0)
 //         return false;
@@ -92,7 +92,7 @@ void test_efficiency()
 //     return false;
 // }
 
-int kmp(const lstring& str, const lstring& pattern)
+int kmp(const string& str, const string& pattern)
 {
     if (pattern.empty()) return 0;
 
@@ -120,8 +120,8 @@ int kmp(const lstring& str, const lstring& pattern)
 class COrder
 {
     public:
-        lstring code;
-        lstring method;
+        string code;
+        string method;
         int counts;
         double price_unit;
         int times;
@@ -131,13 +131,13 @@ class COrder
         double odds;
         bool win;
 
-        static map<lstring, double> profitmap;
+        static map<string, double> profitmap;
 
-        bool test_win(const lstring& open_code)
+        bool test_win(const string& open_code)
         {
             if (method == "wx_zx_fs")
             {
-                lstring_array arr;
+                string_array arr;
                 code.split(arr, "-");
                 for (size_t j = 0; j < min(arr.size(), 5); j++)
                 {
@@ -154,7 +154,7 @@ class COrder
             return false;
         }
 
-        void open(const lstring& open_code)
+        void open(const string& open_code)
         {
             win = test_win(open_code);
 
@@ -165,7 +165,7 @@ class COrder
             profitmap[open_code] += profit;
         }
 };
-map<lstring, double> COrder::profitmap;
+map<string, double> COrder::profitmap;
 
 void profite_calc()
 {
@@ -182,7 +182,7 @@ void profite_calc()
 
     order.method = "wx_zx_ds";
     int rand_value = 0;
-    lstring strcode;
+    string strcode;
     for (size_t i = 0; i < 10; i++)
     {
         rand_value = rand() % 10;
@@ -197,7 +197,7 @@ void profite_calc()
         orders.push_back(order);
     }
 
-    lstring stropen;
+    string stropen;
     for (list<COrder>::iterator it = orders.begin(); it != orders.end(); it++)
     {
 //         printf("\r%d", distance(orders.begin(), it));
@@ -213,8 +213,8 @@ void profite_calc()
         printf("index: %d, counts: %d, cost: %0.3f s\n", distance(orders.begin(), it), it->counts, delay);
     }
 
-    pair<lstring, double> min_profile_open_code = *COrder::profitmap.begin();
-    for (map<lstring, double>::iterator it = COrder::profitmap.begin();
+    pair<string, double> min_profile_open_code = *COrder::profitmap.begin();
+    for (map<string, double>::iterator it = COrder::profitmap.begin();
             it != COrder::profitmap.end(); it++)
     {
         if (min_profile_open_code.second > it->second)

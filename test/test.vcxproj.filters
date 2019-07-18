@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="testcase">
+      <UniqueIdentifier>{cf324d75-f7a4-4cb0-a3ed-313c8dd93632}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="testcase\crypto.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\httpclient.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\json.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\lock.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\logger.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\math.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\os.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\process.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\registry.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\string.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\testcase.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\thread.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\time.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\type.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\utils.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase\zip.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="test.cpp" />
+  </ItemGroup>
+</Project>

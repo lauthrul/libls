@@ -2,7 +2,7 @@
 
 void zip_file_test()
 {
-    lstring strsz[] =
+    string strsz[] =
     {
         "./log4cxx.xml",
         "logcfg.xml",
@@ -10,11 +10,11 @@ void zip_file_test()
     };
 
     printf("------------------zip_file_test\n");
-    for (int i = 0; i < sizeof(strsz) / sizeof(lstring); i++)
+    for (int i = 0; i < sizeof(strsz) / sizeof(string); i++)
     {
-        const lstring& str = strsz[i];
-        lstring dst_zip = os::path_get_filename(str) + ".zip";
-        int ret = zip::zip_file(dst_zip, str, "123456");
+        const string& str = strsz[i];
+        string dst_zip = os::path_get_filename(str.c_str()) + ".zip";
+        int ret = zip::zip_file(dst_zip.c_str(), str.c_str(), "123456");
         printf("zip file: %s -> %s === [%d]\n", str.c_str(), dst_zip.c_str(), ret);
     }
 }
@@ -27,7 +27,7 @@ int zip_progress(void* clientp, int dltotal, int dlnow, int error)
 
 void zip_folder_test()
 {
-    lstring strsz[] =
+    string strsz[] =
     {
         "./log",
         "download_test",
@@ -35,18 +35,18 @@ void zip_folder_test()
     };
 
     printf("------------------zip_folder_test\n");
-    for (int i = 0; i < sizeof(strsz) / sizeof(lstring); i++)
+    for (int i = 0; i < sizeof(strsz) / sizeof(string); i++)
     {
-        const lstring& str = strsz[i];
-        lstring dst_zip = os::path_get_name(str) + ".zip";
-        int ret = zip::zip_folder(dst_zip, str, NULL, zip_progress);
+        const string& str = strsz[i];
+        string dst_zip = os::path_get_name(str.c_str()) + ".zip";
+        int ret = zip::zip_folder(dst_zip.c_str(), str.c_str(), NULL, zip_progress);
         printf("zip folder: %s -> %s === [%d]\n", str.c_str(), dst_zip.c_str(), ret);
     }
 }
 
 void unzip_test()
 {
-    lstring strsz[] =
+    string strsz[] =
     {
         "./log4cxx.zip",
         "logcfg.zip",
@@ -57,11 +57,11 @@ void unzip_test()
     };
 
     printf("------------------unzip_test\n");
-    for (int i = 0; i < sizeof(strsz) / sizeof(lstring); i++)
+    for (int i = 0; i < sizeof(strsz) / sizeof(string); i++)
     {
-        const lstring& str = strsz[i];
+        const string& str = strsz[i];
         const char* dst_dir = "unzip";
-        int ret = zip::unzip(str, dst_dir, "123456", zip_progress);
+        int ret = zip::unzip(str.c_str(), dst_dir, "123456", zip_progress);
         printf("unzip: %s -> %s === [%d]\n", str.c_str(), dst_dir, ret);
     }
 }

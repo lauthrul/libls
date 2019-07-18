@@ -4,7 +4,7 @@ using namespace lslib::process;
 void test_process()
 {
     {
-        lstring sz[] =
+        string sz[] =
         {
             "System",
             "smss.exe",
@@ -17,11 +17,11 @@ void test_process()
             "Telegram.exe",
             "explorer.exe",
         };
-        for (size_t i = 0; i < sizeof(sz) / sizeof(lstring); i++)
+        for (size_t i = 0; i < sizeof(sz) / sizeof(string); i++)
         {
-            const lstring& str = sz[i];
-            cout << "get_process_id_by_name(\"" << str << "\") : " << get_process_id_by_name(str) << endl;
-            cout << "get_process_path_by_name(\"" << str << "\") : " << get_process_path_by_name(str) << endl;
+            const string& str = sz[i];
+            cout << "get_process_id_by_name(\"" << str << "\") : " << get_process_id_by_name(str.c_str()) << endl;
+            cout << "get_process_path_by_name(\"" << str << "\") : " << get_process_path_by_name(str.c_str()) << endl;
         }
     }
 
@@ -39,16 +39,16 @@ void test_process()
 
     if (0)
     {
-        lstring sz[] =
+        string sz[] =
         {
             "explorer.exe",
             "notepad.exe",
             "notepad++.exe",
         };
-        for (size_t i = 0; i < sizeof(sz) / sizeof(lstring); i++)
+        for (size_t i = 0; i < sizeof(sz) / sizeof(string); i++)
         {
-            const lstring& str = sz[i];
-            cout << "kill_process_by_name(\"" << str << "\") : " << kill_process_by_name(str) << endl;
+            const string& str = sz[i];
+            cout << "kill_process_by_name(\"" << str << "\") : " << kill_process_by_name(str.c_str()) << endl;
         }
     }
 }
