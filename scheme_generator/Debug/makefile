@@ -8,22 +8,9 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include utils/subdir.mk
--include core/zip/zipunzip/subdir.mk
--include core/zip/miniz/subdir.mk
--include core/zip/subdir.mk
--include core/xml/subdir.mk
--include core/time/subdir.mk
--include core/thread/subdir.mk
--include core/string/subdir.mk
--include core/os/subdir.mk
--include core/net/subdir.mk
--include core/math/subdir.mk
--include core/logger/subdir.mk
--include core/lock/subdir.mk
--include core/json/subdir.mk
--include core/crypto/subdir.mk
--include core/subdir.mk
+-include lottery/subdir.mk
+-include db/subdir.mk
+-include business/subdir.mk
 -include subdir.mk
 -include objects.mk
 
@@ -53,26 +40,21 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: libls.dll
+all: scheme_generator.exe
 
 # Tool invocations
-libls.dll: $(OBJS) $(USER_OBJS)
+scheme_generator.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -shared -o "libls.dll" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L../../libls/Debug -L/usr/local/mysql/lib -pthread -o "scheme_generator.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
-	$(MAKE) --no-print-directory post-build
 
 # Other Targets
 clean:
-	-$(RM) $(LIBRARIES)$(CC_DEPS)$(C++_DEPS)$(C_UPPER_DEPS)$(CXX_DEPS)$(OBJS)$(CPP_DEPS)$(C_DEPS) libls.dll
+	-$(RM) $(CC_DEPS)$(C++_DEPS)$(EXECUTABLES)$(C_UPPER_DEPS)$(CXX_DEPS)$(OBJS)$(CPP_DEPS)$(C_DEPS) scheme_generator.exe
 	-@echo ' '
 
-post-build:
-	-cp  -f libls.dll ../../test/Debug/
-	-@echo ' '
-
-.PHONY: all clean dependents post-build
+.PHONY: all clean dependents
 
 -include ../makefile.targets

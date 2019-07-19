@@ -100,7 +100,7 @@ namespace lslib
 
         bool SLogConfig::Parse()
         {
-            return Parse(m_strFile);
+            return Parse(m_strFile.c_str());
         }
 
         bool SLogConfig::Parse(_lpcstr lpstrFilePath)
@@ -149,46 +149,46 @@ namespace lslib
                 if (str.find("MB"))
                 {
                     str = str.substr(0, str.length() - 2);
-                    appender.nMaxFileSize = str.to_int() * 1024 * 1024;
+                    appender.nMaxFileSize = strtool::to_int(str) * 1024 * 1024;
                 }
                 else if (str.find("KB"))
                 {
                     str = str.substr(0, str.length() - 2);
-                    appender.nMaxFileSize = str.to_int() * 1024;
+                    appender.nMaxFileSize = strtool::to_int(str) * 1024;
                 }
                 else
                 {
-                    appender.nMaxFileSize = str.to_int();
+                    appender.nMaxFileSize = strtool::to_int(str);
                 }
 
                 str = Xml::GetAttribute(*pNode, "max_file_counts");
-                appender.nMaxFileCounts = str.to_int();
+                appender.nMaxFileCounts = strtool::to_int(str);
 
                 // init data
                 {
-                    os::mkdir(os::path_get_dir(appender.strFile));
+                    os::mkdir(os::path_get_dir(appender.strFile.c_str()).c_str());
 
                     if (appender.strLogDate.empty())
                     {
-                        string writeTime = os::get_file_attr(appender.strFile).writeTime;
+                        string writeTime = os::get_file_attr(appender.strFile.c_str()).writeTime;
                         if (!writeTime.empty())
                         {
-                            Time tm; tm.Parser(writeTime);
+                            Time tm; tm.Parser(writeTime.c_str());
                             appender.strLogDate = tm.GetDateStr();
                         }
                         else appender.strLogDate = Time::GetCurDateStr();
                     }
 
                     if (appender.nWritedSize < 0)
-                        appender.nWritedSize = os::get_file_size(appender.strFile);
+                        appender.nWritedSize = os::get_file_size(appender.strFile.c_str());
 
                     if (appender.nLogFileIndex < 0)
                     {
                         os::enum_file_array arr_files;
                         os::enumerate_files(arr_files,
-                                            os::path_get_dir(appender.strFile),
+                                            os::path_get_dir(appender.strFile.c_str()).c_str(),
                                             NULL,
-                                            os::path_get_name(appender.strFile),
+                                            os::path_get_name(appender.strFile.c_str()).c_str(),
                                             false);
                         if (!arr_files.empty()) appender.nLogFileIndex = arr_files.size() - 1;
                         else appender.nLogFileIndex = 0;
@@ -217,11 +217,11 @@ namespace lslib
                 else if (str == "all") logger.eLevel = LOG_LEVEL_ALL;
 
                 str = Xml::GetAttribute(*pNode, "layout");
-                SLogLayout* pLayout = GetLayout(str);
+                SLogLayout* pLayout = GetLayout(str.c_str());
                 if (pLayout) logger.layout = *pLayout;
 
                 str = Xml::GetAttribute(*pNode, "appender");
-                SLogAppender* pAppender = GetAppender(str);
+                SLogAppender* pAppender = GetAppender(str.c_str());
                 if (pAppender) logger.appender = *pAppender;
                 m_mapLogger[logger.strName] = logger;
             }
@@ -383,7 +383,8 @@ namespace lslib
                                         if (str > appender.strLogDate)
                                         {
                                             if (appender.fp != NULL) fclose(appender.fp);
-                                            os::rename(appender.strFile, str + "_" + appender.strFile);
+                                            os::rename(appender.strFile.c_str(),
+                                                       strtool::format("%s_%s", str.c_str(), appender.strFile.c_str()).c_str());
                                             appender.fp = NULL;
                                             appender.strLogDate = str;
                                         }
@@ -396,15 +397,15 @@ namespace lslib
                                         {
                                             if (appender.fp != NULL) fclose(appender.fp);
                                             for (int i = appender.nMaxFileCounts - 1; i <= appender.nLogFileIndex; i++)
-                                                os::rm(appender.strFile + string().format(".%d", i));
+                                                os::rm(strtool::format("%s.%d", appender.strFile.c_str(), i).c_str());
                                             for (int i = appender.nLogFileIndex; i >= 0; i--)
                                             {
                                                 if (i == 0)
-                                                    os::rename(appender.strFile,
-                                                               appender.strFile + string().format(".%d", i + 1));
+                                                    os::rename(appender.strFile.c_str(),
+                                                               strtool::format("%s.%d", appender.strFile.c_str(), i + 1).c_str());
                                                 else
-                                                    os::rename(appender.strFile + string().format(".%d", i),
-                                                               appender.strFile + string().format(".%d", i + 1));
+                                                    os::rename(strtool::format("%s.%d", appender.strFile.c_str(), i).c_str(),
+                                                               strtool::format("%s.%d", appender.strFile.c_str(), i + 1).c_str());
                                             }
                                             appender.fp = NULL;
                                             appender.nLogFileIndex = min(appender.nLogFileIndex + 1, appender.nMaxFileCounts - 1);
@@ -414,7 +415,7 @@ namespace lslib
                                     break;
                             }
                             if (appender.fp == NULL)
-                                appender.fp = fopen(appender.strFile, "a+");
+                                appender.fp = fopen(appender.strFile.c_str(), "a+");
                         }
                         break;
                 }
@@ -436,20 +437,20 @@ namespace lslib
                     //
                     str = logger->layout.strFormat;
                     Time tm;
-                    str.replace("%d", tm.GetDateStr().c_str());
-                    str.replace("%t", tm.GetTimeStr().c_str());
-                    str.replace("%ms", string().format("%d", tm.GetMilliSec()).c_str());
-                    str.replace("%T", tm.GetDateTimeStr(true).c_str());
-                    str.replace("%f", entity.file);
-                    str.replace("%l", string().format("%d", entity.line).c_str());
-                    str.replace("%F", entity.function);
-                    str.replace("%L", strlvl);
-                    str.replace("%p", string().format("0x%08x", entity.threadId).c_str());
-                    str.replace("%r", string().format("%d", tm.BetweenAllMilliSec(m_tmStart)).c_str());
-                    str.replace("%m", entity.msg);
+                    str = strtool::replace(str, "%d", tm.GetDateStr());
+                    str = strtool::replace(str, "%t", tm.GetTimeStr());
+                    str = strtool::replace(str, "%ms", strtool::format("%d", tm.GetMilliSec()));
+                    str = strtool::replace(str, "%T", tm.GetDateTimeStr(true));
+                    str = strtool::replace(str, "%f", entity.file);
+                    str = strtool::replace(str, "%l", strtool::format("%d", entity.line));
+                    str = strtool::replace(str, "%F", entity.function);
+                    str = strtool::replace(str, "%L", strlvl);
+                    str = strtool::replace(str, "%p", strtool::format("0x%08x", entity.threadId));
+                    str = strtool::replace(str, "%r", strtool::format("%d", tm.BetweenAllMilliSec(m_tmStart)));
+                    str = strtool::replace(str, "%m", entity.msg);
                     str.append("\n");
 
-                    appender.nWritedSize += fwrite(str, 1, str.length(), appender.fp);
+                    appender.nWritedSize += fwrite(str.c_str(), 1, str.length(), appender.fp);
                 }
 
                 m_lstLogEntitys.erase(it++);

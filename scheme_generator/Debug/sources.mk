@@ -12,9 +12,9 @@ CPP_SRCS :=
 C_SRCS := 
 O_SRCS := 
 S_UPPER_SRCS := 
-LIBRARIES := 
 CC_DEPS := 
 C++_DEPS := 
+EXECUTABLES := 
 C_UPPER_DEPS := 
 CXX_DEPS := 
 OBJS := 
@@ -23,21 +23,8 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-core/crypto \
-core/json \
-core/lock \
-core/logger \
-core/math \
-core \
-core/net \
-core/os \
-core/string \
-core/thread \
-core/time \
-core/xml \
-core/zip/miniz \
-core/zip \
-core/zip/zipunzip \
+business \
+db \
+lottery \
 . \
-utils \
 

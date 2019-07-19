@@ -136,7 +136,7 @@ bool CDBWrapper::GetSubSchemesByLottery(__out__ map<int, SubScheme>& mapSubSchem
     {
         SubScheme sc;
         sc.nID = strtool::to_int(row[0]);
-        sc.strName = row[1];
+        sc.strName = row[1]; // crypto::encoding_convert(row[1], "utf-8", "gb2312");
         sc.strLottery = row[2];
         sc.strPlayKind = row[3];
         sc.strPlayName = row[4];

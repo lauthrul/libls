@@ -9,7 +9,7 @@
 #include <math.h>
 #include "des.h"
 #ifdef USE_LIBICONV
-#include "iconv/iconv.h"
+#include <iconv.h>
 #endif
 
 namespace lslib
@@ -474,7 +474,7 @@ namespace lslib
         }
 
 #ifdef USE_LIBICONV
-        LSLIB_API int encoding_convert(_lpcstr from_charset, _lpcstr to_charset, _lpcstr inbuf, unsigned int inlen, __inout__ _lpstr outbuf, __inout__ unsigned int outlen)
+        LSLIB_API int encoding_convert(_lpcstr from_charset, _lpcstr to_charset, _lpcstr inbuf, size_t inlen, __inout__ _lpstr outbuf, __inout__ size_t outlen)
         {
             iconv_t cd;
             const char** pin = &inbuf;
@@ -489,7 +489,7 @@ namespace lslib
 
         LSLIB_API string encoding_convert(_lpcstr data, _lpcstr from_charset, _lpcstr to_charset)
         {
-            int buff_size = 4 * strlen(data);
+            size_t buff_size = 4 * strlen(data);
             _lpstr buf = (_lpstr)malloc(buff_size);
             memset(buf, 0, buff_size);
             encoding_convert(from_charset, to_charset, data, strlen(data), buf, buff_size);

@@ -34,7 +34,7 @@ namespace lslib
 
         string_array arr;
         string strPath = strtool::replace(lpstrPath, '\\', '/');
-        strtool::split(arr, strPath.c_str(), "/");
+        strtool::split(arr, strPath, "/");
         if (arr.empty()) return pParent;
 
         XmlNode* pNode = pParent;

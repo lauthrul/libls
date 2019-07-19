@@ -180,7 +180,7 @@ namespace lslib
 
 #ifdef USE_LIBICONV
         // convert string between ut8/gb2312...
-        LSLIB_API int encoding_convert(_lpcstr from_charset, _lpcstr to_charset, _lpcstr inbuf, unsigned int inlen, __inout__ _lpstr outbuf, __inout__ unsigned int outlen);
+        LSLIB_API int encoding_convert(_lpcstr from_charset, _lpcstr to_charset, _lpcstr inbuf, size_t inlen, __inout__ _lpstr outbuf, __inout__ size_t outlen);
         LSLIB_API string encoding_convert(_lpcstr data, _lpcstr from_charset, _lpcstr to_charset);
 #endif
 

@@ -153,7 +153,7 @@
                     					
                     <sourceEntries>
                         						
-                        <entry excluding="core/zip/bk|Debug|build|bin|dllmain.cpp|3rd-party|core/registry|core/process" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        <entry excluding="core/string/string.cpp|core/zip/bk|Debug|build|bin|dllmain.cpp|3rd-party|core/registry|core/process" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
                         					
                     </sourceEntries>
                     				

@@ -51,7 +51,7 @@ namespace lslib
                 string_array arr;
                 strtool::split(arr, (char*)ptr, ":", false);
                 if (arr.size() == 2)
-                    (*pInfoHeader)[strtool::trim(arr[0].c_str())] = strtool::trim(arr[1].c_str());
+                    (*pInfoHeader)[strtool::trim(arr[0])] = strtool::trim(arr[1]);
             }
             return size * nmemb;
         }
@@ -90,8 +90,7 @@ namespace lslib
             size_t r = sUrl.strHostName.find_last_of(':');
             if (r != string::npos)
             {
-                string strPort = sUrl.strHostName.substr(r + 1, sUrl.strHostName.length());
-                sUrl.nPort = strtool::to_int(strPort.c_str());
+                sUrl.nPort = strtool::to_int(sUrl.strHostName.substr(r + 1, sUrl.strHostName.length()));
                 sUrl.strHostName = sUrl.strHostName.substr(0, r);
             }
             else
@@ -133,7 +132,7 @@ namespace lslib
                 }
                 if (strQuery.empty()) strQuery = strUrl.substr(p);
                 string_array arr_querys;
-                strtool::split(arr_querys, strQuery.c_str(), "&");
+                strtool::split(arr_querys, strQuery, "&");
                 for (size_t j = 0; j < arr_querys.size(); j++)
                 {
                     const string& query = arr_querys[j];
@@ -164,7 +163,7 @@ namespace lslib
                 {
                     strUrl += strtool::format("%s=%s&", it->first.c_str(), it->second.c_str());
                 }
-                strUrl = strtool::trim_right(strUrl.c_str(), '&');
+                strUrl = strtool::trim_right(strUrl, '&');
             }
             if (!vUrl.strTag.empty())
             {

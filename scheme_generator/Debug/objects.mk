@@ -4,5 +4,5 @@
 
 USER_OBJS :=
 
-LIBS := -lexpat -llog4cxx -lssl -lcurl -liconv
+LIBS := -llog4cxx -lls -lmysqlclient
 

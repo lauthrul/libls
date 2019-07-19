@@ -100,7 +100,7 @@ class CDBWrapper : public CDB
 public:
     CDBWrapper();
     CDBWrapper(_lpcstr host, _lpcstr user, _lpcstr passowrd, _lpcstr db);
-    ~CDBWrapper();
+    virtual ~CDBWrapper();
 
 public:
     bool GetSchemeLotterys(__out__ string_list& lstLotterys);

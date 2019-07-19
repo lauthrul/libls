@@ -86,7 +86,7 @@ namespace lslib
 
             string str = strtool::trim(path);
             for (size_t i = 0; i < sizeof(s_slashs); i++)
-                str = strtool::replace(str.c_str(), s_slashs[i], get_slash());
+                str = strtool::replace(str, s_slashs[i], get_slash());
             _lchar buf[MAX_PATH] = { 0 };
             strncpy(buf, str.c_str(), min(MAX_PATH, str.length()));
 #ifdef _MSC_VER
@@ -117,7 +117,8 @@ namespace lslib
             if (strtool::is_empty(path) || is_absolute(join))
                 return path_pretty(join);
 
-            return path_pretty(string(path) + get_slash() + join);
+            string strpath = string(path) + get_slash() + join;
+            return path_pretty(strpath.c_str());
 #endif
         }
 
@@ -158,7 +159,7 @@ namespace lslib
         {
             if (strtool::is_empty(path)) return false;
             string str = path_pretty(path);
-            str = strtool::trim_right(str.c_str(), get_slash());
+            str = strtool::trim_right(str, get_slash());
             struct stat s;
             if (stat(str.c_str(), &s) == 0) return s.st_mode & S_IFDIR;
             return false;
@@ -169,7 +170,7 @@ namespace lslib
             if (strtool::is_empty(path)) return false;
 
             string str = path_pretty(path);
-            str = strtool::lower(str.c_str());
+            str = strtool::lower(str);
             if (str[0] == get_slash()) return true;
             else if (str[0] == '.') return false;
 #ifdef _WIN32
@@ -215,7 +216,7 @@ namespace lslib
             if (is_file(path))
             {
                 if (is_dir(target))
-                    return copy_single_file(path, path_combine(target, path_get_name(path))) > 0;
+                    return copy_single_file(path, path_combine(target, path_get_name(path).c_str()).c_str()) > 0;
                 else
                     return copy_single_file(path, target) > 0;
             }
@@ -236,7 +237,7 @@ namespace lslib
                         continue;
                     strpath = path_combine(path, p->d_name);
                     strtarget = path_combine(target, p->d_name);
-                    copy(strpath, strtarget);
+                    copy(strpath.c_str(), strtarget.c_str());
                 }
                 closedir(d);
                 return ret;
@@ -311,7 +312,7 @@ namespace lslib
             string strpath;
             {
                 size_t idx = 0;
-                if (is_absolute(str))
+                if (is_absolute(str.c_str()))
                 {
                     if (str[0] == slash)    idx = str.find(slash, 1); // linux absolute path
                     else                    idx = str.find(slash, 3); // windows absolute path
@@ -329,16 +330,16 @@ namespace lslib
                     str.clear();
                 }
             }
-            if (!is_exist(strpath))
-                ret |= MKDIR(strpath, 0755);
+            if (!is_exist(strpath.c_str()))
+                ret |= MKDIR(strpath.c_str(), 0755);
 
             string_array arr;
-            str.split(arr, string(slash), false);
+            strtool::split(arr, str, string(1, slash), false);
             for (size_t i = 0; i < arr.size(); i++)
             {
                 strpath += arr[i] + slash;
-                if (!is_exist(strpath))
-                    ret |= MKDIR(strpath, 0755);
+                if (!is_exist(strpath.c_str()))
+                    ret |= MKDIR(strpath.c_str(), 0755);
             }
             return ret;
 #endif
@@ -371,7 +372,7 @@ namespace lslib
                     if (strcmp(p->d_name, ".") == 0 || strcmp(p->d_name, "..") == 0)
                         continue;
                     strpath = path_combine(path, p->d_name);
-                    ret = rm(strpath);
+                    ret = rm(strpath.c_str());
                 }
                 closedir(d);
                 if (ret == 0) return rmdir(path);
@@ -746,26 +747,26 @@ namespace lslib
                     continue;
                 curpath = path_combine(path, p->d_name);
                 struct stat statbuf;
-                if (stat(curpath, &statbuf) == 0)
+                if (stat(curpath.c_str(), &statbuf) == 0)
                 {
                     if (S_ISDIR(statbuf.st_mode))
                     {
                         if (recurse)
-                            enumerate_files(array_files, curpath,  extention,  filter, recurse);
+                            enumerate_files(array_files, curpath.c_str(),  extention,  filter, recurse);
                     }
                     else
                     {
-                        file_info.filePath = path_get_dir(curpath);
-                        file_info.fileName = path_get_name(curpath);
+                        file_info.filePath = path_get_dir(curpath.c_str());
+                        file_info.fileName = path_get_name(curpath.c_str());
                         file_info.fullPath = curpath;
-                        file_info.name = path_get_filename(file_info.fileName);
-                        file_info.extName = path_get_ext(file_info.fileName);
+                        file_info.name = path_get_filename(file_info.fileName.c_str());
+                        file_info.extName = path_get_ext(file_info.fileName.c_str());
 
                         check(file_info, bfilter);
                         if (bfilter)
                         {
-                            file_info.size = get_file_size(curpath);
-                            file_info.attr = get_file_attr(curpath);
+                            file_info.size = get_file_size(curpath.c_str());
+                            file_info.attr = get_file_attr(curpath.c_str());
                             array_files.push_back(file_info);
                         }
                     }

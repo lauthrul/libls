@@ -6,6 +6,7 @@
 
 #include "stdafx.h"
 #include "TaskManager.h"
+#include <stdexcept>
 
 //////////////////////////////////////////////////////////////////////////
 #define TASK_RETRY_INTERVAL                 5   // seconds

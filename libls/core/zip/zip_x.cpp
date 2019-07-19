@@ -105,7 +105,7 @@ namespace lslib
             int ret = 0;
             string strname = name_in_zip;
             if (strname.empty()) strname = os::path_get_name(src_file);
-            if (ret == 0) ret = zip_entry_open(zip, strname);
+            if (ret == 0) ret = zip_entry_open(zip, strname.c_str());
             if (ret == 0) ret = zip_entry_fwrite(zip, src_file);
             if (ret == 0) ret = zip_entry_close(zip);
             zip_close(zip);
@@ -133,8 +133,8 @@ namespace lslib
             {
                 src = arr_files[i].fullPath;
                 dst = src.substr(src.find(root_name));
-                if (ret == 0) ret = zip_entry_open(zip, dst);
-                if (ret == 0) ret = zip_entry_fwrite(zip, src);
+                if (ret == 0) ret = zip_entry_open(zip, dst.c_str());
+                if (ret == 0) ret = zip_entry_fwrite(zip, src.c_str());
                 if (ret == 0) ret = zip_entry_close(zip);
                 if (cb != NULL) ret = cb(clientp, arr_files.size(), i + 1, ret);
             }
@@ -156,8 +156,8 @@ namespace lslib
             {
                 ret = zip_entry_openbyindex(zip, i);
                 string target = os::path_combine(dst_dir, zip_entry_name(zip));
-                os::mkdir(os::path_get_dir(target));
-                if (ret == 0) ret = zip_entry_fread(zip, target);
+                os::mkdir(os::path_get_dir(target.c_str()).c_str());
+                if (ret == 0) ret = zip_entry_fread(zip, target.c_str());
                 if (ret == 0) ret = zip_entry_close(zip);
                 if (cb != NULL) ret = cb(clientp, counts, i + 1, ret);
             }

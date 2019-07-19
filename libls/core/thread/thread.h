@@ -59,7 +59,7 @@ namespace lslib
         CThread& operator = (const CThread& value);
 
     public:
-        virtual _lpcstr GetName() = 0;
+        virtual _lpcstr GetName() { return "CThread"; };
 
         bool Suspend();
         bool Resume();

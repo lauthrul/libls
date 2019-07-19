@@ -11,7 +11,7 @@ namespace lottery
 
             pos_t pos[5];
             string_array arr;
-            strtool::split(arr, ds.c_str(), " ", false);
+            strtool::split(arr, ds, " ", false);
             for (size_t i = 0; i < arr.size(); i++)
             {
                 for (size_t j = 0; j < min(arr[i].length(), 5); j++)
@@ -24,15 +24,15 @@ namespace lottery
             string strret;
             for (size_t j = 0; j < len; j++)
                 strret += string().assign(pos[j].begin(), pos[j].end()) + "-";
-            return strtool::trim_right(strret.c_str(), '-');
+            return strtool::trim_right(strret, '-');
         }
 
         bool check_win_zx_fs(const string& code, const string& openCode, int range[2])
         {
             // code: 123456-123456-123456-123456-123456
             // openCode: 3,4,6,8,1
-            string_array arr;        strtool::split(arr, code.c_str(), "-");
-            string compactOpenCode = strtool::replace(openCode.c_str(), ",", "");
+            string_array arr;        strtool::split(arr, code, "-");
+            string compactOpenCode = strtool::replace(openCode, ",", "");
             compactOpenCode = compactOpenCode.substr(range[0], range[1] - range[0] + 1);
             for (size_t j = 0; j < arr.size(); j++)
             {
@@ -46,8 +46,8 @@ namespace lottery
         {
             // code: 12345 12456 34215 65432 98507 ...
             // openCode: 3,4,6,8,1
-            string_array arr;        strtool::split(arr, code.c_str(), " ");
-            string compactOpenCode = strtool::replace(openCode.c_str(), ",", "");
+            string_array arr;        strtool::split(arr, code, " ");
+            string compactOpenCode = strtool::replace(openCode, ",", "");
             compactOpenCode = compactOpenCode.substr(range[0], range[1] - range[0] + 1);
             for (size_t j = 0; j < arr.size(); j++)
             {
@@ -168,7 +168,7 @@ namespace lottery
                 sort(vct.begin(), vct.end());
                 strret += FormatNumbers(vct, "%d", "") + "-";
             }
-            return strtool::trim_right(strret.c_str(), '-');
+            return strtool::trim_right(strret, '-');
         }
 
         string GenereateCode(const string& playName, const string& formula, double expectedAccuracy)

@@ -8,7 +8,7 @@ class CDB
 public:
     CDB();
     CDB(_lpcstr host, _lpcstr user, _lpcstr passowrd, _lpcstr db);
-    ~CDB();
+    virtual ~CDB();
 
 public:
     void SetHost(_lpcstr host);

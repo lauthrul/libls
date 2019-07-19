@@ -53,6 +53,8 @@ bool CDB::Connect()
 {
     if (IsConnected()) return true;
 
+    mysql_options(m_con, MYSQL_SET_CHARSET_NAME, "utf8");
+    mysql_options(m_con, MYSQL_INIT_COMMAND, "SET NAMES utf8");
     MYSQL* ret = mysql_real_connect(m_con, m_strHost.c_str(), m_strUser.c_str(), m_strPassword.c_str(), m_strDB.c_str(), 0, NULL, CLIENT_MULTI_STATEMENTS);
     if (ret == NULL)
     {
