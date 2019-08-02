@@ -223,8 +223,10 @@ int CRoutine::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lPar
                     g_dbWrapper.AddSchemeDetails(mapSchemeDetails);
                     g_dbWrapper.UpdateSubSchemeStatistic(rfSubScheme);
 
+                    MQTTSchemeNotify(rfSubScheme);
+
                     INFO_LOG(g_pLogger, "=== update sub_scheme statistic[merchant_id:%d, scheme_id:%d, sub_scheme_id:%d, name:%s, lottery:%s, play_kind:%s, play_name:%s, issues:%d,"
-                                        " win_rounds/rounds:%d/%d, comb_win_rounds/max_comb_win_rounds:%d/%d, comb_loss_rounds/max_comb_loss_rounds:%d/%d, accuracy:%0.2f%%] ===",
+                             " win_rounds/rounds:%d/%d, comb_win_rounds/max_comb_win_rounds:%d/%d, comb_loss_rounds/max_comb_loss_rounds:%d/%d, accuracy:%0.2f%%] ===",
                              rfSubScheme.nMerchantID,
                              rfSubScheme.nSchemeID,
                              rfSubScheme.nID,
@@ -259,4 +261,16 @@ void CRoutine::Routine()
     int issues = (m_mapAllHistoryCode.empty()) ? 50 : 1;
     for (string_list::iterator it = lostterys.begin(); it != lostterys.end(); it++)
         g_netManager.GetHistoryCodeRequest(it->c_str(), issues);
+}
+
+void CRoutine::MQTTSchemeNotify(const SubScheme& sc)
+{
+    CJsonValue jv;
+    jv["data"]["merchant"] = sc.nMerchantID;
+    jv["data"]["lottery"] = sc.strLottery;
+    jv["data"]["scheme"] = sc.nSchemeID;
+    jv["data"]["sub_scheme"] = sc.nID;
+    g_mqttClient.SendNotify(enum_str(mqtt_notify, mqtt_notify_scheme_updated).c_str(),
+                            CJsonWrapper::Dumps(jv).c_str(),
+                            false);
 }

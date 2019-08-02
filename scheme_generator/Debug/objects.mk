@@ -4,5 +4,5 @@
 
 USER_OBJS :=
 
-LIBS := -llog4cxx -lls -lmysqlclient
+LIBS := -lls -llog4cxx -lmysqlclient -lpaho-mqttpp3
 

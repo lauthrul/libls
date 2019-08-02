@@ -12,7 +12,8 @@ routine.o: ../routine.cpp ../stdafx.h ../targetver.h ../../libls/libls.h \
  ../../libls/core/json/features.h ../../libls/core/json/writer.h \
  ../../libls/core/logger/logger.h ../../libls/core/net/httpclient.h \
  ../../libls/core/thread/idle_thread.h ../../libls/utils/utils.h \
- ../../libls/utils/cmdline.h ../db/db_wrapper.h ../db/db.h \
+ ../../libls/utils/cmdline.h ../../libls/utils/cfghandler.h ../config.h \
+ ../db/db_wrapper.h ../db/db.h \
  ../3rd-party/MySQL\ Connector\ C\ 6.1/include/mysql.h \
  ../3rd-party/MySQL\ Connector\ C\ 6.1/include/mysql_version.h \
  ../3rd-party/MySQL\ Connector\ C\ 6.1/include/mysql_com.h \
@@ -28,7 +29,32 @@ routine.o: ../routine.cpp ../stdafx.h ../targetver.h ../../libls/libls.h \
  ../3rd-party/MySQL\ Connector\ C\ 6.1/include/mysql/psi/psi_base.h \
  ../business/NetManager.h ../business/TaskManager.h \
  ../business/TaskDefine.h ../business/TaskAgent.h ../business/NetAgent.h \
- ../business/NetDefine.h ../routine.h ../lottery/lottery.h
+ ../business/NetDefine.h ../mqtt/MQTTClient.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/async_client.h \
+ ../3rd-party/paho.mqtt.c/include/MQTTAsync.h \
+ ../3rd-party/paho.mqtt.c/include/MQTTProperties.h \
+ ../3rd-party/paho.mqtt.c/include/MQTTReasonCodes.h \
+ ../3rd-party/paho.mqtt.c/include/MQTTSubscribeOpts.h \
+ ../3rd-party/paho.mqtt.c/include/MQTTClientPersistence.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/types.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/token.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/iaction_listener.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/exception.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/buffer_ref.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/string_collection.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/delivery_token.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/message.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/iclient_persistence.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/buffer_view.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/callback.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/thread_queue.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/iasync_client.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/connect_options.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/topic.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/will_options.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/ssl_options.h \
+ ../3rd-party/paho.mqtt.cpp/include/mqtt/disconnect_options.h \
+ ../mqtt/MQTTDef.h ../routine.h ../lottery/lottery.h
 
 ../stdafx.h:
 
@@ -90,6 +116,10 @@ routine.o: ../routine.cpp ../stdafx.h ../targetver.h ../../libls/libls.h \
 
 ../../libls/utils/cmdline.h:
 
+../../libls/utils/cfghandler.h:
+
+../config.h:
+
 ../db/db_wrapper.h:
 
 ../db/db.h:
@@ -131,6 +161,58 @@ routine.o: ../routine.cpp ../stdafx.h ../targetver.h ../../libls/libls.h \
 ../business/NetAgent.h:
 
 ../business/NetDefine.h:
+
+../mqtt/MQTTClient.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/async_client.h:
+
+../3rd-party/paho.mqtt.c/include/MQTTAsync.h:
+
+../3rd-party/paho.mqtt.c/include/MQTTProperties.h:
+
+../3rd-party/paho.mqtt.c/include/MQTTReasonCodes.h:
+
+../3rd-party/paho.mqtt.c/include/MQTTSubscribeOpts.h:
+
+../3rd-party/paho.mqtt.c/include/MQTTClientPersistence.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/types.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/token.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/iaction_listener.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/exception.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/buffer_ref.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/string_collection.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/delivery_token.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/message.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/iclient_persistence.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/buffer_view.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/callback.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/thread_queue.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/iasync_client.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/connect_options.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/topic.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/will_options.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/ssl_options.h:
+
+../3rd-party/paho.mqtt.cpp/include/mqtt/disconnect_options.h:
+
+../mqtt/MQTTDef.h:
 
 ../routine.h:
 

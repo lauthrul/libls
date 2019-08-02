@@ -45,13 +45,13 @@ namespace lottery
             subScheme.nWinRounds++;
             subScheme.nCombWinRounds++;
             subScheme.nCombLossRounds = 0;
-            subScheme.nMaxCombWinRounds = max(subScheme.nMaxCombWinRounds, subScheme.nCombWinRounds);
+            subScheme.nMaxCombWinRounds = MAX(subScheme.nMaxCombWinRounds, subScheme.nCombWinRounds);
         }
         else if (schemeDetail.nRoundIndex >= schemeDetail.nRoundTotal - 1)
         {
             subScheme.nCombWinRounds = 0;
             subScheme.nCombLossRounds++;
-            subScheme.nMaxCombLossRounds = max(subScheme.nMaxCombLossRounds, subScheme.nCombLossRounds);
+            subScheme.nMaxCombLossRounds = MAX(subScheme.nMaxCombLossRounds, subScheme.nCombLossRounds);
         }
         subScheme.dAccuracy = (double)subScheme.nWinRounds / subScheme.nRounds * 100;
     }

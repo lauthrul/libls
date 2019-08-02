@@ -139,7 +139,7 @@ class COrder
             {
                 string_array arr;
                 code.split(arr, "-");
-                for (size_t j = 0; j < min(arr.size(), 5); j++)
+                for (size_t j = 0; j < MIN(arr.size(), 5); j++)
                 {
                     if (arr[j].find(open_code[j]) == string::npos)
                         return false;

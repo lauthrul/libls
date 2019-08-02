@@ -8,10 +8,10 @@ core/crypto/crypto.o: ../core/crypto/crypto.cpp ../stdafx.h \
  ../core/json/value.h ../core/json/forwards.h ../core/json/reader.h \
  ../core/json/features.h ../core/json/writer.h ../core/logger/logger.h \
  ../core/net/httpclient.h ../core/thread/idle_thread.h ../utils/utils.h \
- ../utils/cmdline.h ../core/crypto/md5.h ../core/crypto/sha1.h \
- ../core/crypto/sha256.h ../core/crypto/base64.h ../core/crypto/aes.h \
- ../core/crypto/cipher_def.h ../core/crypto/url_encode.h \
- ../core/crypto/des.h
+ ../utils/cmdline.h ../utils/cfghandler.h ../core/crypto/md5.h \
+ ../core/crypto/sha1.h ../core/crypto/sha256.h ../core/crypto/base64.h \
+ ../core/crypto/aes.h ../core/crypto/cipher_def.h \
+ ../core/crypto/url_encode.h ../core/crypto/des.h
 
 ../stdafx.h:
 
@@ -72,6 +72,8 @@ core/crypto/crypto.o: ../core/crypto/crypto.cpp ../stdafx.h \
 ../utils/utils.h:
 
 ../utils/cmdline.h:
+
+../utils/cfghandler.h:
 
 ../core/crypto/md5.h:
 

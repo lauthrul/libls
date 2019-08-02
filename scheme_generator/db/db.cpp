@@ -9,6 +9,7 @@ CDB::CDB() : m_con(NULL)
 
 CDB::CDB(_lpcstr host, _lpcstr user, _lpcstr passowrd, _lpcstr db)
     : m_strHost(host),
+      m_nPort(3306),
       m_strUser(user),
       m_strPassword(passowrd),
       m_strDB(db),
@@ -26,6 +27,11 @@ CDB::~CDB()
 void CDB::SetHost(_lpcstr host)
 {
     m_strHost = host;
+}
+
+void CDB::SetPort(int port)
+{
+    m_nPort = port;
 }
 
 void CDB::SetUser(_lpcstr user)
@@ -55,7 +61,7 @@ bool CDB::Connect()
 
     mysql_options(m_con, MYSQL_SET_CHARSET_NAME, "utf8");
     mysql_options(m_con, MYSQL_INIT_COMMAND, "SET NAMES utf8");
-    MYSQL* ret = mysql_real_connect(m_con, m_strHost.c_str(), m_strUser.c_str(), m_strPassword.c_str(), m_strDB.c_str(), 0, NULL, CLIENT_MULTI_STATEMENTS);
+    MYSQL* ret = mysql_real_connect(m_con, m_strHost.c_str(), m_strUser.c_str(), m_strPassword.c_str(), m_strDB.c_str(), m_nPort, NULL, CLIENT_MULTI_STATEMENTS);
     if (ret == NULL)
     {
         ERROR_LOG(g_pLogger, "connect db fail. exception: %d-%s", mysql_errno(m_con), mysql_error(m_con));

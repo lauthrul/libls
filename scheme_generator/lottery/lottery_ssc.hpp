@@ -14,7 +14,7 @@ namespace lottery
             strtool::split(arr, ds, " ", false);
             for (size_t i = 0; i < arr.size(); i++)
             {
-                for (size_t j = 0; j < min(arr[i].length(), 5); j++)
+                for (size_t j = 0; j < MIN(arr[i].length(), 5); j++)
                 {
                     const string& num = arr[i];
                     pos[j].insert(num[j]);

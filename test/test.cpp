@@ -18,6 +18,7 @@
 #include "testcase/httpclient.hpp"
 #include "testcase/crypto.hpp"
 #include "testcase/json.hpp"
+#include "testcase/cfghandler.hpp"
 
 extern fn_test_list test_cases;
 int main(int argc, char* argv[])

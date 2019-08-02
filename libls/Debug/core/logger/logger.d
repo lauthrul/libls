@@ -8,7 +8,7 @@ core/logger/logger.o: ../core/logger/logger.cpp ../stdafx.h \
  ../core/json/value.h ../core/json/forwards.h ../core/json/reader.h \
  ../core/json/features.h ../core/json/writer.h ../core/logger/logger.h \
  ../core/net/httpclient.h ../core/thread/idle_thread.h ../utils/utils.h \
- ../utils/cmdline.h
+ ../utils/cmdline.h ../utils/cfghandler.h
 
 ../stdafx.h:
 
@@ -69,3 +69,5 @@ core/logger/logger.o: ../core/logger/logger.cpp ../stdafx.h \
 ../utils/utils.h:
 
 ../utils/cmdline.h:
+
+../utils/cfghandler.h:

@@ -8,7 +8,7 @@ core/zip/zip_x.o: ../core/zip/zip_x.cpp ../stdafx.h ../targetver.h \
  ../core/json/forwards.h ../core/json/reader.h ../core/json/features.h \
  ../core/json/writer.h ../core/logger/logger.h ../core/net/httpclient.h \
  ../core/thread/idle_thread.h ../utils/utils.h ../utils/cmdline.h \
- ../core/zip/miniz/mzip.h
+ ../utils/cfghandler.h ../core/zip/miniz/mzip.h
 
 ../stdafx.h:
 
@@ -69,5 +69,7 @@ core/zip/zip_x.o: ../core/zip/zip_x.cpp ../stdafx.h ../targetver.h \
 ../utils/utils.h:
 
 ../utils/cmdline.h:
+
+../utils/cfghandler.h:
 
 ../core/zip/miniz/mzip.h:

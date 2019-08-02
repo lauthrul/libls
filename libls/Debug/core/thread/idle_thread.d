@@ -8,7 +8,7 @@ core/thread/idle_thread.o: ../core/thread/idle_thread.cpp ../stdafx.h \
  ../core/json/value.h ../core/json/forwards.h ../core/json/reader.h \
  ../core/json/features.h ../core/json/writer.h ../core/logger/logger.h \
  ../core/net/httpclient.h ../core/thread/idle_thread.h ../utils/utils.h \
- ../utils/cmdline.h ../core/thread/idle_thread.h
+ ../utils/cmdline.h ../utils/cfghandler.h ../core/thread/idle_thread.h
 
 ../stdafx.h:
 
@@ -69,5 +69,7 @@ core/thread/idle_thread.o: ../core/thread/idle_thread.cpp ../stdafx.h \
 ../utils/utils.h:
 
 ../utils/cmdline.h:
+
+../utils/cfghandler.h:
 
 ../core/thread/idle_thread.h:

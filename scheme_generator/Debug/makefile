@@ -8,6 +8,7 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include mqtt/subdir.mk
 -include lottery/subdir.mk
 -include db/subdir.mk
 -include business/subdir.mk

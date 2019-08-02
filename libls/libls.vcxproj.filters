@@ -168,6 +168,9 @@
     <ClCompile Include="core\string\strtool.cpp">
       <Filter>core\string</Filter>
     </ClCompile>
+    <ClCompile Include="utils\cfghandler.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\mmr.h">
@@ -298,6 +301,9 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="core\string\strtool.h">
       <Filter>core\string</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cfghandler.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

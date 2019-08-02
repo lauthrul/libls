@@ -26,7 +26,7 @@ CPP_DEPS += \
 business/%.o: ../business/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -I../../libls -I../../libls/utils -I../../libls/core -I../ -I"../3rd-party/MySQL Connector C 6.1/include" -include ../stdafx.h -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ -I../../libls -I../../libls/utils -I../../libls/core -I../ -I"../3rd-party/MySQL Connector C 6.1/include" -I"../3rd-party/paho.mqtt.c/include" -I"../3rd-party/paho.mqtt.cpp/include" -include ../stdafx.h -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -std=c++11 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

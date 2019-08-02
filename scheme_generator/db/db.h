@@ -12,6 +12,7 @@ public:
 
 public:
     void SetHost(_lpcstr host);
+    void SetPort(int port);
     void SetUser(_lpcstr user);
     void SetPassword(_lpcstr password);
     void SetDB(_lpcstr db);
@@ -28,6 +29,7 @@ protected:
 
 protected:
     string m_strHost;
+    int m_nPort;
     string m_strUser;
     string m_strPassword;
     string m_strDB;

@@ -4,5 +4,5 @@
 
 USER_OBJS :=
 
-LIBS :=
+LIBS := -lexpat -llog4cxx -lssl -lcurl -liconv
 

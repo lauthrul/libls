@@ -14,13 +14,16 @@ using namespace lslib;
 using namespace lslib::net;
 using namespace lslib::logger;
 
+#include "config.h"
 #include "db/db_wrapper.h"
 #include "business/NetManager.h"
+#include "mqtt/MQTTClient.h"
 
 //////////////////////////////////////////////////////////////////////////
 #define Console                 printf
 
 //////////////////////////////////////////////////////////////////////////
+extern string                   g_strCfgFile;
 extern _loggerptr               g_pLogger;
 extern _loggerptr               g_pNetlogger;
 extern CDBWrapper               g_dbWrapper;

@@ -54,7 +54,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)\libls;$(SolutionDir)\libls\core;$(SolutionDir)\libls\utils;$(SolutionDir)\libls\3rd-party\include;$(ProjectDir)\3rd-party\MySQL Connector C 6.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)\libls;$(SolutionDir)\libls\core;$(SolutionDir)\libls\utils;$(SolutionDir)\libls\3rd-party\include;$(ProjectDir)\3rd-party\MySQL Connector C 6.1\include;$(ProjectDir)\3rd-party\paho.mqtt.c\include;$(ProjectDir)\3rd-party\paho.mqtt.cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;CPPCONN_DONT_TYPEDEF_MS_TYPES_TO_C99_TYPES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -64,8 +64,8 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libls.lib;log4cxx.lib;mysqlclient.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\libls\bin\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\log4cxx\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;$(ProjectDir)\3rd-party\MySQL Connector C 6.1\lib\vs12\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libls.lib;log4cxx.lib;mysqlclient.lib;paho-mqttpp3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libls\bin\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\log4cxx\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;$(ProjectDir)\3rd-party\MySQL Connector C 6.1\lib\vs12\;$(ProjectDir)\3rd-party\paho.mqtt.c\lib\$(Configuration)\;$(ProjectDir)\3rd-party\paho.mqtt.cpp\lib\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -80,7 +80,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)\libls;$(SolutionDir)\libls\core;$(SolutionDir)\libls\utils;$(SolutionDir)\libls\3rd-party\include;$(ProjectDir)\3rd-party\MySQL Connector C 6.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)\libls;$(SolutionDir)\libls\core;$(SolutionDir)\libls\utils;$(SolutionDir)\libls\3rd-party\include;$(ProjectDir)\3rd-party\MySQL Connector C 6.1\include;$(ProjectDir)\3rd-party\paho.mqtt.c\include;$(ProjectDir)\3rd-party\paho.mqtt.cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;CPPCONN_DONT_TYPEDEF_MS_TYPES_TO_C99_TYPES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -89,8 +89,8 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libls.lib;log4cxx.lib;mysqlclient.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\libls\bin\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\log4cxx\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;$(ProjectDir)\3rd-party\MySQL Connector C 6.1\lib\vs12\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libls.lib;log4cxx.lib;mysqlclient.lib;paho-mqttpp3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libls\bin\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\log4cxx\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;$(ProjectDir)\3rd-party\MySQL Connector C 6.1\lib\vs12\;$(ProjectDir)\3rd-party\paho.mqtt.c\lib\$(Configuration)\;$(ProjectDir)\3rd-party\paho.mqtt.cpp\lib\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -109,6 +109,8 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClCompile Include="db\db.cpp" />
     <ClCompile Include="db\db_wrapper.cpp" />
     <ClCompile Include="lottery\lottery.cpp" />
+    <ClCompile Include="mqtt\MQTTClient.cpp" />
+    <ClCompile Include="mqtt\MQTTDef.cpp" />
     <ClCompile Include="routine.cpp" />
     <ClCompile Include="scheme_generator.cpp" />
     <ClCompile Include="stdafx.cpp" />
@@ -120,6 +122,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClInclude Include="business\TaskAgent.h" />
     <ClInclude Include="business\TaskDefine.h" />
     <ClInclude Include="business\TaskManager.h" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="db\db.h" />
     <ClInclude Include="db\db_wrapper.h" />
     <ClInclude Include="lottery\lottery.h" />
@@ -130,6 +133,8 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClInclude Include="lottery\lottery_pk10.hpp" />
     <ClInclude Include="lottery\lottery_pl35.hpp" />
     <ClInclude Include="lottery\lottery_ssc.hpp" />
+    <ClInclude Include="mqtt\MQTTClient.h" />
+    <ClInclude Include="mqtt\MQTTDef.h" />
     <ClInclude Include="routine.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />

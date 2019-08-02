@@ -7,7 +7,8 @@ utils/cmdline.o: ../utils/cmdline.cpp ../stdafx.h ../targetver.h \
  ../core/json/autolink.h ../core/json/config.h ../core/json/value.h \
  ../core/json/forwards.h ../core/json/reader.h ../core/json/features.h \
  ../core/json/writer.h ../core/logger/logger.h ../core/net/httpclient.h \
- ../core/thread/idle_thread.h ../utils/utils.h ../utils/cmdline.h
+ ../core/thread/idle_thread.h ../utils/utils.h ../utils/cmdline.h \
+ ../utils/cfghandler.h
 
 ../stdafx.h:
 
@@ -68,3 +69,5 @@ utils/cmdline.o: ../utils/cmdline.cpp ../stdafx.h ../targetver.h \
 ../utils/utils.h:
 
 ../utils/cmdline.h:
+
+../utils/cfghandler.h:

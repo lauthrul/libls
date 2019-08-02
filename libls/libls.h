@@ -128,14 +128,15 @@ using namespace std;
 #endif
 #include "utils/utils.h"
 #include "utils/cmdline.h"
+#include "utils/cfghandler.h"
 
 //////////////////////////////////////////////////////////////////////////
 // custom macro defines
 
-#ifndef max
-#define max(a, b) (((a) > (b)) ? (a) : (b))
+#ifndef MAX
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #endif
 
-#ifndef min
-#define min(a, b) (((a) < (b)) ? (a) : (b))
+#ifndef MIN
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #endif

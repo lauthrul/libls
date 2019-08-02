@@ -408,7 +408,7 @@ namespace lslib
                                                                strtool::format("%s.%d", appender.strFile.c_str(), i + 1).c_str());
                                             }
                                             appender.fp = NULL;
-                                            appender.nLogFileIndex = min(appender.nLogFileIndex + 1, appender.nMaxFileCounts - 1);
+                                            appender.nLogFileIndex = MIN(appender.nLogFileIndex + 1, appender.nMaxFileCounts - 1);
                                             appender.nWritedSize = 0;
                                         }
                                     }

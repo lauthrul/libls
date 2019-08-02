@@ -140,10 +140,12 @@ namespace lslib
 
         _lpbyte crypto_padding(__inout__ _lpbyte& data_buf, __inout__ int& data_len, int bock_size, crypto_padding_mode mode)
         {
-            int padding_len = bock_size - data_len % bock_size;
-            data_buf = (_lpbyte)realloc(data_buf, data_len + padding_len);
-            switch (mode)
+            if (data_buf != NULL && data_len > 0)
             {
+                int padding_len = bock_size - data_len % bock_size;
+                data_buf = (_lpbyte)realloc(data_buf, data_len + padding_len);
+                switch (mode)
+                {
                 case crypto_zeropadding:
                     memset(data_buf + data_len, 0, padding_len);
                     break;
@@ -151,15 +153,18 @@ namespace lslib
                 case crypto_pkcs7padding:
                     memset(data_buf + data_len, padding_len, padding_len);
                     break;
+                }
+                data_len += padding_len;
             }
-            data_len += padding_len;
             return data_buf;
         }
 
         _lpbyte crypto_unpadding(__inout__ _lpbyte& data_buf, __inout__ int& data_len, crypto_padding_mode mode)
         {
-            switch (mode)
+            if (data_buf != NULL && data_len > 0)
             {
+                switch (mode)
+                {
                 case crypto_zeropadding:
                     while (data_buf[--data_len] == 0 && data_len >= 0);
                     ++data_len;
@@ -168,8 +173,9 @@ namespace lslib
                 case crypto_pkcs7padding:
                     data_len -= data_buf[data_len - 1];
                     break;
+                }
+                data_buf = (_lpbyte)realloc(data_buf, data_len);
             }
-            data_buf = (_lpbyte)realloc(data_buf, data_len);
             return data_buf;
         }
 

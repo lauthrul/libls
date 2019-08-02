@@ -12,10 +12,11 @@ test.o: ../test.cpp ../stdafx.h ../targetver.h ../../libls/libls.h \
  ../../libls/core/json/features.h ../../libls/core/json/writer.h \
  ../../libls/core/logger/logger.h ../../libls/core/net/httpclient.h \
  ../../libls/core/thread/idle_thread.h ../../libls/utils/utils.h \
- ../../libls/utils/cmdline.h ../testcase/testcase.hpp \
- ../testcase/string.hpp ../testcase/type.hpp ../testcase/logger.hpp \
- ../testcase/os.hpp ../testcase/zip.hpp ../testcase/httpclient.hpp \
- ../testcase/crypto.hpp ../testcase/json.hpp
+ ../../libls/utils/cmdline.h ../../libls/utils/cfghandler.h \
+ ../testcase/testcase.hpp ../testcase/string.hpp ../testcase/type.hpp \
+ ../testcase/logger.hpp ../testcase/os.hpp ../testcase/zip.hpp \
+ ../testcase/httpclient.hpp ../testcase/crypto.hpp ../testcase/json.hpp \
+ ../testcase/cfghandler.hpp
 
 ../stdafx.h:
 
@@ -77,6 +78,8 @@ test.o: ../test.cpp ../stdafx.h ../targetver.h ../../libls/libls.h \
 
 ../../libls/utils/cmdline.h:
 
+../../libls/utils/cfghandler.h:
+
 ../testcase/testcase.hpp:
 
 ../testcase/string.hpp:
@@ -94,3 +97,5 @@ test.o: ../test.cpp ../stdafx.h ../targetver.h ../../libls/libls.h \
 ../testcase/crypto.hpp:
 
 ../testcase/json.hpp:
+
+../testcase/cfghandler.hpp:

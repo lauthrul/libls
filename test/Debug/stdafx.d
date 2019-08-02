@@ -12,7 +12,7 @@ stdafx.o: ../stdafx.cpp ../stdafx.h ../targetver.h ../../libls/libls.h \
  ../../libls/core/json/features.h ../../libls/core/json/writer.h \
  ../../libls/core/logger/logger.h ../../libls/core/net/httpclient.h \
  ../../libls/core/thread/idle_thread.h ../../libls/utils/utils.h \
- ../../libls/utils/cmdline.h
+ ../../libls/utils/cmdline.h ../../libls/utils/cfghandler.h
 
 ../stdafx.h:
 
@@ -73,3 +73,5 @@ stdafx.o: ../stdafx.cpp ../stdafx.h ../targetver.h ../../libls/libls.h \
 ../../libls/utils/utils.h:
 
 ../../libls/utils/cmdline.h:
+
+../../libls/utils/cfghandler.h:

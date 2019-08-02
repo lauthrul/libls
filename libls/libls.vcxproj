@@ -246,6 +246,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="utils\cfghandler.cpp" />
     <ClCompile Include="utils\cmdline.cpp" />
     <ClCompile Include="utils\utils.cpp" />
   </ItemGroup>
@@ -293,6 +294,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClInclude Include="libls.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="utils\cfghandler.h" />
     <ClInclude Include="utils\cmdline.h" />
     <ClInclude Include="utils\utils.h" />
   </ItemGroup>

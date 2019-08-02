@@ -10,6 +10,9 @@
     <Filter Include="lottery">
       <UniqueIdentifier>{39e4edb4-0652-465b-a6db-a32dfa07af4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mqtt">
+      <UniqueIdentifier>{7f59e05f-9cfd-4931-ab7e-2f953e5e7c14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="business\NetAgent.cpp">
@@ -36,6 +39,12 @@
     <ClCompile Include="routine.cpp" />
     <ClCompile Include="scheme_generator.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="mqtt\MQTTClient.cpp">
+      <Filter>mqtt</Filter>
+    </ClCompile>
+    <ClCompile Include="mqtt\MQTTDef.cpp">
+      <Filter>mqtt</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="business\NetAgent.h">
@@ -89,5 +98,12 @@
     <ClInclude Include="routine.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="mqtt\MQTTClient.h">
+      <Filter>mqtt</Filter>
+    </ClInclude>
+    <ClInclude Include="mqtt\MQTTDef.h">
+      <Filter>mqtt</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h" />
   </ItemGroup>
 </Project>

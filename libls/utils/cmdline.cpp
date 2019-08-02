@@ -33,7 +33,7 @@ namespace lslib
                     break;
 
                 memset(buf, 0, MAX_PATH + 1);
-                strncpy(buf, p, min(q - p, MAX_PATH));
+                strncpy(buf, p, MIN(q - p, MAX_PATH));
                 if (find(outarr.begin(), outarr.end(), buf) == outarr.end())
                     outarr.push_back(buf);
 

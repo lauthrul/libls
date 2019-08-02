@@ -112,6 +112,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="testcase\cfghandler.hpp" />
     <ClInclude Include="testcase\crypto.hpp" />
     <ClInclude Include="testcase\httpclient.hpp" />
     <ClInclude Include="testcase\json.hpp" />

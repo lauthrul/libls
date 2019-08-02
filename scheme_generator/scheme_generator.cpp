@@ -20,12 +20,18 @@ void CustomInit()
 
     // init db wrapper
 #ifndef MAKE_TEST_DATA
-    g_dbWrapper.SetHost("192.168.169.215");
-    g_dbWrapper.SetUser("suser");
-    g_dbWrapper.SetPassword("cyberuser");
-    g_dbWrapper.SetDB("autoservice_debug");
+    g_dbWrapper.SetHost(CCfgHandler::GetCfgText(CFG_MODULE_System, CFG_KEY_DB_HOST, CFG_DEFAULT_DB_HOST, g_strCfgFile.c_str()).c_str());
+    g_dbWrapper.SetPort(CCfgHandler::GetCfgInt(CFG_MODULE_System, CFG_KEY_DB_PORT, CFG_DEFAULT_DB_PORT, g_strCfgFile.c_str()));
+    g_dbWrapper.SetUser(CCfgHandler::GetCfgText(CFG_MODULE_System, CFG_KEY_DB_USER, CFG_DEFAULT_DB_USER, g_strCfgFile.c_str()).c_str());
+    g_dbWrapper.SetPassword(CCfgHandler::GetCfgText(CFG_MODULE_System, CFG_KEY_DB_PWD, CFG_DEFAULT_DB_PWD, g_strCfgFile.c_str()).c_str());
+    g_dbWrapper.SetDB(CCfgHandler::GetCfgText(CFG_MODULE_System, CFG_KEY_DB_DATABASE, CFG_DEFAULT_DB_DATABASE, g_strCfgFile.c_str()).c_str());
     g_dbWrapper.Connect();
 #endif
+
+    // mqtt client
+    g_mqttClient.Connect(CCfgHandler::GetCfgText(CFG_MODULE_System, CFG_KEY_MQTT_HOST, CFG_DEFAULT_MQTT_HOST, g_strCfgFile.c_str()).c_str(),
+                         CCfgHandler::GetCfgText(CFG_MODULE_System, CFG_KEY_MQTT_USER, CFG_DEFAULT_MQTT_USER, g_strCfgFile.c_str()).c_str(),
+                         CCfgHandler::GetCfgText(CFG_MODULE_System, CFG_KEY_MQTT_PWD, CFG_DEFAULT_MQTT_PWD, g_strCfgFile.c_str()).c_str());
 }
 
 void CustomDestory()
@@ -44,6 +50,7 @@ int main(int argc, char* argv[])
 
     CRoutine routine;
     g_netManager.RegisterCallBack(&routine);
+    g_mqttClient.SetNotifier(&routine);
     routine.Run();
 
     CustomDestory();

@@ -26,5 +26,6 @@ SUBDIRS := \
 business \
 db \
 lottery \
+mqtt \
 . \
 

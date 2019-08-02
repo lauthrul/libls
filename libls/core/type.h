@@ -15,6 +15,7 @@ namespace lslib
     typedef type _l##type; \
     typedef type* _lp##type;
 
+    regist_ls_type(void);
     regist_ls_type(byte);
     regist_ls_type(bool);
     regist_ls_type(int);
@@ -45,6 +46,7 @@ namespace lslib
     typedef list<type*>             type##_ptr_list; \
     typedef set<type*>              type##_ptr_set;
 
+    declare_stl_obj(_lvoid);
     declare_stl_obj(_lbyte);
     declare_stl_pointer(_lbyte);
     declare_stl_obj(_lbool);
@@ -85,6 +87,9 @@ namespace lslib
 
 #define enum_str_item(enum_value) \
         _table[enum_value] = #enum_value;
+
+#define enum_str_item_ex(enum_value, str) \
+        _table[enum_value] = str;
 
 #define enum_str_end(enum_type) \
         return _table; \
