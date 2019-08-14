@@ -23,6 +23,7 @@ using namespace lslib::logger;
 #define Console                 printf
 
 //////////////////////////////////////////////////////////////////////////
+extern string                   g_strAppCode;
 extern string                   g_strCfgFile;
 extern _loggerptr               g_pLogger;
 extern _loggerptr               g_pNetlogger;

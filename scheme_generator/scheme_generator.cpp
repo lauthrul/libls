@@ -48,6 +48,12 @@ int main(int argc, char* argv[])
 {
     CustomInit();
 
+    if (argc >= 1)
+    {
+        g_strAppCode = argv[1];
+        INFO_LOG(g_pLogger, "appcode [%s]", g_strAppCode.c_str());
+    }
+
     CRoutine routine;
     g_netManager.RegisterCallBack(&routine);
     g_mqttClient.SetNotifier(&routine);

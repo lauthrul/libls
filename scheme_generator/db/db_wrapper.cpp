@@ -102,7 +102,11 @@ bool CDBWrapper::GetSchemeLotterys(__out__ string_list& lstLotterys)
             lstLotterys.push_back(sc.strLottery);
     }
 #else
-    MYSQL_RES* res = ExcuteQuery("select distinct lottery from service_subscheme where state = 1 and lottery in ( select  distinct lottery from service_scheme where state = 1)");
+    string stmt = "select distinct lottery from service_subscheme where state = 1 and lottery in (select distinct lottery from service_scheme where state = 1) ";
+    if (!g_strAppCode.empty())
+        stmt += strtool::format("and merchant_id in (select id from service_merchant where code = '%s') ", g_strAppCode.c_str());
+
+    MYSQL_RES* res = ExcuteQuery(stmt.c_str());
     if (res == NULL) return false;
 
     MYSQL_ROW row;
@@ -124,9 +128,12 @@ bool CDBWrapper::GetSubSchemesByLottery(__out__ map<int, SubScheme>& mapSubSchem
             mapSubSchemes[it->first] = it->second;
     }
 #else
-    string stmt = strtool::format("select id, name, lottery, play_kind, play_name, dwd_pos, formula, expected_accuracy, issues_per_round, \
-                                  issues, rounds, win_rounds, comb_win_rounds, max_comb_win_rounds, comb_loss_rounds, max_comb_loss_rounds, \
-                                  accuracy, merchant_id, scheme_id from service_subscheme where lottery = '%s';", lottery);
+    string stmt = strtool::format("select id, name, lottery, play_kind, play_name, dwd_pos, formula, expected_accuracy, issues_per_round, issues, rounds, "
+                                  "win_rounds, comb_win_rounds, max_comb_win_rounds, comb_loss_rounds, max_comb_loss_rounds, accuracy, merchant_id, scheme_id "
+                                  "from service_subscheme where lottery = '%s' ", lottery);
+    if (!g_strAppCode.empty())
+        stmt += strtool::format("and merchant_id in (select id from service_merchant where code = '%s') ", g_strAppCode.c_str());
+
     MYSQL_RES* res = ExcuteQuery(stmt.c_str());
     if (res == NULL) return false;
 
