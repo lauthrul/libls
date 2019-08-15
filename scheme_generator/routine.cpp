@@ -107,6 +107,7 @@ int CRoutine::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lPar
                 string& rfCurIssue = apHistoryCode->strCurIssue;
                 MapHistoryCode& rfNewHisotrys = apHistoryCode->mapHistoryCode;
 
+                list<SubScheme> lstSubSchemeUpdated;
                 map<int, SubScheme> mapSubSchemes;
                 g_dbWrapper.GetSubSchemesByLottery(mapSubSchemes, apLottery->c_str());
                 for (map<int, SubScheme>::iterator it = mapSubSchemes.begin(); it != mapSubSchemes.end(); it++)
@@ -223,7 +224,7 @@ int CRoutine::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lPar
                     g_dbWrapper.AddSchemeDetails(mapSchemeDetails);
                     g_dbWrapper.UpdateSubSchemeStatistic(rfSubScheme);
 
-                    MQTTSchemeNotify(rfSubScheme);
+                    lstSubSchemeUpdated.push_back(rfSubScheme);
 
                     INFO_LOG(g_pLogger, "=== update sub_scheme statistic[merchant_id:%d, scheme_id:%d, sub_scheme_id:%d, name:%s, lottery:%s, play_kind:%s, play_name:%s, issues:%d,"
                              " win_rounds/rounds:%d/%d, comb_win_rounds/max_comb_win_rounds:%d/%d, comb_loss_rounds/max_comb_loss_rounds:%d/%d, accuracy:%0.2f%%] ===",
@@ -240,6 +241,8 @@ int CRoutine::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lPar
                              rfSubScheme.nCombLossRounds, rfSubScheme.nMaxCombLossRounds,
                              rfSubScheme.dAccuracy);
                 }
+
+                MQTTSchemeNotify(lstSubSchemeUpdated, rfCurIssue.c_str());
             }
             break;
     }
@@ -263,14 +266,26 @@ void CRoutine::Routine()
         g_netManager.GetHistoryCodeRequest(it->c_str(), issues);
 }
 
-void CRoutine::MQTTSchemeNotify(const SubScheme& sc)
+void CRoutine::MQTTSchemeNotify(const list<SubScheme>& lstSubSchemeUpdated, _lpcstr issue)
 {
-    CJsonValue jv;
-    jv["data"]["merchant"] = sc.nMerchantID;
-    jv["data"]["lottery"] = sc.strLottery;
-    jv["data"]["scheme"] = sc.nSchemeID;
-    jv["data"]["sub_scheme"] = sc.nID;
-    g_mqttClient.SendNotify(enum_str(mqtt_notify, mqtt_notify_scheme_updated).c_str(),
-                            CJsonWrapper::Dumps(jv).c_str(),
-                            false);
+    map<int, Scheme> mapSchemes;
+    for (list<SubScheme>::const_iterator it = lstSubSchemeUpdated.begin(); it != lstSubSchemeUpdated.end(); it++)
+    {
+        Scheme sc;
+        sc.nMerchantID = it->nMerchantID;
+        sc.strLottery = it->strLottery;
+        sc.nID = it->nSchemeID;
+        mapSchemes[sc.nID] = sc;
+    }
+    for (map<int, Scheme>::iterator it = mapSchemes.begin(); it != mapSchemes.end(); it++)
+    {
+        const Scheme& sc = it->second;
+
+        CJsonValue jv;
+        jv["merchant"] = sc.nMerchantID;
+        jv["lottery"] = sc.strLottery;
+        jv["issue"] = issue;
+        jv["scheme"] = sc.nID;
+        g_mqttClient.SendNotify(enum_str(mqtt_notify, mqtt_notify_scheme_updated).c_str(), CJsonWrapper::Dumps(jv).c_str(), false);
+    }
 }

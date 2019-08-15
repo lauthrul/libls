@@ -17,7 +17,7 @@ public:
 
 protected:
     void        Routine();
-    void        MQTTSchemeNotify(const SubScheme& sc);
+    void        MQTTSchemeNotify(const list<SubScheme>& lstSubSchemeUpdated, _lpcstr issue);
 
 protected:
     map<int, Scheme>                    m_mapSchemes; // <scheme id, Scheme>
