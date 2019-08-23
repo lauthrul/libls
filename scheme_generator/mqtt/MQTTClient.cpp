@@ -17,7 +17,7 @@ constexpr int   RETRY_ATTEMPTS                  = 3;
 // #define mqtt_identity_sgsrv                     enum_str(mqtt_terminal, mt_sgsrv)
 
 // mqtt default qos
-#define mqtt_qos                                2
+#define mqtt_qos                                0
 
 // mqtt msg key words, which are specified in mqtt topic
 // #define mqtt_msg_key_cmd                        enum_str(mqtt_msg_type, mmt_cmd)
