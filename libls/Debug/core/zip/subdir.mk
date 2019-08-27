@@ -6,6 +6,9 @@
 CPP_SRCS += \
 ../core/zip/zip_x.cpp 
 
+HEADERS += \
+../core/zip/zip_x.h 
+
 OBJS += \
 ./core/zip/zip_x.o 
 

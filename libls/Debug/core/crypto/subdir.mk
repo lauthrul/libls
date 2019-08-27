@@ -16,6 +16,9 @@ C_SRCS += \
 ../core/crypto/sha256.c \
 ../core/crypto/url_encode.c 
 
+HEADERS += \
+../core/crypto/crypto.h
+
 OBJS += \
 ./core/crypto/aes.o \
 ./core/crypto/base64.o \

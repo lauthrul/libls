@@ -7,6 +7,10 @@ CPP_SRCS += \
 ../core/zip/zipunzip/unzip.cpp \
 ../core/zip/zipunzip/zip.cpp 
 
+#HEADERS += \
+#../core/zip/zipunzip/unzip.h \
+#../core/zip/zipunzip/zip.h 
+
 OBJS += \
 ./core/zip/zipunzip/unzip.o \
 ./core/zip/zipunzip/zip.o 

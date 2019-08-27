@@ -24,7 +24,7 @@ namespace lslib
 
         FILE* hFile = NULL;
         _lpustr pBuffer = NULL;
-        _ldword dwBufLen = 0;
+        _lint dwBufLen = 0;
         tagPointer pt;
 
         GetHandler(pFile, hFile, &pBuffer, &dwBufLen);
@@ -35,12 +35,12 @@ namespace lslib
             return pDefault;
         }
 
-        _ldword dwKeyLen = strlen(pKey);
+        _lint dwKeyLen = strlen(pKey);
         int nValueLen = 0;
-        memcpy(&nValueLen, pt.pKeyStart + sizeof(_ldword) + dwKeyLen + 1, sizeof(_ldword));
+        memcpy(&nValueLen, pt.pKeyStart + sizeof(_lint) + dwKeyLen + 1, sizeof(_lint));
         _lchar* tszValue = new _lchar[nValueLen + 1];
         memset(tszValue, 0, nValueLen + 1);
-        memcpy(tszValue, pt.pKeyStart + sizeof(_ldword) + dwKeyLen + 1 + sizeof(_ldword), nValueLen);
+        memcpy(tszValue, pt.pKeyStart + sizeof(_lint) + dwKeyLen + 1 + sizeof(_lint), nValueLen);
         string strValue = tszValue;
 
         delete[] tszValue;
@@ -56,7 +56,7 @@ namespace lslib
 
         FILE* hFile = NULL;
         _lpustr pBuffer = NULL;
-        _ldword dwBufLen = 0;
+        _lint dwBufLen = 0;
         tagPointer pt;
 
         GetHandler(pFile, hFile, &pBuffer, &dwBufLen);
@@ -67,11 +67,11 @@ namespace lslib
             return nDefault;
         }
 
-        _ldword dwKeyLen = strlen(pKey);
+        _lint dwKeyLen = strlen(pKey);
         int nValue = nDefault;
         int nValueLen = 0;
-        memcpy(&nValueLen, pt.pKeyStart + sizeof(_ldword) + dwKeyLen + 1, sizeof(_ldword));
-        memcpy(&nValue, pt.pKeyStart + sizeof(_ldword) + dwKeyLen + 1 + sizeof(_ldword), nValueLen);
+        memcpy(&nValueLen, pt.pKeyStart + sizeof(_lint) + dwKeyLen + 1, sizeof(_lint));
+        memcpy(&nValue, pt.pKeyStart + sizeof(_lint) + dwKeyLen + 1 + sizeof(_lint), nValueLen);
 
         CloseHandler(hFile, pBuffer);
 
@@ -85,7 +85,7 @@ namespace lslib
 
         FILE* hFile = NULL;
         _lpustr pBuffer = NULL;
-        _ldword dwBufLen = 0;
+        _lint dwBufLen = 0;
         tagPointer pt;
 
         GetHandler(pFile, hFile, &pBuffer, &dwBufLen);
@@ -96,11 +96,11 @@ namespace lslib
             return fDefault;
         }
 
-        _ldword dwKeyLen = strlen(pKey);
+        _lint dwKeyLen = strlen(pKey);
         float fValue = fDefault;
         int nValueLen = 0;
-        memcpy(&nValueLen, pt.pKeyStart + sizeof(_ldword) + dwKeyLen + 1, sizeof(_ldword));
-        memcpy(&fValue, pt.pKeyStart + sizeof(_ldword) + dwKeyLen + 1 + sizeof(_ldword), nValueLen);
+        memcpy(&nValueLen, pt.pKeyStart + sizeof(_lint) + dwKeyLen + 1, sizeof(_lint));
+        memcpy(&fValue, pt.pKeyStart + sizeof(_lint) + dwKeyLen + 1 + sizeof(_lint), nValueLen);
 
         CloseHandler(hFile, pBuffer);
 
@@ -108,13 +108,13 @@ namespace lslib
         return fValue;
     }
 
-    int CCfgHandler::SetCfg(_lpcstr pModule, _lpcstr pKey, int nValueType, _lpvoid pValue, _ldword dwValueLen, _lpcstr pFile)
+    int CCfgHandler::SetCfg(_lpcstr pModule, _lpcstr pKey, int nValueType, _lpvoid pValue, _lint dwValueLen, _lpcstr pFile)
     {
         m_mtxLock.Lock();
 
         FILE* hFile = NULL;
         _lpustr pBuffer = NULL;
-        _ldword dwBufLen = 0;
+        _lint dwBufLen = 0;
         tagPointer pt;
 
         int nRet = GetHandler(pFile, hFile, &pBuffer, &dwBufLen);
@@ -132,21 +132,21 @@ namespace lslib
 
         bool bRet = true;
         _lpustr pCh = NULL;
-        _ldword dwModuleLen = strlen(pModule);
-        _ldword dwKeyLen = strlen(pKey);
+        _lint dwModuleLen = strlen(pModule);
+        _lint dwKeyLen = strlen(pKey);
 
         // Data format:
         //  01 01 01 01 | xx xx xx xx | xx xx ... xx | 02 02 02 02 | xx xx xx xx | xx xx ... xx | 0x         | xx xx xx xx | xx xx ... xx | 03 03 03 03 | 04 04 04 04
         // Module Begin | Module Len  | Module Name  | Item Begin  | Key Len     | Key Name     | Value type | Value Len   | Value        | Item end    | Module end
-        _ldword dwNewBufLen = dwBufLen //old buffer length
-                              + FLAG_LENGTH + sizeof(_ldword) + dwModuleLen //additional module length
-                              + FLAG_LENGTH + sizeof(_ldword) + dwKeyLen //additional key length
-                              + 1 + sizeof(_ldword) + dwValueLen //additional value length
+        _lint dwNewBufLen = dwBufLen //old buffer length
+                              + FLAG_LENGTH + sizeof(_lint) + dwModuleLen //additional module length
+                              + FLAG_LENGTH + sizeof(_lint) + dwKeyLen //additional key length
+                              + 1 + sizeof(_lint) + dwValueLen //additional value length
                               + FLAG_LENGTH  //additional item end flag length
                               + FLAG_LENGTH;  //additional module end flag length
         _lpustr pNewBuffer = (_lpustr)malloc(dwNewBufLen);
         memset(pNewBuffer, 0, dwNewBufLen);
-        _ldword dwNewBufWriten = 0;
+        _lint dwNewBufWriten = 0;
 
         switch (nRet)
         {
@@ -155,7 +155,7 @@ namespace lslib
                     pCh = pBuffer;
                     while (pCh < pBuffer + dwBufLen)
                     {
-                        if (pCh < pt.pKeyStart + sizeof(_ldword) + dwKeyLen || pCh >= pt.pKeyEnd)
+                        if (pCh < pt.pKeyStart + sizeof(_lint) + dwKeyLen || pCh >= pt.pKeyEnd)
                         {
                             memcpy(pNewBuffer + dwNewBufWriten, pCh, 1);
                             dwNewBufWriten++;
@@ -165,8 +165,8 @@ namespace lslib
                         {
                             memcpy(pNewBuffer + dwNewBufWriten, &nValueType, 1); //value type
                             dwNewBufWriten += 1;
-                            memcpy(pNewBuffer + dwNewBufWriten, &dwValueLen, sizeof(_ldword)); //value length
-                            dwNewBufWriten += sizeof(_ldword);
+                            memcpy(pNewBuffer + dwNewBufWriten, &dwValueLen, sizeof(_lint)); //value length
+                            dwNewBufWriten += sizeof(_lint);
                             memcpy(pNewBuffer + dwNewBufWriten, pValue, dwValueLen); // value content
                             dwNewBufWriten += dwValueLen;
                             pCh = pt.pKeyEnd;
@@ -182,23 +182,23 @@ namespace lslib
                     memcpy(pNewBuffer + dwNewBufWriten, &FLAG_MODULE_BEGIN, FLAG_LENGTH); // one module item begin flag
                     dwNewBufWriten += FLAG_LENGTH;
 
-                    memcpy(pNewBuffer + dwNewBufWriten, &dwModuleLen, sizeof(_ldword)); // module length
-                    dwNewBufWriten += sizeof(_ldword);
+                    memcpy(pNewBuffer + dwNewBufWriten, &dwModuleLen, sizeof(_lint)); // module length
+                    dwNewBufWriten += sizeof(_lint);
                     memcpy(pNewBuffer + dwNewBufWriten, pModule, dwModuleLen); // module content
                     dwNewBufWriten += dwModuleLen;
 
                     memcpy(pNewBuffer + dwNewBufWriten, &FLAG_ITEM_BEGIN, FLAG_LENGTH); // one config item begin flag
                     dwNewBufWriten += FLAG_LENGTH;
 
-                    memcpy(pNewBuffer + dwNewBufWriten, &dwKeyLen, sizeof(_ldword)); // key length
-                    dwNewBufWriten += sizeof(_ldword);
+                    memcpy(pNewBuffer + dwNewBufWriten, &dwKeyLen, sizeof(_lint)); // key length
+                    dwNewBufWriten += sizeof(_lint);
                     memcpy(pNewBuffer + dwNewBufWriten, pKey, dwKeyLen); //key content
                     dwNewBufWriten += dwKeyLen;
 
                     memcpy(pNewBuffer + dwNewBufWriten, &nValueType, 1); //value type
                     dwNewBufWriten += 1;
-                    memcpy(pNewBuffer + dwNewBufWriten, &dwValueLen, sizeof(_ldword)); //value length
-                    dwNewBufWriten += sizeof(_ldword);
+                    memcpy(pNewBuffer + dwNewBufWriten, &dwValueLen, sizeof(_lint)); //value length
+                    dwNewBufWriten += sizeof(_lint);
                     memcpy(pNewBuffer + dwNewBufWriten, pValue, dwValueLen); // value content
                     dwNewBufWriten += dwValueLen;
 
@@ -219,15 +219,15 @@ namespace lslib
                             memcpy(pNewBuffer + dwNewBufWriten, &FLAG_ITEM_BEGIN, FLAG_LENGTH); // one config item begin flag
                             dwNewBufWriten += FLAG_LENGTH;
 
-                            memcpy(pNewBuffer + dwNewBufWriten, &dwKeyLen, sizeof(_ldword)); // key length
-                            dwNewBufWriten += sizeof(_ldword);
+                            memcpy(pNewBuffer + dwNewBufWriten, &dwKeyLen, sizeof(_lint)); // key length
+                            dwNewBufWriten += sizeof(_lint);
                             memcpy(pNewBuffer + dwNewBufWriten, pKey, dwKeyLen); //key content
                             dwNewBufWriten += dwKeyLen;
 
                             memcpy(pNewBuffer + dwNewBufWriten, &nValueType, 1); //value type
                             dwNewBufWriten += 1;
-                            memcpy(pNewBuffer + dwNewBufWriten, &dwValueLen, sizeof(_ldword)); //value length
-                            dwNewBufWriten += sizeof(_ldword);
+                            memcpy(pNewBuffer + dwNewBufWriten, &dwValueLen, sizeof(_lint)); //value length
+                            dwNewBufWriten += sizeof(_lint);
                             memcpy(pNewBuffer + dwNewBufWriten, pValue, dwValueLen); // value content
                             dwNewBufWriten += dwValueLen;
 
@@ -267,7 +267,7 @@ namespace lslib
         }
 
         fseek(hFile, 0, SEEK_SET);
-        _ldword dwWrite = fwrite(pNewBuffer, 1, dwNewBufWriten, hFile);
+        _lint dwWrite = fwrite(pNewBuffer, 1, dwNewBufWriten, hFile);
         CloseHandler(hFile, pBuffer);
 
         m_mtxLock.Unlock();
@@ -296,7 +296,141 @@ namespace lslib
         return SetCfg(pModule, pKey, VAT_FLOAT, (_lpvoid)&value, sizeof(float), pFile);
     }
 
-    int CCfgHandler::GetHandler(_lpcstr pFile, FILE*& hFile, _lpustr* pOutBuf, _lpdword dwBufLen /*= NULL*/)
+    int CCfgHandler::LoadCfg(__out__ SCfgData_list& lst, _lpcstr pFile)
+    {
+        m_mtxLock.Lock();
+
+        FILE* hFile = NULL;
+        _lpustr pBuffer = NULL;
+        _lint dwBufLen = 0;
+        tagPointer pt;
+
+        int ret = GetHandler(pFile, hFile, &pBuffer, &dwBufLen);
+        if (ret != 0)
+        {
+            m_mtxLock.Unlock();
+            return ret;
+        }
+
+        _lpustr pCh = pBuffer;
+        while (pCh != NULL)
+        {
+            _lpustr pModuleStart = NULL, pModuleEnd = NULL;
+            _lpustr tcModule = NULL;
+            _lint dwModuleLen = 0;
+
+            // module start
+            for (; pCh < pBuffer + dwBufLen; pCh++)
+            {
+                if (memcmp(pCh, &FLAG_MODULE_BEGIN, FLAG_LENGTH) == 0)
+                {
+                    pModuleStart = pCh + FLAG_LENGTH;
+                    break;
+                }
+            }
+            if (pModuleStart == NULL) break;
+            else {
+                memcpy(&dwModuleLen, pModuleStart, sizeof(_lint));
+                tcModule = (_lpustr)malloc(dwModuleLen + 1);
+                memcpy(tcModule, pModuleStart + sizeof(_lint), dwModuleLen);
+                tcModule[dwModuleLen] = 0;
+                pCh += FLAG_LENGTH + sizeof(_lint) + dwModuleLen;
+            }
+
+            // module end
+            for (; pCh < pBuffer + dwBufLen; pCh++)
+            {
+                if (memcmp(pCh, &FLAG_MODULE_END, FLAG_LENGTH) == 0)
+                {
+                    pModuleEnd = pCh;
+                    break;
+                }
+            }
+            if (pModuleEnd == NULL)
+            {
+                if (tcModule != NULL) free(tcModule);
+                break;
+            }
+            else pCh = pModuleEnd /*+ FLAG_LENGTH*/;
+
+            _lpustr pCh2 = pModuleStart;
+            for (; pCh2 < pModuleEnd; pCh2++)
+            {
+                _lpustr pKey = NULL, pValue = NULL, pEnd = NULL;
+                _lpustr tcKey = NULL;
+                int nValueType = 0;
+                _lpustr tcValue = NULL;
+                _lint dwKeyLen = 0, dwValueLen = 0;
+
+                // key start
+                for (; pCh2 < pModuleEnd; pCh2++)
+                {
+                    if (memcmp(pCh2, &FLAG_ITEM_BEGIN, FLAG_LENGTH) == 0)
+                    {
+                        pKey = pCh2 + FLAG_LENGTH;
+                        break;
+                    }
+                }
+                if (pKey == NULL) break;
+                else
+                {
+                    memcpy(&dwKeyLen, pKey, sizeof(_lint));
+                    tcKey = (_lpustr)malloc(dwKeyLen + 1);
+                    memcpy(tcKey, pKey + sizeof(_lint), dwKeyLen);
+                    tcKey[dwKeyLen] = 0;
+                    pCh2 += FLAG_LENGTH + sizeof(_lint) + dwKeyLen;
+                    memcpy(&nValueType, pCh2, 1);
+                    pValue = pCh2 + 1;
+                }
+
+                // key end
+                for (; pCh2 < pModuleEnd; pCh2++)
+                {
+                    if (memcmp(pCh2, &FLAG_ITEM_END, FLAG_LENGTH) == 0)
+                    {
+                        pEnd = pCh2;
+                        break;
+                    }
+                }
+                if (pEnd == NULL)
+                {
+                    if (tcKey != NULL) free(tcKey);
+                    break;
+                }
+                else pCh2 = pEnd /*+ FLAG_LENGTH*/;
+
+                if (pValue < pEnd)
+                {
+                    memcpy(&dwValueLen, pValue, sizeof(_lint));
+                    tcValue = (_lpustr)malloc(dwValueLen + 1);
+                    memcpy(tcValue, pValue + sizeof(_lint), dwValueLen);
+                    tcValue[dwValueLen] = 0;
+                }
+
+                SCfgData cfg;
+                cfg.strModule = (char*)tcModule;
+                cfg.strKey = (char*)tcKey;
+                cfg.eValueType = (EValueType)nValueType;
+                if (cfg.eValueType == VAT_STRING) cfg.v_str.assign((const char*)tcValue, dwValueLen);
+                else if (cfg.eValueType == VAT_INT) memcpy(&cfg.v_int, tcValue, sizeof(_lint));
+                else if (cfg.eValueType == VAT_FLOAT) memcpy(&cfg.v_float, tcValue, sizeof(_lint));
+
+                lst.push_back(cfg);
+
+                if (tcKey != NULL) free(tcKey);
+                if (tcValue != NULL) free(tcValue);
+            }
+
+            if (tcModule != NULL) free(tcModule);
+        }
+
+        CCfgHandler::CloseHandler(hFile, pBuffer);
+        m_mtxLock.Unlock();
+
+        return 0;
+    }
+
+    int CCfgHandler::GetHandler(_lpcstr pFile, FILE*& hFile, _lpustr* pOutBuf, _lpint dwBufLen /*= NULL*/)
     {
         if (strtool::is_empty(pFile)) return INVALID_PARAM;
 
@@ -313,14 +447,14 @@ namespace lslib
 
         // get file size
         fseek(hFile, 0, SEEK_END);
-        _ldword dwFileSize = ftell(hFile);
+        _lint dwFileSize = ftell(hFile);
         fseek(hFile, 0, SEEK_SET);
 
         // new buffer
         _lpustr pBuffer = (_lpustr)malloc(dwFileSize);
         memset(pBuffer, 0, dwFileSize);
 
-        _ldword dwReadSize = fread(pBuffer, 1, dwFileSize, hFile);
+        _lint dwReadSize = fread(pBuffer, 1, dwFileSize, hFile);
         if (dwReadSize < 0)
         {
             ERROR_LOG(g_logger, "read file fail, error: %d", errno);
@@ -331,7 +465,7 @@ namespace lslib
             WARN_LOG(g_logger, "read size not equal file size. dwFileSize[%d], dwReadSize[%d]", dwFileSize, dwReadSize);
         }
 
-        _ldword dwCryptSize = 0;
+        _lint dwCryptSize = 0;
         string strCryptBuf = crypto::des_decrypt_cbc((_lpcstr)pBuffer, dwReadSize, DEFAULT_CRYPT_KEY, crypto::crypto_pkcs7padding, DEFAULT_CRYPT_IV, (int*)&dwCryptSize);
         if (dwCryptSize > 0)
         {
@@ -363,22 +497,22 @@ namespace lslib
         return true;
     }
 
-    int CCfgHandler::GetPointer(_lpcstr pModule, _lpcstr pKey, _lpustr pBuffer, _ldword dwBufLen, tagPointer& pt)
+    int CCfgHandler::GetPointer(_lpcstr pModule, _lpcstr pKey, _lpustr pBuffer, _lint dwBufLen, tagPointer& pt)
     {
         if (pModule == NULL || pKey == NULL /*|| pBuffer == NULL || dwBufLen < 0*/) return INVALID_PARAM;
 
         _lpustr pModuleStart = NULL, pModuleEnd = NULL;
         _lpustr pStart = NULL, pEnd = NULL;
-        _ldword dwModuleLen = strlen(pModule);
-        _ldword dwKeyLen = strlen(pKey);
+        _lint dwModuleLen = strlen(pModule);
+        _lint dwKeyLen = strlen(pKey);
 
         // module start
         _lpustr pCh = pBuffer;
         for (; pCh < pBuffer + dwBufLen; pCh++)
         {
             if (memcmp(pCh, &FLAG_MODULE_BEGIN, FLAG_LENGTH) == 0 &&
-                    memcmp(pCh + FLAG_LENGTH, &dwModuleLen, sizeof(_ldword)) == 0 &&
-                    memcmp(pCh + FLAG_LENGTH + sizeof(_ldword), pModule, dwModuleLen) == 0)
+                    memcmp(pCh + FLAG_LENGTH, &dwModuleLen, sizeof(_lint)) == 0 &&
+                    memcmp(pCh + FLAG_LENGTH + sizeof(_lint), pModule, dwModuleLen) == 0)
             {
                 pModuleStart = pCh + FLAG_LENGTH;
                 break;
@@ -386,7 +520,7 @@ namespace lslib
         }
         pt.pModuleStart = pModuleStart;
         if (pModuleStart == NULL) return MODULE_NOT_EXIST;
-        pCh += FLAG_LENGTH + sizeof(_ldword) + dwModuleLen;
+        pCh += FLAG_LENGTH + sizeof(_lint) + dwModuleLen;
 
         // module end
         for (; pCh < pBuffer + dwBufLen; pCh++)
@@ -402,12 +536,12 @@ namespace lslib
         if (pModuleEnd == NULL) return INVALID_MODULE;
 
         // key start
-        pCh = pModuleStart + sizeof(_ldword) + dwModuleLen;
+        pCh = pModuleStart + sizeof(_lint) + dwModuleLen;
         for (; pCh < pModuleEnd; pCh++)
         {
             if (memcmp(pCh, &FLAG_ITEM_BEGIN, FLAG_LENGTH) == 0 &&
-                    memcmp(pCh + FLAG_LENGTH, &dwKeyLen, sizeof(_ldword)) == 0 &&
-                    memcmp(pCh + FLAG_LENGTH + sizeof(_ldword), pKey, dwKeyLen) == 0)
+                    memcmp(pCh + FLAG_LENGTH, &dwKeyLen, sizeof(_lint)) == 0 &&
+                    memcmp(pCh + FLAG_LENGTH + sizeof(_lint), pKey, dwKeyLen) == 0)
             {
                 pStart = pCh + FLAG_LENGTH;
                 break;
@@ -415,7 +549,7 @@ namespace lslib
         }
         pt.pKeyStart = pStart;
         if (pStart == NULL) return KEY_NOT_EXIST;
-        pCh += FLAG_LENGTH + sizeof(_ldword) + dwKeyLen;
+        pCh += FLAG_LENGTH + sizeof(_lint) + dwKeyLen;
 
         // key end
         for (; pCh < pModuleEnd; pCh++)

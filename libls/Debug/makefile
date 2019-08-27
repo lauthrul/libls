@@ -9,7 +9,7 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include utils/subdir.mk
--include core/zip/zipunzip/subdir.mk
+# -include core/zip/zipunzip/subdir.mk
 -include core/zip/miniz/subdir.mk
 -include core/zip/subdir.mk
 -include core/xml/subdir.mk
@@ -48,31 +48,45 @@ ifneq ($(strip $(C_DEPS)),)
 endif
 endif
 
+#PREFIX is environment variable, but if it is not set, then set default value
+ifeq ($(PREFIX),)
+PREFIX := /usr/local
+endif
+
 -include ../makefile.defs
 
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: libls.dll
+all: libls.so
 
 # Tool invocations
-libls.dll: $(OBJS) $(USER_OBJS)
+libls.so: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -shared -o "libls.dll" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -shared -o "libls.so" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
+    
+install:
+	@for h in $(HEADERS); do \
+		f=$(PREFIX)/include/$${h/../libls}; \
+		d=`dirname $$f`; \
+		mkdir -p $$d; \
+		cp -f $$h $$d; \
+	done; \
+	cp -f libls.so $(PREFIX)/lib/;
 
 # Other Targets
 clean:
-	-$(RM) $(LIBRARIES)$(CC_DEPS)$(C++_DEPS)$(C_UPPER_DEPS)$(CXX_DEPS)$(OBJS)$(CPP_DEPS)$(C_DEPS) libls.dll
+	-$(RM) $(LIBRARIES)$(CC_DEPS)$(C++_DEPS)$(C_UPPER_DEPS)$(CXX_DEPS)$(OBJS)$(CPP_DEPS)$(C_DEPS) libls.so
 	-@echo ' '
 
 post-build:
-	-cp  -f libls.dll ../../test/Debug/
+	-cp  -f libls.so ../../test/Debug/
 	-@echo ' '
 
-.PHONY: all clean dependents post-build
+.PHONY: all install clean dependents post-build
 
 -include ../makefile.targets

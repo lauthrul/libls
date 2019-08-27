@@ -7,6 +7,9 @@ CPP_SRCS += \
 ../libls.cpp \
 ../stdafx.cpp 
 
+HEADERS += \
+../libls.h
+
 OBJS += \
 ./libls.o \
 ./stdafx.o 

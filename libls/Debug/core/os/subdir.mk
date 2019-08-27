@@ -6,6 +6,9 @@
 CPP_SRCS += \
 ../core/os/os.cpp 
 
+HEADERS += \
+../core/os/os.h 
+
 OBJS += \
 ./core/os/os.o 
 

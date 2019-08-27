@@ -6,6 +6,9 @@
 CPP_SRCS += \
 ../core/string/strtool.cpp 
 
+HEADERS += \
+../core/string/strtool.h 
+
 OBJS += \
 ./core/string/strtool.o 
 

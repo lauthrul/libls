@@ -6,6 +6,9 @@
 CPP_SRCS += \
 ../core/net/httpclient.cpp 
 
+HEADERS += \
+../core/net/httpclient.h 
+
 OBJS += \
 ./core/net/httpclient.o 
 

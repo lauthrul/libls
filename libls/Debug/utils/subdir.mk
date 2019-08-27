@@ -8,6 +8,11 @@ CPP_SRCS += \
 ../utils/cmdline.cpp \
 ../utils/utils.cpp 
 
+HEADERS += \
+../utils/cfghandler.h \
+../utils/cmdline.h \
+../utils/utils.h 
+
 OBJS += \
 ./utils/cfghandler.o \
 ./utils/cmdline.o \

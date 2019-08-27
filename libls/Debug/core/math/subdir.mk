@@ -6,6 +6,9 @@
 CPP_SRCS += \
 ../core/math/math.cpp 
 
+HEADERS += \
+../core/math/math.h 
+
 OBJS += \
 ./core/math/math.o 
 

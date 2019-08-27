@@ -6,6 +6,10 @@
 CPP_SRCS += \
 ../core/mmr.cpp 
 
+HEADERS += \
+../core/type.h \
+../core/mmr.h 
+
 OBJS += \
 ./core/mmr.o 
 

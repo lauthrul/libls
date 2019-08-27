@@ -6,6 +6,9 @@
 CPP_SRCS += \
 ../core/time/timer.cpp 
 
+HEADERS += \
+../core/time/timer.h 
+
 OBJS += \
 ./core/time/timer.o 
 

@@ -10,6 +10,11 @@ CPP_SRCS += \
 ../core/xml/tinyxmlparser.cpp \
 ../core/xml/xml.cpp 
 
+HEADERS += \
+../core/xml/tinystr.h \
+../core/xml/tinyxml.h \
+../core/xml/xml.h 
+
 OBJS += \
 ./core/xml/tinystr.o \
 ./core/xml/tinyxml.o \

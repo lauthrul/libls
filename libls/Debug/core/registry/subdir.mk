@@ -6,6 +6,9 @@
 CPP_SRCS += \
 ../core/registry/registry.cpp 
 
+HEADERS += \
+../core/registry/registry.h 
+
 OBJS += \
 ./core/registry/registry.o 
 

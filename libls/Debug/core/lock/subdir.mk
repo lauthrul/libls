@@ -6,6 +6,9 @@
 CPP_SRCS += \
 ../core/lock/lock.cpp 
 
+HEADERS += \
+../core/lock/lock.h 
+
 OBJS += \
 ./core/lock/lock.o 
 

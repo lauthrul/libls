@@ -7,6 +7,10 @@ CPP_SRCS += \
 ../core/thread/idle_thread.cpp \
 ../core/thread/thread.cpp 
 
+HEADERS += \
+../core/thread/idle_thread.h \
+../core/thread/thread.h
+
 OBJS += \
 ./core/thread/idle_thread.o \
 ./core/thread/thread.o 

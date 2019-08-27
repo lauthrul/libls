@@ -6,6 +6,9 @@
 CPP_SRCS += \
 ../core/logger/logger.cpp 
 
+HEADERS += \
+../core/logger/logger.h 
+
 OBJS += \
 ./core/logger/logger.o 
 

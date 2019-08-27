@@ -6,6 +6,9 @@
 CPP_SRCS += \
 ../core/zip/miniz/mzip.cpp 
 
+#HEADERS += \
+#../core/zip/miniz/mzip.h
+
 OBJS += \
 ./core/zip/miniz/mzip.o 
 

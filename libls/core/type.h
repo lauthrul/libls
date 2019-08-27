@@ -22,8 +22,8 @@ namespace lslib
     regist_ls_type(float);
     regist_ls_type(double);
 
-    typedef unsigned short _lword;
-    typedef unsigned long _ldword;
+    typedef unsigned short _lword; // 2bytes
+    typedef unsigned long _ldword; // windows: 4bytes, linux: 8bytes
     typedef _lword* _lpword;
     typedef _ldword* _lpdword;
     typedef unsigned char _luchar;

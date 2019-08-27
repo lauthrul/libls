@@ -6,6 +6,9 @@
 CPP_SRCS += \
 ../core/process/process.cpp 
 
+HEADERS += \
+../core/process/process.h 
+
 OBJS += \
 ./core/process/process.o 
 
