@@ -6,14 +6,6 @@
 using namespace lslib;
 
 //////////////////////////////////////////////////////////////////////////
-declare_enum_str(EValueType, )
-enum_str_begin(EValueType)
-enum_str_item_ex(VAT_INT, "int")
-enum_str_item_ex(VAT_FLOAT, "float")
-enum_str_item_ex(VAT_STRING, "string")
-enum_str_end(EValueType)
-
-//////////////////////////////////////////////////////////////////////////
 void print_table_row(_lpcstr c1, _lpcstr c2, _lpcstr c3, _lpcstr c4)
 {
     printf("%-30s %-30s %-30s %-30s \n", c1, c2, c3, c4);
@@ -48,17 +40,17 @@ int view_config(_lpcstr file)
         const SCfgData& data = *it;
         switch (data.eValueType)
         {
-            case VAT_INT:
+            case CVT_INT:
                 value = strtool::format("%d", data.v_int);
                 break;
-            case VAT_FLOAT:
+            case CVT_FLOAT:
                 value = strtool::format("%f", data.v_float);
                 break;
-            case VAT_STRING:
+            case CVT_STRING:
                 value = data.v_str;
                 break;
         }
-        print_table_row(data.strModule.c_str(), data.strKey.c_str(), enum_str(EValueType, data.eValueType).c_str(), value.c_str());
+        print_table_row(data.strModule.c_str(), data.strKey.c_str(), enum_str(ECfgValueType, data.eValueType).c_str(), value.c_str());
     }
     print_table_tail();
 
@@ -71,23 +63,22 @@ int set_cfg(_lpcstr module, _lpcstr key, _lpcstr type, _lpcstr value, _lpcstr fi
         return -1;
 
     int ret = 0;
-    switch (enum_from_str(EValueType, type))
+    switch (enum_from_str(ECfgValueType, type))
     {
-        case VAT_INT:
+        case CVT_INT:
             ret = CCfgHandler::SetCfg(module, key, strtool::to_int(value), file);
             break;
-        case VAT_FLOAT:
+        case CVT_FLOAT:
             ret = CCfgHandler::SetCfg(module, key, (float)strtool::to_float(value), file);
             break;
-        case VAT_STRING:
+        case CVT_STRING:
             ret = CCfgHandler::SetCfg(module, key, value, file);
             break;
     }
 
-    if (ret == 0)
-        printf("set config success\n");
-    else
-        printf("set config fail. code: %d\n", ret);
+    if (ret == 0)   printf("set config success\n");
+    else            printf("set config fail. code: %d\n", ret);
+    view_config(file);
 
     return 0;
 }
@@ -98,15 +89,15 @@ int get_cfg(_lpcstr module, _lpcstr key, _lpcstr type, _lpcstr file)
         return -1;
 
     string value;
-    switch (enum_from_str(EValueType, type))
+    switch (enum_from_str(ECfgValueType, type))
     {
-        case VAT_INT:
+        case CVT_INT:
             value = strtool::format("%d", CCfgHandler::GetCfgInt(module, key, 0, file));
             break;
-        case VAT_FLOAT:
+        case CVT_FLOAT:
             value = strtool::format("%f", CCfgHandler::GetCfgFloat(module, key, 0, file));
             break;
-        case VAT_STRING:
+        case CVT_STRING:
             value = CCfgHandler::GetCfgText(module, key, "", file);
             break;
     }
@@ -165,7 +156,7 @@ int main(int argc, _lpcstr argv[])
         }
     }
 
-    if (ret < 0)
+    if (ret == -1)
     {
         printf(usage);
         return -1;

@@ -10,14 +10,34 @@ namespace lslib
 #define DEFAULT_CRYPT_IV        "12345678"
 
     const int FLAG_MODULE_BEGIN = 0x01010101;
-    const int FLAG_ITEM_BEGIN = 0x02020202;
-    const int FLAG_ITEM_END = 0x03030303;
-    const int FLAG_MODULE_END = 0x04040404;
-    const int FLAG_LENGTH = 4;
+    const int FLAG_ITEM_BEGIN   = 0x02020202;
+    const int FLAG_ITEM_END     = 0x03030303;
+    const int FLAG_MODULE_END   = 0x04040404;
+    const int FLAG_LENGTH       = 4;
 
-    CMutexLock CCfgHandler::m_mtxLock;
+    CMutexLock m_mtxLock;
+
+    enum_str_begin(ECfgValueType)
+    enum_str_item_ex(CVT_INT, "int")
+    enum_str_item_ex(CVT_FLOAT, "float")
+    enum_str_item_ex(CVT_STRING, "string")
+    enum_str_end(ECfgValueType)
+
+    struct tagPointer
+    {
+        _lpustr pModuleStart;
+        _lpustr pKeyStart;
+        _lpustr pKeyEnd;
+        _lpustr pModuleEnd;
+
+        tagPointer() { memset(this, 0, sizeof(tagPointer)); }
+    };
+
+    int GetHandler(_lpcstr pFile, FILE*& hFile, _lpustr* pOutBuf, _lpint dwBufLen = NULL);
+    bool CloseHandler(FILE* hFile, _lpustr pBuffer);
+    int GetPointer(_lpcstr pModule, _lpcstr pKey, _lpustr pBuffer, _lint dwBufLen, tagPointer& pt);
+
     //////////////////////////////////////////////////////////////////////////
-
     string CCfgHandler::GetCfgText(_lpcstr pModule, _lpcstr pKey, _lpcstr pDefault, _lpcstr pFile)
     {
         m_mtxLock.Lock();
@@ -139,11 +159,11 @@ namespace lslib
         //  01 01 01 01 | xx xx xx xx | xx xx ... xx | 02 02 02 02 | xx xx xx xx | xx xx ... xx | 0x         | xx xx xx xx | xx xx ... xx | 03 03 03 03 | 04 04 04 04
         // Module Begin | Module Len  | Module Name  | Item Begin  | Key Len     | Key Name     | Value type | Value Len   | Value        | Item end    | Module end
         _lint dwNewBufLen = dwBufLen //old buffer length
-                              + FLAG_LENGTH + sizeof(_lint) + dwModuleLen //additional module length
-                              + FLAG_LENGTH + sizeof(_lint) + dwKeyLen //additional key length
-                              + 1 + sizeof(_lint) + dwValueLen //additional value length
-                              + FLAG_LENGTH  //additional item end flag length
-                              + FLAG_LENGTH;  //additional module end flag length
+                            + FLAG_LENGTH + sizeof(_lint) + dwModuleLen //additional module length
+                            + FLAG_LENGTH + sizeof(_lint) + dwKeyLen //additional key length
+                            + 1 + sizeof(_lint) + dwValueLen //additional value length
+                            + FLAG_LENGTH  //additional item end flag length
+                            + FLAG_LENGTH;  //additional module end flag length
         _lpustr pNewBuffer = (_lpustr)malloc(dwNewBufLen);
         memset(pNewBuffer, 0, dwNewBufLen);
         _lint dwNewBufWriten = 0;
@@ -283,17 +303,17 @@ namespace lslib
 
     int CCfgHandler::SetCfg(_lpcstr pModule, _lpcstr pKey, _lpcstr value, _lpcstr pFile)
     {
-        return SetCfg(pModule, pKey, VAT_STRING, (_lpvoid)value, strlen(value), pFile);
+        return SetCfg(pModule, pKey, CVT_STRING, (_lpvoid)value, strlen(value), pFile);
     }
 
     int CCfgHandler::SetCfg(_lpcstr pModule, _lpcstr pKey, int value, _lpcstr pFile)
     {
-        return SetCfg(pModule, pKey, VAT_INT, (_lpvoid)&value, sizeof(int), pFile);
+        return SetCfg(pModule, pKey, CVT_INT, (_lpvoid)&value, sizeof(int), pFile);
     }
 
     int CCfgHandler::SetCfg(_lpcstr pModule, _lpcstr pKey, float value, _lpcstr pFile)
     {
-        return SetCfg(pModule, pKey, VAT_FLOAT, (_lpvoid)&value, sizeof(float), pFile);
+        return SetCfg(pModule, pKey, CVT_FLOAT, (_lpvoid)&value, sizeof(float), pFile);
     }
 
     int CCfgHandler::LoadCfg(__out__ SCfgData_list& lst, _lpcstr pFile)
@@ -329,7 +349,8 @@ namespace lslib
                 }
             }
             if (pModuleStart == NULL) break;
-            else {
+            else
+            {
                 memcpy(&dwModuleLen, pModuleStart, sizeof(_lint));
                 tcModule = (_lpustr)malloc(dwModuleLen + 1);
                 memcpy(tcModule, pModuleStart + sizeof(_lint), dwModuleLen);
@@ -410,10 +431,10 @@ namespace lslib
                 SCfgData cfg;
                 cfg.strModule = (char*)tcModule;
                 cfg.strKey = (char*)tcKey;
-                cfg.eValueType = (EValueType)nValueType;
-                if (cfg.eValueType == VAT_STRING) cfg.v_str.assign((const char*)tcValue, dwValueLen);
-                else if (cfg.eValueType == VAT_INT) memcpy(&cfg.v_int, tcValue, sizeof(_lint));
-                else if (cfg.eValueType == VAT_FLOAT) memcpy(&cfg.v_float, tcValue, sizeof(_lint));
+                cfg.eValueType = (ECfgValueType)nValueType;
+                if (cfg.eValueType == CVT_STRING) cfg.v_str.assign((const char*)tcValue, dwValueLen);
+                else if (cfg.eValueType == CVT_INT) memcpy(&cfg.v_int, tcValue, sizeof(_lint));
+                else if (cfg.eValueType == CVT_FLOAT) memcpy(&cfg.v_float, tcValue, sizeof(_lint));
 
                 lst.push_back(cfg);
 
@@ -424,13 +445,13 @@ namespace lslib
             if (tcModule != NULL) free(tcModule);
         }
 
-        CCfgHandler::CloseHandler(hFile, pBuffer);
+        CloseHandler(hFile, pBuffer);
         m_mtxLock.Unlock();
 
         return 0;
     }
 
-    int CCfgHandler::GetHandler(_lpcstr pFile, FILE*& hFile, _lpustr* pOutBuf, _lpint dwBufLen /*= NULL*/)
+    int /*CCfgHandler::*/GetHandler(_lpcstr pFile, FILE*& hFile, _lpustr* pOutBuf, _lpint dwBufLen /*= NULL*/)
     {
         if (strtool::is_empty(pFile)) return INVALID_PARAM;
 
@@ -486,7 +507,7 @@ namespace lslib
         return 0;
     }
 
-    bool CCfgHandler::CloseHandler(FILE* hFile, _lpustr pBuffer)
+    bool /*CCfgHandler::*/CloseHandler(FILE* hFile, _lpustr pBuffer)
     {
         if (pBuffer != NULL)
             free(pBuffer);
@@ -497,7 +518,7 @@ namespace lslib
         return true;
     }
 
-    int CCfgHandler::GetPointer(_lpcstr pModule, _lpcstr pKey, _lpustr pBuffer, _lint dwBufLen, tagPointer& pt)
+    int /*CCfgHandler::*/GetPointer(_lpcstr pModule, _lpcstr pKey, _lpustr pBuffer, _lint dwBufLen, tagPointer& pt)
     {
         if (pModule == NULL || pKey == NULL /*|| pBuffer == NULL || dwBufLen < 0*/) return INVALID_PARAM;
 

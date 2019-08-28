@@ -2,13 +2,11 @@
 
 namespace lslib
 {
-    extern const int FLAG_MODULE_BEGIN;
-    extern const int FLAG_ITEM_BEGIN;
-    extern const int FLAG_ITEM_END;
-    extern const int FLAG_MODULE_END;
-    extern const int FLAG_LENGTH;
+    // config value type
+    enum ECfgValueType { CVT_STRING = 0, CVT_INT = 1, CVT_FLOAT = 2 };
+    declare_enum_str(ECfgValueType, LSLIB_API);
 
-    enum EValueType { VAT_STRING = 0, VAT_INT = 1, VAT_FLOAT = 2 };
+    // config api error codes
     enum ECfgErr
     {
         INVALID_PARAM = -100,
@@ -26,12 +24,12 @@ namespace lslib
     // config item structure
     struct SCfgData
     {
-        string strModule;
-        string strKey;
-        EValueType eValueType;
-        string v_str;
-        int v_int;
-        float v_float;
+        string          strModule;
+        string          strKey;
+        ECfgValueType   eValueType;
+        string          v_str;
+        int             v_int;
+        float           v_float;
     };
     declare_stl_obj(SCfgData);
 
@@ -48,22 +46,5 @@ namespace lslib
         static LSLIB_API int SetCfg(_lpcstr pModule, _lpcstr pKey, float value, _lpcstr pFile);
 
         static LSLIB_API int LoadCfg(__out__ SCfgData_list& lst, _lpcstr  pFile);
-
-    public:
-        struct tagPointer
-        {
-            _lpustr pModuleStart;
-            _lpustr pKeyStart;
-            _lpustr pKeyEnd;
-            _lpustr pModuleEnd;
-
-            tagPointer() { memset(this, 0, sizeof(tagPointer)); }
-        };
-        static int GetHandler(_lpcstr pFile, FILE*& hFile, _lpustr* pOutBuf, _lpint dwBufLen = NULL);
-        static bool CloseHandler(FILE* hFile, _lpustr pBuffer);
-        static int GetPointer(_lpcstr pModule, _lpcstr pKey, _lpustr pBuffer, _lint dwBufLen, tagPointer& pt);
-
-    private:
-        static CMutexLock m_mtxLock;
     };
 }
