@@ -53,40 +53,58 @@ ifeq ($(PREFIX),)
 PREFIX := /usr/local
 endif
 
+TARGET := libls.so
+
 -include ../makefile.defs
+
+# functions define
+define fdist
+	$(eval dst := $(1))
+	@echo "Target path: $(dst)"
+	@for h in $(HEADERS); do \
+		f=$(dst)/include/$${h/../libls}; \
+		echo "$$h -> $$f"; \
+		d=`dirname $$f`; \
+		mkdir -p $$d; \
+		cp -f $$h $$d; \
+	done
+	@echo "$(TARGET) -> $(dst)/lib/$(TARGET)"
+	@cp -f $(TARGET) $(dst)/lib/
+endef
 
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: libls.so
+all: $(TARGET)
 
 # Tool invocations
-libls.so: $(OBJS) $(USER_OBJS)
+$(TARGET): $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -shared -o "libls.so" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -shared -o "$(TARGET)" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
-    
+
 install:
-	@for h in $(HEADERS); do \
-		f=$(PREFIX)/include/$${h/../libls}; \
-		d=`dirname $$f`; \
-		mkdir -p $$d; \
-		cp -f $$h $$d; \
-	done; \
-	cp -f libls.so $(PREFIX)/lib/;
+	@echo 'Install targets...'
+	@$(call fdist, $(PREFIX))
+
+dist:
+	@echo 'Distribute targets...'
+	@mkdir -p dist/include
+	@mkdir -p dist/lib
+	@$(call fdist, dist)
 
 # Other Targets
 clean:
-	-$(RM) $(LIBRARIES)$(CC_DEPS)$(C++_DEPS)$(C_UPPER_DEPS)$(CXX_DEPS)$(OBJS)$(CPP_DEPS)$(C_DEPS) libls.so
+	-$(RM) $(LIBRARIES)$(CC_DEPS)$(C++_DEPS)$(C_UPPER_DEPS)$(CXX_DEPS)$(OBJS)$(CPP_DEPS)$(C_DEPS) $(TARGET)
 	-@echo ' '
 
 post-build:
-	-cp  -f libls.so ../../test/Debug/
+	-cp  -f $(TARGET) ../../test/Debug/
 	-@echo ' '
 
-.PHONY: all install clean dependents post-build
+.PHONY: all install dist clean dependents post-build
 
 -include ../makefile.targets
