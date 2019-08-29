@@ -2,7 +2,7 @@
 #define USE_LIBCURL
 #define USE_LIBICONV
 
-#include <libls.h>
+#include <libls/libls.h>
 using namespace lslib;
 
 //////////////////////////////////////////////////////////////////////////
@@ -111,9 +111,9 @@ int get_cfg(_lpcstr module, _lpcstr key, _lpcstr type, _lpcstr file)
 int main(int argc, _lpcstr argv[])
 {
     _lpcstr usage = "usage: \n"
-                    "   get config:    ./cfgtool set <file> <module> <key> <type> <value>\n"
-                    "   set config:    ./cfgtool get <file> <module> <key> <type>\n"
-                    "   view config:   ./cfgtool view <file>\n"
+                    "   get config:    cfgtool set <file> <module> <key> <type> <value>\n"
+                    "   set config:    cfgtool get <file> <module> <key> <type>\n"
+                    "   view config:   cfgtool view <file>\n\n"
                     "      <file>      config file path\n"
                     "      <module>    module name\n"
                     "      <key>       key name\n"
@@ -163,4 +163,3 @@ int main(int argc, _lpcstr argv[])
     }
     return 0;
 }
-
