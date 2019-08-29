@@ -692,8 +692,8 @@ label_exit:
                     strText += strtool::format("file: %s, ", ((SHttpDowloadParam*)pParam)->strFile.c_str());
                     strText += strtool::format("token: %s, ", ((SHttpDowloadParam*)pParam)->strToken.c_str());
                     strText += strtool::format("breakpointsupport: %d, ", ((SHttpDowloadParam*)pParam)->bBreakPointSupport);
-                    strText += strtool::format("callback: 0x%x, ", ((SHttpDowloadParam*)pParam)->cb);
-                    strText += strtool::format("clientp: 0x%x", ((SHttpDowloadParam*)pParam)->clientp);
+                    strText += strtool::format("callback: 0x%p, ", ((SHttpDowloadParam*)pParam)->cb);
+                    strText += strtool::format("clientp: 0x%p", ((SHttpDowloadParam*)pParam)->clientp);
                     break;
                 case HTTP_UPLOAD:
                     strText += strtool::format("file: %s, ", ((SHttpDowloadParam*)pParam)->strFile.c_str());

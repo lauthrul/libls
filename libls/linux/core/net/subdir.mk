@@ -4,10 +4,10 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../core/net/httpclient.cpp 
+$(SRC_DIR)/core/net/httpclient.cpp 
 
 HEADERS += \
-../core/net/httpclient.h 
+$(SRC_DIR)/core/net/httpclient.h 
 
 OBJS += \
 ./core/net/httpclient.o 
@@ -17,10 +17,10 @@ CPP_DEPS += \
 
 
 # Each subdirectory must supply rules for building sources it contributes
-core/net/%.o: ../core/net/%.cpp
+core/net/%.o: $(SRC_DIR)/core/net/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -I../ -I../core -I../utils -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	$(GCPP) $(INCLUDE_PATH) -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

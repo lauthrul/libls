@@ -2,6 +2,7 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
+SRC_DIR := ../src
 C_UPPER_SRCS := 
 CXX_SRCS := 
 C++_SRCS := 
@@ -21,6 +22,8 @@ OBJS :=
 CPP_DEPS := 
 C_DEPS := 
 HEADERS := 
+
+INCLUDE_PATH := -I../src -I../src/core -I../src/utils
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \

@@ -12,8 +12,6 @@
 namespace lslib
 {
     //////////////////////////////////////////////////////////////////////////
-    extern LSLIB_API _ldword GenerateUniqueID();
-
 #ifdef _MSC_VER
     //////////////////////////////////////////////////////////////////////////
     class LSLIB_API IIdleTreadClient
@@ -90,6 +88,10 @@ namespace lslib
     typedef bool (*FnTaskCompare)       (const SIdleThreadTask& lhs, const SIdleThreadTask& rhs);
 
     //////////////////////////////////////////////////////////////////////////
+    extern LSLIB_API _ldword GenerateUniqueID();
+    extern LSLIB_API string DumpTaskInfo(const SIdleThreadTask* pTask);
+
+    //////////////////////////////////////////////////////////////////////////
     class LSLIB_API CIdleThread : public CThread
     {
     public :
@@ -99,7 +101,7 @@ namespace lslib
     public:
         bool    IsIdle();
         int     GetTaskRemain();
-        _ldword RunTask(SIdleThreadTask task);
+        _ldword RunTask(const SIdleThreadTask& task);
 #ifdef _MSC_VER
         bool    CancelTask(IIdleTreadClient* pClient, PTR_CLIENT_IDLETHREAD_TASKHANDLER hanlder = NULL);
 #endif
@@ -134,7 +136,7 @@ namespace lslib
         virtual ~CIdleThreadManager();
 
     public:
-        _ldword RunTask(SIdleThreadTask task, int nThreadIndex = -1);
+        _ldword RunTask(const SIdleThreadTask& task, int nThreadIndex = -1);
 #ifdef _MSC_VER
         bool    CancelTask(IIdleTreadClient* pClient, PTR_CLIENT_IDLETHREAD_TASKHANDLER hanlder = NULL, int nThreadIndex = -1);
 #endif
@@ -153,7 +155,8 @@ namespace lslib
     private:
         int                 m_nThreadNums;
         CIdleThread**       m_pThreads;
-        map<_ldword, int>       m_mapTaskThreadMap;     // <UniqueID, ThreadIndex>
+        CMutexLock          m_mtxTaskThreadMap;
+        map<_ldword, int>   m_mapTaskThreadMap;     // <UniqueID, ThreadIndex>
         static int          s_nLastThreadIndex;
     };
 }

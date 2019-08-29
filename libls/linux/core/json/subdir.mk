@@ -4,21 +4,21 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../core/json/json_reader.cpp \
-../core/json/json_value.cpp \
-../core/json/json_writer.cpp \
-../core/json/json_x.cpp 
+$(SRC_DIR)/core/json/json_reader.cpp \
+$(SRC_DIR)/core/json/json_value.cpp \
+$(SRC_DIR)/core/json/json_writer.cpp \
+$(SRC_DIR)/core/json/json_x.cpp 
 
 HEADERS += \
-../core/json/autolink.h \
-../core/json/config.h \
-../core/json/features.h \
-../core/json/forwards.h \
-../core/json/json.h \
-../core/json/json_x.h \
-../core/json/reader.h \
-../core/json/value.h \
-../core/json/writer.h
+$(SRC_DIR)/core/json/autolink.h \
+$(SRC_DIR)/core/json/config.h \
+$(SRC_DIR)/core/json/features.h \
+$(SRC_DIR)/core/json/forwards.h \
+$(SRC_DIR)/core/json/json.h \
+$(SRC_DIR)/core/json/json_x.h \
+$(SRC_DIR)/core/json/reader.h \
+$(SRC_DIR)/core/json/value.h \
+$(SRC_DIR)/core/json/writer.h
 
 OBJS += \
 ./core/json/json_reader.o \
@@ -34,10 +34,10 @@ CPP_DEPS += \
 
 
 # Each subdirectory must supply rules for building sources it contributes
-core/json/%.o: ../core/json/%.cpp
+core/json/%.o: $(SRC_DIR)/core/json/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -I../ -I../core -I../utils -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	$(GCPP) $(INCLUDE_PATH) -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

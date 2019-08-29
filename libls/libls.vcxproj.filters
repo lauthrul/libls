@@ -57,263 +57,263 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="core\mmr.cpp">
+    <ClCompile Include="src\core\mmr.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="core\os\os.cpp">
+    <ClCompile Include="src\core\os\os.cpp">
       <Filter>core\os</Filter>
     </ClCompile>
-    <ClCompile Include="core\zip\zip_x.cpp">
+    <ClCompile Include="src\core\zip\zip_x.cpp">
       <Filter>core\zip</Filter>
     </ClCompile>
-    <ClCompile Include="core\zip\zipunzip\unzip.cpp">
+    <ClCompile Include="src\core\zip\zipunzip\unzip.cpp">
       <Filter>core\zip\zipunzip</Filter>
     </ClCompile>
-    <ClCompile Include="core\zip\zipunzip\zip.cpp">
+    <ClCompile Include="src\core\zip\zipunzip\zip.cpp">
       <Filter>core\zip\zipunzip</Filter>
     </ClCompile>
-    <ClCompile Include="core\zip\miniz\mzip.cpp">
+    <ClCompile Include="src\core\zip\miniz\mzip.cpp">
       <Filter>core\zip\miniz</Filter>
     </ClCompile>
-    <ClCompile Include="core\crypto\aes.c">
+    <ClCompile Include="src\core\crypto\aes.c">
       <Filter>core\crypto</Filter>
     </ClCompile>
-    <ClCompile Include="core\crypto\base64.c">
+    <ClCompile Include="src\core\crypto\base64.c">
       <Filter>core\crypto</Filter>
     </ClCompile>
-    <ClCompile Include="core\crypto\cipher_def.c">
+    <ClCompile Include="src\core\crypto\cipher_def.c">
       <Filter>core\crypto</Filter>
     </ClCompile>
-    <ClCompile Include="core\crypto\crypto.cpp">
+    <ClCompile Include="src\core\crypto\crypto.cpp">
       <Filter>core\crypto</Filter>
     </ClCompile>
-    <ClCompile Include="core\crypto\des.c">
+    <ClCompile Include="src\core\crypto\des.c">
       <Filter>core\crypto</Filter>
     </ClCompile>
-    <ClCompile Include="core\crypto\md5.c">
+    <ClCompile Include="src\core\crypto\md5.c">
       <Filter>core\crypto</Filter>
     </ClCompile>
-    <ClCompile Include="core\crypto\sha1.c">
+    <ClCompile Include="src\core\crypto\sha1.c">
       <Filter>core\crypto</Filter>
     </ClCompile>
-    <ClCompile Include="core\crypto\sha256.c">
+    <ClCompile Include="src\core\crypto\sha256.c">
       <Filter>core\crypto</Filter>
     </ClCompile>
-    <ClCompile Include="core\crypto\url_encode.c">
+    <ClCompile Include="src\core\crypto\url_encode.c">
       <Filter>core\crypto</Filter>
     </ClCompile>
-    <ClCompile Include="core\math\math.cpp">
+    <ClCompile Include="src\core\math\math.cpp">
       <Filter>core\math</Filter>
     </ClCompile>
-    <ClCompile Include="core\lock\lock.cpp">
+    <ClCompile Include="src\core\lock\lock.cpp">
       <Filter>core\lock</Filter>
     </ClCompile>
-    <ClCompile Include="core\thread\idle_thread.cpp">
+    <ClCompile Include="src\core\thread\idle_thread.cpp">
       <Filter>core\thread</Filter>
     </ClCompile>
-    <ClCompile Include="core\thread\thread.cpp">
+    <ClCompile Include="src\core\thread\thread.cpp">
       <Filter>core\thread</Filter>
     </ClCompile>
-    <ClCompile Include="core\logger\logger.cpp">
+    <ClCompile Include="src\core\logger\logger.cpp">
       <Filter>core\logger</Filter>
     </ClCompile>
-    <ClCompile Include="core\net\httpclient.cpp">
+    <ClCompile Include="src\core\net\httpclient.cpp">
       <Filter>core\net</Filter>
     </ClCompile>
-    <ClCompile Include="core\time\timer.cpp">
+    <ClCompile Include="src\core\time\timer.cpp">
       <Filter>core\time</Filter>
     </ClCompile>
-    <ClCompile Include="core\registry\registry.cpp">
+    <ClCompile Include="src\core\registry\registry.cpp">
       <Filter>core\registry</Filter>
     </ClCompile>
-    <ClCompile Include="core\process\process.cpp">
+    <ClCompile Include="src\core\process\process.cpp">
       <Filter>core\process</Filter>
     </ClCompile>
-    <ClCompile Include="core\xml\tinystr.cpp">
+    <ClCompile Include="src\core\xml\tinystr.cpp">
       <Filter>core\xml</Filter>
     </ClCompile>
-    <ClCompile Include="core\xml\tinyxml.cpp">
+    <ClCompile Include="src\core\xml\tinyxml.cpp">
       <Filter>core\xml</Filter>
     </ClCompile>
-    <ClCompile Include="core\xml\tinyxmlerror.cpp">
+    <ClCompile Include="src\core\xml\tinyxmlerror.cpp">
       <Filter>core\xml</Filter>
     </ClCompile>
-    <ClCompile Include="core\xml\tinyxmlparser.cpp">
+    <ClCompile Include="src\core\xml\tinyxmlparser.cpp">
       <Filter>core\xml</Filter>
     </ClCompile>
-    <ClCompile Include="core\xml\xml.cpp">
+    <ClCompile Include="src\core\xml\xml.cpp">
       <Filter>core\xml</Filter>
     </ClCompile>
-    <ClCompile Include="core\json\json_reader.cpp">
+    <ClCompile Include="src\core\json\json_reader.cpp">
       <Filter>core\json</Filter>
     </ClCompile>
-    <ClCompile Include="core\json\json_value.cpp">
+    <ClCompile Include="src\core\json\json_value.cpp">
       <Filter>core\json</Filter>
     </ClCompile>
-    <ClCompile Include="core\json\json_writer.cpp">
+    <ClCompile Include="src\core\json\json_writer.cpp">
       <Filter>core\json</Filter>
     </ClCompile>
-    <ClCompile Include="core\json\json_x.cpp">
+    <ClCompile Include="src\core\json\json_x.cpp">
       <Filter>core\json</Filter>
     </ClCompile>
-    <ClCompile Include="utils\cmdline.cpp">
+    <ClCompile Include="src\utils\cmdline.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="utils\utils.cpp">
+    <ClCompile Include="src\utils\utils.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="libls.cpp" />
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="core\string\strtool.cpp">
+    <ClCompile Include="src\dllmain.cpp" />
+    <ClCompile Include="src\libls.cpp" />
+    <ClCompile Include="src\stdafx.cpp" />
+    <ClCompile Include="src\core\string\strtool.cpp">
       <Filter>core\string</Filter>
     </ClCompile>
-    <ClCompile Include="utils\cfghandler.cpp">
+    <ClCompile Include="src\utils\cfghandler.cpp">
       <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="core\mmr.h">
+    <ClInclude Include="src\core\mmr.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="core\type.h">
+    <ClInclude Include="src\core\type.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="core\os\os.h">
+    <ClInclude Include="src\core\os\os.h">
       <Filter>core\os</Filter>
     </ClInclude>
-    <ClInclude Include="core\zip\zip_x.h">
+    <ClInclude Include="src\core\zip\zip_x.h">
       <Filter>core\zip</Filter>
     </ClInclude>
-    <ClInclude Include="core\zip\zipunzip\unzip.h">
+    <ClInclude Include="src\core\zip\zipunzip\unzip.h">
       <Filter>core\zip\zipunzip</Filter>
     </ClInclude>
-    <ClInclude Include="core\zip\zipunzip\zip.h">
+    <ClInclude Include="src\core\zip\zipunzip\zip.h">
       <Filter>core\zip\zipunzip</Filter>
     </ClInclude>
-    <ClInclude Include="core\zip\miniz\miniz.h">
+    <ClInclude Include="src\core\zip\miniz\miniz.h">
       <Filter>core\zip\miniz</Filter>
     </ClInclude>
-    <ClInclude Include="core\zip\miniz\mzip.h">
+    <ClInclude Include="src\core\zip\miniz\mzip.h">
       <Filter>core\zip\miniz</Filter>
     </ClInclude>
-    <ClInclude Include="core\crypto\aes.h">
+    <ClInclude Include="src\core\crypto\aes.h">
       <Filter>core\crypto</Filter>
     </ClInclude>
-    <ClInclude Include="core\crypto\base64.h">
+    <ClInclude Include="src\core\crypto\base64.h">
       <Filter>core\crypto</Filter>
     </ClInclude>
-    <ClInclude Include="core\crypto\cipher_def.h">
+    <ClInclude Include="src\core\crypto\cipher_def.h">
       <Filter>core\crypto</Filter>
     </ClInclude>
-    <ClInclude Include="core\crypto\crypto.h">
+    <ClInclude Include="src\core\crypto\crypto.h">
       <Filter>core\crypto</Filter>
     </ClInclude>
-    <ClInclude Include="core\crypto\des.h">
+    <ClInclude Include="src\core\crypto\des.h">
       <Filter>core\crypto</Filter>
     </ClInclude>
-    <ClInclude Include="core\crypto\md5.h">
+    <ClInclude Include="src\core\crypto\md5.h">
       <Filter>core\crypto</Filter>
     </ClInclude>
-    <ClInclude Include="core\crypto\sha1.h">
+    <ClInclude Include="src\core\crypto\sha1.h">
       <Filter>core\crypto</Filter>
     </ClInclude>
-    <ClInclude Include="core\crypto\sha256.h">
+    <ClInclude Include="src\core\crypto\sha256.h">
       <Filter>core\crypto</Filter>
     </ClInclude>
-    <ClInclude Include="core\crypto\url_encode.h">
+    <ClInclude Include="src\core\crypto\url_encode.h">
       <Filter>core\crypto</Filter>
     </ClInclude>
-    <ClInclude Include="core\math\math.h">
+    <ClInclude Include="src\core\math\math.h">
       <Filter>core\math</Filter>
     </ClInclude>
-    <ClInclude Include="core\lock\lock.h">
+    <ClInclude Include="src\core\lock\lock.h">
       <Filter>core\lock</Filter>
     </ClInclude>
-    <ClInclude Include="core\thread\idle_thread.h">
+    <ClInclude Include="src\core\thread\idle_thread.h">
       <Filter>core\thread</Filter>
     </ClInclude>
-    <ClInclude Include="core\thread\thread.h">
+    <ClInclude Include="src\core\thread\thread.h">
       <Filter>core\thread</Filter>
     </ClInclude>
-    <ClInclude Include="core\logger\logger.h">
+    <ClInclude Include="src\core\logger\logger.h">
       <Filter>core\logger</Filter>
     </ClInclude>
-    <ClInclude Include="core\net\httpclient.h">
+    <ClInclude Include="src\core\net\httpclient.h">
       <Filter>core\net</Filter>
     </ClInclude>
-    <ClInclude Include="core\time\timer.h">
+    <ClInclude Include="src\core\time\timer.h">
       <Filter>core\time</Filter>
     </ClInclude>
-    <ClInclude Include="core\registry\registry.h">
+    <ClInclude Include="src\core\registry\registry.h">
       <Filter>core\registry</Filter>
     </ClInclude>
-    <ClInclude Include="core\process\process.h">
+    <ClInclude Include="src\core\process\process.h">
       <Filter>core\process</Filter>
     </ClInclude>
-    <ClInclude Include="core\xml\tinystr.h">
+    <ClInclude Include="src\core\xml\tinystr.h">
       <Filter>core\xml</Filter>
     </ClInclude>
-    <ClInclude Include="core\xml\tinyxml.h">
+    <ClInclude Include="src\core\xml\tinyxml.h">
       <Filter>core\xml</Filter>
     </ClInclude>
-    <ClInclude Include="core\xml\xml.h">
+    <ClInclude Include="src\core\xml\xml.h">
       <Filter>core\xml</Filter>
     </ClInclude>
-    <ClInclude Include="core\json\autolink.h">
+    <ClInclude Include="src\core\json\autolink.h">
       <Filter>core\json</Filter>
     </ClInclude>
-    <ClInclude Include="core\json\config.h">
+    <ClInclude Include="src\core\json\config.h">
       <Filter>core\json</Filter>
     </ClInclude>
-    <ClInclude Include="core\json\features.h">
+    <ClInclude Include="src\core\json\features.h">
       <Filter>core\json</Filter>
     </ClInclude>
-    <ClInclude Include="core\json\forwards.h">
+    <ClInclude Include="src\core\json\forwards.h">
       <Filter>core\json</Filter>
     </ClInclude>
-    <ClInclude Include="core\json\json.h">
+    <ClInclude Include="src\core\json\json.h">
       <Filter>core\json</Filter>
     </ClInclude>
-    <ClInclude Include="core\json\json_batchallocator.h">
+    <ClInclude Include="src\core\json\json_batchallocator.h">
       <Filter>core\json</Filter>
     </ClInclude>
-    <ClInclude Include="core\json\json_x.h">
+    <ClInclude Include="src\core\json\json_x.h">
       <Filter>core\json</Filter>
     </ClInclude>
-    <ClInclude Include="core\json\reader.h">
+    <ClInclude Include="src\core\json\reader.h">
       <Filter>core\json</Filter>
     </ClInclude>
-    <ClInclude Include="core\json\value.h">
+    <ClInclude Include="src\core\json\value.h">
       <Filter>core\json</Filter>
     </ClInclude>
-    <ClInclude Include="core\json\writer.h">
+    <ClInclude Include="src\core\json\writer.h">
       <Filter>core\json</Filter>
     </ClInclude>
-    <ClInclude Include="utils\cmdline.h">
+    <ClInclude Include="src\utils\cmdline.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="utils\utils.h">
+    <ClInclude Include="src\utils\utils.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="libls.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="core\string\strtool.h">
+    <ClInclude Include="src\libls.h" />
+    <ClInclude Include="src\stdafx.h" />
+    <ClInclude Include="src\targetver.h" />
+    <ClInclude Include="src\core\string\strtool.h">
       <Filter>core\string</Filter>
     </ClInclude>
-    <ClInclude Include="utils\cfghandler.h">
+    <ClInclude Include="src\utils\cfghandler.h">
       <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="core\json\json_internalarray.inl">
+    <None Include="src\core\json\json_internalarray.inl">
       <Filter>core\json</Filter>
     </None>
-    <None Include="core\json\json_internalmap.inl">
+    <None Include="src\core\json\json_internalmap.inl">
       <Filter>core\json</Filter>
     </None>
-    <None Include="core\json\json_valueiterator.inl">
+    <None Include="src\core\json\json_valueiterator.inl">
       <Filter>core\json</Filter>
     </None>
   </ItemGroup>

@@ -54,7 +54,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\core;$(ProjectDir)\utils;$(ProjectDir)\3rd-party\include;$(ProjectDir)\3rd-party\include\iconv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\src\core;$(ProjectDir)\src\utils;$(ProjectDir)\3rd-party\include;$(ProjectDir)\3rd-party\include\iconv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LSLIB_EXPORTS;JSON_DLL_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -80,7 +80,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\core;$(ProjectDir)\utils;$(ProjectDir)\3rd-party\include;$(ProjectDir)\3rd-party\include\iconv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\src\core;$(ProjectDir)\src\utils;$(ProjectDir)\3rd-party\include;$(ProjectDir)\3rd-party\include\iconv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LSLIB_EXPORTS;JSON_DLL_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -104,136 +104,136 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="core\crypto\aes.c">
+    <ClCompile Include="src\core\crypto\aes.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\crypto\base64.c">
+    <ClCompile Include="src\core\crypto\base64.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\crypto\cipher_def.c">
+    <ClCompile Include="src\core\crypto\cipher_def.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\crypto\crypto.cpp" />
-    <ClCompile Include="core\crypto\des.c">
+    <ClCompile Include="src\core\crypto\crypto.cpp" />
+    <ClCompile Include="src\core\crypto\des.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\crypto\md5.c">
+    <ClCompile Include="src\core\crypto\md5.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\crypto\sha1.c">
+    <ClCompile Include="src\core\crypto\sha1.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\crypto\sha256.c">
+    <ClCompile Include="src\core\crypto\sha256.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\crypto\url_encode.c">
+    <ClCompile Include="src\core\crypto\url_encode.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\json\json_reader.cpp">
+    <ClCompile Include="src\core\json\json_reader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\json\json_value.cpp">
+    <ClCompile Include="src\core\json\json_value.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\json\json_writer.cpp">
+    <ClCompile Include="src\core\json\json_writer.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\json\json_x.cpp" />
-    <ClCompile Include="core\lock\lock.cpp" />
-    <ClCompile Include="core\logger\logger.cpp" />
-    <ClCompile Include="core\math\math.cpp" />
-    <ClCompile Include="core\mmr.cpp" />
-    <ClCompile Include="core\net\httpclient.cpp" />
-    <ClCompile Include="core\os\os.cpp" />
-    <ClCompile Include="core\process\process.cpp" />
-    <ClCompile Include="core\registry\registry.cpp" />
-    <ClCompile Include="core\string\strtool.cpp" />
-    <ClCompile Include="core\thread\idle_thread.cpp" />
-    <ClCompile Include="core\thread\thread.cpp" />
-    <ClCompile Include="core\time\timer.cpp" />
-    <ClCompile Include="core\xml\tinystr.cpp">
+    <ClCompile Include="src\core\json\json_x.cpp" />
+    <ClCompile Include="src\core\lock\lock.cpp" />
+    <ClCompile Include="src\core\logger\logger.cpp" />
+    <ClCompile Include="src\core\math\math.cpp" />
+    <ClCompile Include="src\core\mmr.cpp" />
+    <ClCompile Include="src\core\net\httpclient.cpp" />
+    <ClCompile Include="src\core\os\os.cpp" />
+    <ClCompile Include="src\core\process\process.cpp" />
+    <ClCompile Include="src\core\registry\registry.cpp" />
+    <ClCompile Include="src\core\string\strtool.cpp" />
+    <ClCompile Include="src\core\thread\idle_thread.cpp" />
+    <ClCompile Include="src\core\thread\thread.cpp" />
+    <ClCompile Include="src\core\time\timer.cpp" />
+    <ClCompile Include="src\core\xml\tinystr.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\xml\tinyxml.cpp">
+    <ClCompile Include="src\core\xml\tinyxml.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\xml\tinyxmlerror.cpp">
+    <ClCompile Include="src\core\xml\tinyxmlerror.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\xml\tinyxmlparser.cpp">
+    <ClCompile Include="src\core\xml\tinyxmlparser.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\xml\xml.cpp">
+    <ClCompile Include="src\core\xml\xml.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\zip\miniz\mzip.cpp">
+    <ClCompile Include="src\core\zip\miniz\mzip.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\zip\zipunzip\unzip.cpp">
+    <ClCompile Include="src\core\zip\zipunzip\unzip.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\zip\zipunzip\zip.cpp">
+    <ClCompile Include="src\core\zip\zipunzip\zip.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="core\zip\zip_x.cpp" />
-    <ClCompile Include="dllmain.cpp">
+    <ClCompile Include="src\core\zip\zip_x.cpp" />
+    <ClCompile Include="src\dllmain.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
@@ -241,67 +241,67 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
       </PrecompiledHeader>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
     </ClCompile>
-    <ClCompile Include="libls.cpp" />
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="src\libls.cpp" />
+    <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="utils\cfghandler.cpp" />
-    <ClCompile Include="utils\cmdline.cpp" />
-    <ClCompile Include="utils\utils.cpp" />
+    <ClCompile Include="src\utils\cfghandler.cpp" />
+    <ClCompile Include="src\utils\cmdline.cpp" />
+    <ClCompile Include="src\utils\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="core\crypto\aes.h" />
-    <ClInclude Include="core\crypto\base64.h" />
-    <ClInclude Include="core\crypto\cipher_def.h" />
-    <ClInclude Include="core\crypto\crypto.h" />
-    <ClInclude Include="core\crypto\des.h" />
-    <ClInclude Include="core\crypto\md5.h" />
-    <ClInclude Include="core\crypto\sha1.h" />
-    <ClInclude Include="core\crypto\sha256.h" />
-    <ClInclude Include="core\crypto\url_encode.h" />
-    <ClInclude Include="core\json\autolink.h" />
-    <ClInclude Include="core\json\config.h" />
-    <ClInclude Include="core\json\features.h" />
-    <ClInclude Include="core\json\forwards.h" />
-    <ClInclude Include="core\json\json.h" />
-    <ClInclude Include="core\json\json_batchallocator.h" />
-    <ClInclude Include="core\json\json_x.h" />
-    <ClInclude Include="core\json\reader.h" />
-    <ClInclude Include="core\json\value.h" />
-    <ClInclude Include="core\json\writer.h" />
-    <ClInclude Include="core\lock\lock.h" />
-    <ClInclude Include="core\logger\logger.h" />
-    <ClInclude Include="core\math\math.h" />
-    <ClInclude Include="core\mmr.h" />
-    <ClInclude Include="core\net\httpclient.h" />
-    <ClInclude Include="core\os\os.h" />
-    <ClInclude Include="core\process\process.h" />
-    <ClInclude Include="core\registry\registry.h" />
-    <ClInclude Include="core\string\strtool.h" />
-    <ClInclude Include="core\thread\idle_thread.h" />
-    <ClInclude Include="core\thread\thread.h" />
-    <ClInclude Include="core\time\timer.h" />
-    <ClInclude Include="core\type.h" />
-    <ClInclude Include="core\xml\tinystr.h" />
-    <ClInclude Include="core\xml\tinyxml.h" />
-    <ClInclude Include="core\xml\xml.h" />
-    <ClInclude Include="core\zip\miniz\miniz.h" />
-    <ClInclude Include="core\zip\miniz\mzip.h" />
-    <ClInclude Include="core\zip\zipunzip\unzip.h" />
-    <ClInclude Include="core\zip\zipunzip\zip.h" />
-    <ClInclude Include="core\zip\zip_x.h" />
-    <ClInclude Include="libls.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="utils\cfghandler.h" />
-    <ClInclude Include="utils\cmdline.h" />
-    <ClInclude Include="utils\utils.h" />
+    <ClInclude Include="src\core\crypto\aes.h" />
+    <ClInclude Include="src\core\crypto\base64.h" />
+    <ClInclude Include="src\core\crypto\cipher_def.h" />
+    <ClInclude Include="src\core\crypto\crypto.h" />
+    <ClInclude Include="src\core\crypto\des.h" />
+    <ClInclude Include="src\core\crypto\md5.h" />
+    <ClInclude Include="src\core\crypto\sha1.h" />
+    <ClInclude Include="src\core\crypto\sha256.h" />
+    <ClInclude Include="src\core\crypto\url_encode.h" />
+    <ClInclude Include="src\core\json\autolink.h" />
+    <ClInclude Include="src\core\json\config.h" />
+    <ClInclude Include="src\core\json\features.h" />
+    <ClInclude Include="src\core\json\forwards.h" />
+    <ClInclude Include="src\core\json\json.h" />
+    <ClInclude Include="src\core\json\json_batchallocator.h" />
+    <ClInclude Include="src\core\json\json_x.h" />
+    <ClInclude Include="src\core\json\reader.h" />
+    <ClInclude Include="src\core\json\value.h" />
+    <ClInclude Include="src\core\json\writer.h" />
+    <ClInclude Include="src\core\lock\lock.h" />
+    <ClInclude Include="src\core\logger\logger.h" />
+    <ClInclude Include="src\core\math\math.h" />
+    <ClInclude Include="src\core\mmr.h" />
+    <ClInclude Include="src\core\net\httpclient.h" />
+    <ClInclude Include="src\core\os\os.h" />
+    <ClInclude Include="src\core\process\process.h" />
+    <ClInclude Include="src\core\registry\registry.h" />
+    <ClInclude Include="src\core\string\strtool.h" />
+    <ClInclude Include="src\core\thread\idle_thread.h" />
+    <ClInclude Include="src\core\thread\thread.h" />
+    <ClInclude Include="src\core\time\timer.h" />
+    <ClInclude Include="src\core\type.h" />
+    <ClInclude Include="src\core\xml\tinystr.h" />
+    <ClInclude Include="src\core\xml\tinyxml.h" />
+    <ClInclude Include="src\core\xml\xml.h" />
+    <ClInclude Include="src\core\zip\miniz\miniz.h" />
+    <ClInclude Include="src\core\zip\miniz\mzip.h" />
+    <ClInclude Include="src\core\zip\zipunzip\unzip.h" />
+    <ClInclude Include="src\core\zip\zipunzip\zip.h" />
+    <ClInclude Include="src\core\zip\zip_x.h" />
+    <ClInclude Include="src\libls.h" />
+    <ClInclude Include="src\stdafx.h" />
+    <ClInclude Include="src\targetver.h" />
+    <ClInclude Include="src\utils\cfghandler.h" />
+    <ClInclude Include="src\utils\cmdline.h" />
+    <ClInclude Include="src\utils\utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="core\json\json_internalarray.inl" />
-    <None Include="core\json\json_internalmap.inl" />
-    <None Include="core\json\json_valueiterator.inl" />
+    <None Include="src\core\json\json_internalarray.inl" />
+    <None Include="src\core\json\json_internalmap.inl" />
+    <None Include="src\core\json\json_valueiterator.inl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

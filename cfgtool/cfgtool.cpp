@@ -2,7 +2,7 @@
 #define USE_LIBCURL
 #define USE_LIBICONV
 
-#include <libls/libls.h>
+#include <libls.h>
 using namespace lslib;
 
 //////////////////////////////////////////////////////////////////////////

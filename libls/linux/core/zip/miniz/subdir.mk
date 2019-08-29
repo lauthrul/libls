@@ -4,10 +4,10 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../core/zip/miniz/mzip.cpp 
+$(SRC_DIR)/core/zip/miniz/mzip.cpp 
 
 #HEADERS += \
-#../core/zip/miniz/mzip.h
+#$(SRC_DIR)/core/zip/miniz/mzip.h
 
 OBJS += \
 ./core/zip/miniz/mzip.o 
@@ -17,10 +17,10 @@ CPP_DEPS += \
 
 
 # Each subdirectory must supply rules for building sources it contributes
-core/zip/miniz/%.o: ../core/zip/miniz/%.cpp
+core/zip/miniz/%.o: $(SRC_DIR)/core/zip/miniz/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -I../ -I../core -I../utils -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	$(GCPP) $(INCLUDE_PATH) -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

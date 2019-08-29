@@ -4,16 +4,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../core/xml/tinystr.cpp \
-../core/xml/tinyxml.cpp \
-../core/xml/tinyxmlerror.cpp \
-../core/xml/tinyxmlparser.cpp \
-../core/xml/xml.cpp 
+$(SRC_DIR)/core/xml/tinystr.cpp \
+$(SRC_DIR)/core/xml/tinyxml.cpp \
+$(SRC_DIR)/core/xml/tinyxmlerror.cpp \
+$(SRC_DIR)/core/xml/tinyxmlparser.cpp \
+$(SRC_DIR)/core/xml/xml.cpp 
 
 HEADERS += \
-../core/xml/tinystr.h \
-../core/xml/tinyxml.h \
-../core/xml/xml.h 
+$(SRC_DIR)/core/xml/tinystr.h \
+$(SRC_DIR)/core/xml/tinyxml.h \
+$(SRC_DIR)/core/xml/xml.h 
 
 OBJS += \
 ./core/xml/tinystr.o \
@@ -31,10 +31,10 @@ CPP_DEPS += \
 
 
 # Each subdirectory must supply rules for building sources it contributes
-core/xml/%.o: ../core/xml/%.cpp
+core/xml/%.o: $(SRC_DIR)/core/xml/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -I../ -I../core -I../utils -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	$(GCPP) $(INCLUDE_PATH) -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

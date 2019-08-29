@@ -197,7 +197,7 @@ namespace lslib
                 if (lpMsg != NULL)
                 {
                     *lpMsg = msg;
-//                      DEBUG_LOG(g_logger, "get msg. level[%d], msg[%d, (0x%x, 0x%x)]", rit->first, msg.message, msg.wParam, msg.lParam);
+//                     DEBUG_LOG(g_logger, "get msg. level[%d], msg[%d, (0x%p, 0x%p)]", rit->first, msg.message, msg.wParam, msg.lParam);
                 }
                 if (msglist.empty())
                 {
@@ -385,7 +385,7 @@ namespace lslib
                 if (lpMsg != NULL)
                 {
                     *lpMsg = msg;
-                    DEBUG_LOG(g_logger, "get msg. level[%d], msg[%d, (0x%x, 0x%x)]", rit->first, msg.message, msg.wParam, msg.lParam);
+//                     DEBUG_LOG(g_logger, "get msg. level[%d], msg[%d, (0x%p, 0x%p)]", rit->first, msg.message, msg.wParam, msg.lParam);
                 }
                 if (msglist.empty())
                 {

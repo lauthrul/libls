@@ -4,14 +4,14 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../utils/cfghandler.cpp \
-../utils/cmdline.cpp \
-../utils/utils.cpp 
+$(SRC_DIR)/utils/cfghandler.cpp \
+$(SRC_DIR)/utils/cmdline.cpp \
+$(SRC_DIR)/utils/utils.cpp 
 
 HEADERS += \
-../utils/cfghandler.h \
-../utils/cmdline.h \
-../utils/utils.h 
+$(SRC_DIR)/utils/cfghandler.h \
+$(SRC_DIR)/utils/cmdline.h \
+$(SRC_DIR)/utils/utils.h 
 
 OBJS += \
 ./utils/cfghandler.o \
@@ -25,10 +25,10 @@ CPP_DEPS += \
 
 
 # Each subdirectory must supply rules for building sources it contributes
-utils/%.o: ../utils/%.cpp
+utils/%.o: $(SRC_DIR)/utils/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -I../ -I../core -I../utils -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	$(GCPP) $(INCLUDE_PATH) -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
