@@ -339,7 +339,7 @@ namespace lslib
                     else HandleMessage(msg.message, msg.wParam, msg.lParam);
                 }
                 OnExecute();
-//                usleep(1000); // 1msec.  1sec = 1000msec = 1000*1000usec
+                usleep(1000); // 1msec.  1sec = 1000msec = 1000*1000usec
             }
         }
 
