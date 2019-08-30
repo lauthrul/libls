@@ -49,24 +49,24 @@ namespace lslib
 
         string strText = strtool::format(
 #ifdef _MSC_VER
-            "task info[0x%p]: uid:%d, tid:%d, name:%s, param:0x%p, result:0x%p, keep single:%d, sync:%d, task type: %d, client task:0x%p, static task:0x%p, thread task:0x%p",
+                             "task info[0x%p]: uid:%d, tid:%d, name:%s, param:0x%p, result:0x%p, keep single:%d, sync:%d, task type: %d, client task:0x%p, static task:0x%p, thread task:0x%p",
 #else
-            "task info[0x%p]: uid:%d, tid:%d, name:%s, param:0x%p, result:0x%p, keep single:%d, sync:%d, thread task:0x%p",
+                             "task info[0x%p]: uid:%d, tid:%d, name:%s, param:0x%p, result:0x%p, keep single:%d, sync:%d, thread task:0x%p",
 #endif
-            pTask,
-            pTask->m_dwUniqueID,
-            pTask->m_dwTID,
-            pTask->m_strTaskName.c_str(),
-            pTask->m_pParam,
-            pTask->m_pResult,
-            pTask->m_bKeepSingle,
-            pTask->m_bSyncCallback,
-            pTask->m_eTaskType,
+                             pTask,
+                             pTask->m_dwUniqueID,
+                             pTask->m_dwTID,
+                             pTask->m_strTaskName.c_str(),
+                             pTask->m_pParam,
+                             pTask->m_pResult,
+                             pTask->m_bKeepSingle,
+                             pTask->m_bSyncCallback,
+                             pTask->m_eTaskType,
 #ifdef _MSC_VER
-            pTask->m_ptrClientTask,
-            pTask->m_ptrStaticTask,
+                             pTask->m_ptrClientTask,
+                             pTask->m_ptrStaticTask,
 #endif
-            pTask->m_ptrThreadTask);
+                             pTask->m_ptrThreadTask);
         return strText;
     }
 
@@ -271,7 +271,7 @@ namespace lslib
         if (task.m_bKeepSingle && IsTaskExist(task))
             return 0;
 
-        SIdleThreadTask *pTask = new SIdleThreadTask(task);
+        SIdleThreadTask* pTask = new SIdleThreadTask(task);
         if (pTask == NULL) return -1;
 
         pTask->m_dwUniqueID = GenerateUniqueID();

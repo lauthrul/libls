@@ -146,13 +146,13 @@ namespace lslib
                 data_buf = (_lpbyte)realloc(data_buf, data_len + padding_len);
                 switch (mode)
                 {
-                case crypto_zeropadding:
-                    memset(data_buf + data_len, 0, padding_len);
-                    break;
-                case crypto_pkcs5padding:
-                case crypto_pkcs7padding:
-                    memset(data_buf + data_len, padding_len, padding_len);
-                    break;
+                    case crypto_zeropadding:
+                        memset(data_buf + data_len, 0, padding_len);
+                        break;
+                    case crypto_pkcs5padding:
+                    case crypto_pkcs7padding:
+                        memset(data_buf + data_len, padding_len, padding_len);
+                        break;
                 }
                 data_len += padding_len;
             }
@@ -165,14 +165,14 @@ namespace lslib
             {
                 switch (mode)
                 {
-                case crypto_zeropadding:
-                    while (data_buf[--data_len] == 0 && data_len >= 0);
-                    ++data_len;
-                    break;
-                case crypto_pkcs5padding:
-                case crypto_pkcs7padding:
-                    data_len -= data_buf[data_len - 1];
-                    break;
+                    case crypto_zeropadding:
+                        while (data_buf[--data_len] == 0 && data_len >= 0);
+                        ++data_len;
+                        break;
+                    case crypto_pkcs5padding:
+                    case crypto_pkcs7padding:
+                        data_len -= data_buf[data_len - 1];
+                        break;
                 }
                 data_buf = (_lpbyte)realloc(data_buf, data_len);
             }
@@ -180,10 +180,10 @@ namespace lslib
         }
 
         LSLIB_API string des_encrypt(_lpcstr data,                 // data(string or byte array) to be encrypt
-                                      int data_len,                 // data length in bytes
-                                      _lpcstr key,                  // the key must be length of 64 bits (8 bytes)
-                                      crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                      __out__ int* out_len)           // result length in bytes
+                                     int data_len,                 // data length in bytes
+                                     _lpcstr key,                  // the key must be length of 64 bits (8 bytes)
+                                     crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                     __out__ int* out_len)           // result length in bytes
         {
             uint8_t key_schedule[16][6] = {0};
             des_key_setup((uint8_t*)key, key_schedule, DES_ENCRYPT);
@@ -203,10 +203,10 @@ namespace lslib
         }
 
         LSLIB_API string des_decrypt(_lpcstr data,                 // data(string or byte array) to be decrypt, data length must be multiple of 8.
-                                      int data_len,                 // data length in bytes
-                                      _lpcstr key,                  // the key must be length of 64 bits (8 bytes)
-                                      crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                      __out__ int* out_len)           // result length in bytes
+                                     int data_len,                 // data length in bytes
+                                     _lpcstr key,                  // the key must be length of 64 bits (8 bytes)
+                                     crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                     __out__ int* out_len)           // result length in bytes
         {
             if (data_len % DES_BLOCK_SIZE != 0) return ""; // decrypt data size must be times of AES_BLOCK_SIZE
 
@@ -279,10 +279,10 @@ namespace lslib
         }
 
         LSLIB_API string three_des_encrypt(_lpcstr data,                 // data(string or byte array) to be encrypt
-                                            int data_len,                 // data length in bytes
-                                            _lpcstr key,                  // the key must be length of 192 bits (24 bytes)
-                                            crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                            __out__ int* out_len)           // result length in bytes
+                                           int data_len,                 // data length in bytes
+                                           _lpcstr key,                  // the key must be length of 192 bits (24 bytes)
+                                           crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                           __out__ int* out_len)           // result length in bytes
         {
             uint8_t key_schedule[3][16][6] = {0};
             three_des_key_setup((uint8_t*)key, key_schedule, DES_ENCRYPT);
@@ -302,10 +302,10 @@ namespace lslib
         }
 
         LSLIB_API string three_des_decrypt(_lpcstr data,                 // data(string or byte array) to be decrypt, data length must be multiple of 8.
-                                            int data_len,                 // data length in bytes
-                                            _lpcstr key,                  // the key must be length of 192 bits (24 bytes)
-                                            crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                            __out__ int* out_len)           // result length in bytes
+                                           int data_len,                 // data length in bytes
+                                           _lpcstr key,                  // the key must be length of 192 bits (24 bytes)
+                                           crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                           __out__ int* out_len)           // result length in bytes
         {
             if (data_len % DES_BLOCK_SIZE != 0) return ""; // decrypt data size must be times of AES_BLOCK_SIZE
 

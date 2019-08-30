@@ -19,20 +19,17 @@ namespace lslib
 
     CMutexLock::~CMutexLock()
     {
-        if (m_mutex)
-        ::CloseHandle(m_mutex);
+        if (m_mutex) ::CloseHandle(m_mutex);
     }
 
     void CMutexLock::Lock()
     {
-        if (m_mutex)
-        WaitForSingleObject(m_mutex, INFINITE);
+        if (m_mutex) WaitForSingleObject(m_mutex, INFINITE);
     }
 
     void CMutexLock::Unlock()
     {
-        if (m_mutex)
-        ::ReleaseMutex(m_mutex);
+        if (m_mutex) ::ReleaseMutex(m_mutex);
     }
 
 //////////////////////////////////////////////////////////////////////////
@@ -61,8 +58,7 @@ namespace lslib
 #endif // end of #ifdef
 
 //////////////////////////////////////////////////////////////////////////
-    CAutoLock::CAutoLock(CMutexLock& m)
-            : m_lock(m)
+    CAutoLock::CAutoLock(CMutexLock& m) : m_lock(m)
     {
         m_lock.Lock();
     }

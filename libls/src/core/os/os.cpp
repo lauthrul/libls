@@ -174,7 +174,7 @@ namespace lslib
             if (str[0] == get_slash()) return true;
             else if (str[0] == '.') return false;
 #ifdef _WIN32
-            if (str.length() >= 2 && (str[0] > 'a' && str[0] <='z') &&  str[1] == ':')
+            if (str.length() >= 2 && (str[0] > 'a' && str[0] <= 'z') &&  str[1] == ':')
                 return true;
 #endif
             return false;

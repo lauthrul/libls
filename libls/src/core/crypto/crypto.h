@@ -69,64 +69,64 @@ namespace lslib
 
         // return data is a string or byte array (stored in string), check the length (out_len) before use.
         LSLIB_API string des_encrypt(_lpcstr data,                 // data(string or byte array) to be encrypt
-                                      int data_len,                 // data length in bytes
-                                      _lpcstr key,                  // the key must be length of 64 bits (8 bytes)
-                                      crypto_padding_mode mode,     // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                      __out__ int* out_len);          // result length in bytes
+                                     int data_len,                 // data length in bytes
+                                     _lpcstr key,                  // the key must be length of 64 bits (8 bytes)
+                                     crypto_padding_mode mode,     // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                     __out__ int* out_len);          // result length in bytes
 
         // return data is a string or byte array (stored in string), check the length (out_len) before use.
         LSLIB_API string des_decrypt(_lpcstr data,                 // data(string or byte array) to be decrypt, data length must be multiple of 8.
-                                      int data_len,                 // data length in bytes
-                                      _lpcstr key,                  // the key must be length of 64 bits (8 bytes)
-                                      crypto_padding_mode mode,     // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                      __out__ int* out_len);          // result length in bytes
+                                     int data_len,                 // data length in bytes
+                                     _lpcstr key,                  // the key must be length of 64 bits (8 bytes)
+                                     crypto_padding_mode mode,     // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                     __out__ int* out_len);          // result length in bytes
 
         // return data is a string or byte array (stored in string), check the length (out_len) before use.
         LSLIB_API string des_encrypt_cbc(_lpcstr data,             // data(string or byte array) to be encrypt
-                                          int data_len,             // data length in bytes
-                                          _lpcstr key,              // the key must be length of 64 bits (8 bytes)
-                                          crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                          _lchar iv[8],             // init vector. must be length of 8 bytes
-                                          __out__ int* out_len);      // result length in bytes
+                                         int data_len,             // data length in bytes
+                                         _lpcstr key,              // the key must be length of 64 bits (8 bytes)
+                                         crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                         _lchar iv[8],             // init vector. must be length of 8 bytes
+                                         __out__ int* out_len);      // result length in bytes
 
         // return data is a string or byte array (stored in string), check the length (out_len) before use.
         LSLIB_API string des_decrypt_cbc(_lpcstr data,             // data(string or byte array) to be decrypt, data length must be multiple of 8.
-                                          int data_len,             // data length in bytes, must be multiple of 8.
-                                          _lpcstr key,              // the key must be length of 64 bits (8 bytes)
-                                          crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                          _lchar iv[8],             // init vector. must be length of 8 bytes
-                                          __out__ int* out_len);      // result length in bytes
+                                         int data_len,             // data length in bytes, must be multiple of 8.
+                                         _lpcstr key,              // the key must be length of 64 bits (8 bytes)
+                                         crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                         _lchar iv[8],             // init vector. must be length of 8 bytes
+                                         __out__ int* out_len);      // result length in bytes
 
 
         // return data is a string or byte array (stored in string), check the length (out_len) before use.
         LSLIB_API string three_des_encrypt(_lpcstr data,                 // data(string or byte array) to be encrypt
-                                            int data_len,                 // data length in bytes
-                                            _lpcstr key,                  // the key must be length of 192 bits (24 bytes)
-                                            crypto_padding_mode mode,     // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                            __out__ int* out_len);          // result length in bytes
+                                           int data_len,                 // data length in bytes
+                                           _lpcstr key,                  // the key must be length of 192 bits (24 bytes)
+                                           crypto_padding_mode mode,     // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                           __out__ int* out_len);          // result length in bytes
 
         // return data is a string or byte array (stored in string), check the length (out_len) before use.
         LSLIB_API string three_des_decrypt(_lpcstr data,                 // data(string or byte array) to be decrypt, data length must be multiple of 8.
-                                            int data_len,                 // data length in bytes
-                                            _lpcstr key,                  // the key must be length of 192 bits (24 bytes)
-                                            crypto_padding_mode mode,     // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                            __out__ int* out_len);          // result length in bytes
+                                           int data_len,                 // data length in bytes
+                                           _lpcstr key,                  // the key must be length of 192 bits (24 bytes)
+                                           crypto_padding_mode mode,     // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                           __out__ int* out_len);          // result length in bytes
 
         // return data is a string or byte array (stored in string), check the length (out_len) before use.
         LSLIB_API string three_des_encrypt_cbc(_lpcstr data,             // data(string or byte array) to be encrypt
-                                                int data_len,             // data length in bytes
-                                                _lpcstr key,              // the key must be length of 64 bits (8 bytes)
-                                                crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                                _lchar iv[8],             // init vector. must be length of 8 bytes
-                                                __out__ int* out_len);      // result length in bytes
+                                               int data_len,             // data length in bytes
+                                               _lpcstr key,              // the key must be length of 64 bits (8 bytes)
+                                               crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                               _lchar iv[8],             // init vector. must be length of 8 bytes
+                                               __out__ int* out_len);      // result length in bytes
 
         // return data is a string or byte array (stored in string), check the length (out_len) before use.
         LSLIB_API string three_des_decrypt_cbc(_lpcstr data,             // data(string or byte array) to be decrypt, data length must be multiple of 8.
-                                                int data_len,             // data length in bytes, must be multiple of 8.
-                                                _lpcstr key,              // the key must be length of 64 bits (8 bytes)
-                                                crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                                _lchar iv[8],             // init vector. must be length of 8 bytes
-                                                __out__ int* out_len);      // result length in bytes
+                                               int data_len,             // data length in bytes, must be multiple of 8.
+                                               _lpcstr key,              // the key must be length of 64 bits (8 bytes)
+                                               crypto_padding_mode mode, // padding mode. only data_len is multiple of 8, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                               _lchar iv[8],             // init vector. must be length of 8 bytes
+                                               __out__ int* out_len);      // result length in bytes
 
 
         ///////////////////
@@ -135,37 +135,37 @@ namespace lslib
 
         // return data is a string or byte array (stored in string), check the length (out_len) before use.
         LSLIB_API string aes_encrypt(_lpcstr data,                 // data(string or byte array) to be encrypt
-                                      int data_len,                 // data length in bytes
-                                      _lpcstr key,                  // the key must be length of 128, 192 or 256 bits (16, 24, 32 bytes)
-                                      crypto_key_bits key_bits,        // key length in bit
-                                      crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                      __out__ int* out_len);          // result length in bytes
+                                     int data_len,                 // data length in bytes
+                                     _lpcstr key,                  // the key must be length of 128, 192 or 256 bits (16, 24, 32 bytes)
+                                     crypto_key_bits key_bits,        // key length in bit
+                                     crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                     __out__ int* out_len);          // result length in bytes
 
         // return data is a string or byte array (stored in string), check the length (out_len) before use.
         LSLIB_API string aes_decrypt(_lpcstr data,                 // data(string or byte array) to be decrypt, data length must be multiple of 16.
-                                      int data_len,                 // data length in bytes, must be multiple of 16.
-                                      _lpcstr key,                  // the key must be length of 128, 192 or 256 bits (16, 24, 32 bytes)
-                                      crypto_key_bits key_bits,        // key length in bit
-                                      crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                      __out__ int* out_len);          // result length in bytes
+                                     int data_len,                 // data length in bytes, must be multiple of 16.
+                                     _lpcstr key,                  // the key must be length of 128, 192 or 256 bits (16, 24, 32 bytes)
+                                     crypto_key_bits key_bits,        // key length in bit
+                                     crypto_padding_mode mode,     // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                     __out__ int* out_len);          // result length in bytes
 
         // return data is a string or byte array (stored in string), check the length (out_len) before use.
         LSLIB_API string aes_encrypt_cbc(_lpcstr data,             // data(string or byte array) to be encrypt
-                                          int data_len,             // data length in bytes
-                                          _lpcstr key,              // the key must be length of 128, 192 or 256 bits (16, 24, 32 bytes)
-                                          crypto_key_bits key_bits,    // key length in bit
-                                          crypto_padding_mode mode, // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                          _lchar iv[16],            // init vector. must be length of 16 bytes
-                                          __out__ int* out_len);      // result length in bytes
+                                         int data_len,             // data length in bytes
+                                         _lpcstr key,              // the key must be length of 128, 192 or 256 bits (16, 24, 32 bytes)
+                                         crypto_key_bits key_bits,    // key length in bit
+                                         crypto_padding_mode mode, // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                         _lchar iv[16],            // init vector. must be length of 16 bytes
+                                         __out__ int* out_len);      // result length in bytes
 
         // return data is a string or byte array (stored in string), check the length (out_len) before use.
         LSLIB_API string aes_decrypt_cbc(_lpcstr data,             // data(string or byte array) to be decrypt, data length must be multiple of 16.
-                                          int data_len,             // data length in bytes, must be multiple of 16.
-                                          _lpcstr key,              // the key must be length of 128, 192 or 256 bits (16, 24, 32 bytes)
-                                          crypto_key_bits key_bits,    // key length in bit
-                                          crypto_padding_mode mode, // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
-                                          _lchar iv[16],            // init vector. must be length of 16 bytes
-                                          __out__ int* out_len);      // result length in bytes
+                                         int data_len,             // data length in bytes, must be multiple of 16.
+                                         _lpcstr key,              // the key must be length of 128, 192 or 256 bits (16, 24, 32 bytes)
+                                         crypto_key_bits key_bits,    // key length in bit
+                                         crypto_padding_mode mode, // padding mode. only data_len is multiple of 16, crypto_nopadding can be set, otherwise the result will be uncertain.
+                                         _lchar iv[16],            // init vector. must be length of 16 bytes
+                                         __out__ int* out_len);      // result length in bytes
 
         ///////////////////
         // url encoding

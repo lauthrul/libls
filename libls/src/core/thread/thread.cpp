@@ -32,10 +32,8 @@ namespace lslib
     {
         DEBUG_LOG(g_logger, "%s[%d] suspend", GetName(), m_uThreadID);
 
-        if (m_hThreadHandle <= 0)
-        return FALSE;
-        if (SuspendThread(m_hThreadHandle) < 0)
-        return FALSE;
+        if (m_hThreadHandle <= 0)                   return FALSE;
+        if (SuspendThread(m_hThreadHandle) < 0)     return FALSE;
         m_eThreadState = TS_SUSPENDED;
         return TRUE;
     }
@@ -44,10 +42,8 @@ namespace lslib
     {
         DEBUG_LOG(g_logger, "%s[%d] resume", GetName(), m_uThreadID);
 
-        if (m_hThreadHandle <= 0)
-        return FALSE;
-        if (ResumeThread(m_hThreadHandle) < 0)
-        return FALSE;
+        if (m_hThreadHandle <= 0)                   return FALSE;
+        if (ResumeThread(m_hThreadHandle) < 0)      return FALSE;
         m_eThreadState = TS_WORKING;
         return TRUE;
     }
@@ -103,7 +99,7 @@ namespace lslib
     bool CThread::WaitFor(DWORD dwMilliseconds)
     {
         if (WaitForSingleObject(m_hThreadHandle, dwMilliseconds) == WAIT_OBJECT_0)
-        return true;
+            return true;
         return false;
     }
 
@@ -135,11 +131,9 @@ namespace lslib
             {
                 MSG rfmsg = *itj;
                 bret = (*pfunc)(msg, level, rfmsg, it->first);
-                if (bret)
-                break;
+                if (bret) break;
             }
-            if (bret)
-            break;
+            if (bret) break;
         }
         m_mutexMsgs.Unlock();
         return bret;
@@ -155,10 +149,8 @@ namespace lslib
             MSG msg;
             if (GetMessage(&msg))
             {
-                if (msg.message == WM_QUIT)
-                break;
-                else
-                HandleMessage(msg.message, msg.wParam, msg.lParam);
+                if (msg.message == WM_QUIT)     break;
+                else                            HandleMessage(msg.message, msg.wParam, msg.lParam);
             }
             OnExecute();
             Sleep(1);
@@ -167,7 +159,7 @@ namespace lslib
         int nRemains = 0;
         m_mutexMsgs.Lock();
         for (map<int, list<MSG> >::iterator it = m_mapMsgs.begin(); it != m_mapMsgs.end(); it++)
-        nRemains += it->second.size();
+            nRemains += it->second.size();
         m_mutexMsgs.Unlock();
 
         DEBUG_LOG(g_logger, "%s[%d] exit. remain tasks[%d]", strThreadName.c_str(), m_uThreadID, nRemains);
@@ -212,8 +204,7 @@ namespace lslib
 
     unsigned int __stdcall CThread::_ThreadEntry(void* pParam)
     {
-        if (pParam == NULL)
-        return -1;
+        if (pParam == NULL) return -1;
         ((CThread*)pParam)->Execute();
         return 0;
     }

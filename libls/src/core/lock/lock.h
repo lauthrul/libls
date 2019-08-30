@@ -23,7 +23,7 @@ namespace lslib
         virtual void Unlock();
 
     private:
-        void *m_mutex;
+        void* m_mutex;
     };
 
 #else
@@ -48,10 +48,10 @@ namespace lslib
     class LSLIB_API CAutoLock
     {
     public:
-        CAutoLock(CMutexLock &mtx);
+        CAutoLock(CMutexLock& mtx);
         ~CAutoLock();
 
     private:
-        CMutexLock &m_lock;
+        CMutexLock& m_lock;
     };
 }
