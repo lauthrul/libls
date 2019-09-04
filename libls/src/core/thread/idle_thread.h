@@ -89,7 +89,7 @@ namespace lslib
 
     //////////////////////////////////////////////////////////////////////////
     extern LSLIB_API _ldword GenerateUniqueID();
-    extern LSLIB_API string DumpTaskInfo(const SIdleThreadTask* pTask);
+    extern LSLIB_API string DumpTaskInfo(const SIdleThreadTask* pTask, bool bBrief = false);
 
     //////////////////////////////////////////////////////////////////////////
     class LSLIB_API CIdleThread : public CThread
@@ -114,6 +114,7 @@ namespace lslib
     protected:
         virtual _lpcstr GetName() { return "CIdleThread"; };
         virtual void    OnExecute();
+        virtual void    OnDumpThreadInfo();
 
         void    RetryCBNotify();
 

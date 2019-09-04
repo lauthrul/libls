@@ -67,6 +67,7 @@ namespace lslib
         virtual bool Stop(); // must call in subclass destructor firstly
         unsigned int GetThreadID() const;
         EThreadState GetThreadState() const;
+        void Sleep(int nMilliseconds);
 
 #ifdef _MSC_VER
         HANDLE GetThreadHandle() const;
@@ -78,25 +79,29 @@ namespace lslib
         bool PostMessage(msgid_t msgid, wparam_t wParam = 0, lparam_t lParam = 0, int nLevel = 0);
         int SendMessage(msgid_t msgid, wparam_t wParam = 0, lparam_t lParam = 0);
         bool FindMessage(msg_t msg, int level, CompareMessageFunc pfunc);
+        int GetMessageSize();
 
     protected:
         bool GetMessage(__out__ msg_t* pmsg);
 
         virtual void Execute();
         virtual void OnExecute();
+        virtual void DumpThreadInfo();
+        virtual void OnDumpThreadInfo();
         virtual int HandleMessage(msgid_t msgid, wparam_t wparam, lparam_t lparam);
 
     private:
-#ifdef _MSC_VER
-        static unsigned __stdcall _ThreadEntry(void* pParam);
-#else
+// #ifdef _MSC_VER
+//         static unsigned __stdcall _ThreadEntry(void* pParam);
+// #else
         static void* _ThreadEntry(void* pParam);
-#endif
+// #endif
 
     protected:
         EThreadState m_eThreadState;
         CMutexLock m_mutexMsgs;
         map<int, list<msg_t> > m_mapMsgs;// <level, list<msg_t>>
+        long m_lDumpTimeStamp;
 
 #ifdef _MSC_VER
         int m_nPriority;

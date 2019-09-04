@@ -7,20 +7,28 @@ using namespace lslib::logger;
 namespace lslib
 {
 
-#ifdef _MSC_VER
-
-    CThread::CThread(bool bSuspend)
+    CThread::CThread(bool bSuspend) : m_lDumpTimeStamp(0)
     {
+#ifdef _MSC_VER
         if (bSuspend)
         {
-            m_hThreadHandle = (HANDLE)_beginthreadex(NULL, 0, _ThreadEntry, this, CREATE_SUSPENDED, &m_uThreadID);
+            m_hThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (unsigned int(__stdcall *)(void *))_ThreadEntry, this, CREATE_SUSPENDED, &m_uThreadID);
             m_eThreadState = TS_SUSPENDED;
         }
         else
         {
-            m_hThreadHandle = (HANDLE)_beginthreadex(NULL, 0, _ThreadEntry, this, NULL, &m_uThreadID);
+            m_hThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (unsigned int(__stdcall *)(void *))_ThreadEntry, this, NULL, &m_uThreadID);
             m_eThreadState = TS_WORKING;
         }
+#else
+        pthread_mutex_init(&m_mtxPause, NULL);
+        pthread_cond_init(&m_conPause, NULL);
+        m_eThreadState = TS_WORKING;
+
+        pthread_create(&m_uThreadID, NULL, _ThreadEntry, this);
+
+        if (bSuspend) Suspend();
+#endif
     }
 
     CThread::~CThread()
@@ -30,31 +38,51 @@ namespace lslib
 
     bool CThread::Suspend()
     {
-        DEBUG_LOG(g_logger, "%s[%d] suspend", GetName(), m_uThreadID);
+        DEBUG_LOG(g_logger, "%s[0x%p] suspend", GetName(), m_uThreadID);
 
-        if (m_hThreadHandle <= 0)                   return FALSE;
-        if (SuspendThread(m_hThreadHandle) < 0)     return FALSE;
+#ifdef _MSC_VER
+        if (m_hThreadHandle <= 0)                   return false;
+        if (SuspendThread(m_hThreadHandle) < 0)     return false;
         m_eThreadState = TS_SUSPENDED;
-        return TRUE;
+        return true;
+#else
+        if (m_eThreadState == TS_WORKING)
+            m_eThreadState = TS_SUSPENDED;
+        return true;
+#endif
     }
 
     bool CThread::Resume()
     {
-        DEBUG_LOG(g_logger, "%s[%d] resume", GetName(), m_uThreadID);
+        DEBUG_LOG(g_logger, "%s[0x%p] resume", GetName(), m_uThreadID);
 
-        if (m_hThreadHandle <= 0)                   return FALSE;
-        if (ResumeThread(m_hThreadHandle) < 0)      return FALSE;
+#ifdef _MSC_VER
+        if (m_hThreadHandle <= 0)                   return false;
+        if (ResumeThread(m_hThreadHandle) < 0)      return false;
         m_eThreadState = TS_WORKING;
-        return TRUE;
+        return true;
+#else
+        if (m_eThreadState == TS_SUSPENDED)
+        {
+            m_eThreadState = TS_WORKING;
+            pthread_cond_signal(&m_conPause);
+        }
+        return true;
+#endif
     }
 
     void CThread::Run()
     {
+#ifdef _MSC_VER
         WaitFor(INFINITE);
+#else
+        pthread_join(m_uThreadID, NULL);
+#endif
     }
 
     bool CThread::Stop()
     {
+#ifdef _MSC_VER
         if (m_eThreadState == TS_WORKING)
         {
             PostMessage(WM_QUIT, 0, 0, MAXINT);
@@ -64,6 +92,17 @@ namespace lslib
         {
             return TerminateThread(m_hThreadHandle, 0);
         }
+#else
+        if (m_eThreadState == TS_WORKING)
+        {
+            PostMessage(WM_QUIT, 0, 0, MAXINT);
+            return (pthread_join(m_uThreadID, NULL) == 0);
+        }
+        else
+        {
+            return (pthread_cancel(m_uThreadID) == 0);
+        }
+#endif
     }
 
     unsigned int CThread::GetThreadID() const
@@ -71,14 +110,25 @@ namespace lslib
         return m_uThreadID;
     }
 
-    HANDLE CThread::GetThreadHandle() const
-    {
-        return m_hThreadHandle;
-    }
-
     EThreadState CThread::GetThreadState() const
     {
         return m_eThreadState;
+    }
+
+    void CThread::Sleep(int nMilliseconds)
+    {
+#ifdef _MSC_VER
+        ::Sleep(nMilliseconds);
+#else
+        usleep(nMilliseconds * 1000); // 1sec = 1000msec = 1000*1000usec
+#endif
+    }
+
+#ifdef _MSC_VER
+
+    HANDLE CThread::GetThreadHandle() const
+    {
+        return m_hThreadHandle;
     }
 
     int CThread::GetPriority() const
@@ -103,184 +153,15 @@ namespace lslib
         return false;
     }
 
-    bool CThread::PostMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/, int nLevel)
-    {
-        MSG msg =
-        {   NULL, uMsg, wParam, lParam, 0, 0};
-        m_mutexMsgs.Lock();
-        m_mapMsgs[nLevel].push_back(msg);
-        m_mutexMsgs.Unlock();
-        return true;
-    }
-
-    int CThread::SendMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/)
-    {
-        return HandleMessage(uMsg, wParam, lParam);
-    }
-
-    bool CThread::FindMessage(MSG msg, int level, CompareMessageFunc pfunc)
-    {
-        bool bret = false;
-        m_mutexMsgs.Lock();
-        map<int, list<MSG> >::iterator it = m_mapMsgs.begin();
-        for (; it != m_mapMsgs.end(); it++)
-        {
-            list<MSG>& msglist = it->second;
-            list<MSG>::iterator itj = msglist.begin();
-            for (; itj != msglist.end(); itj++)
-            {
-                MSG rfmsg = *itj;
-                bret = (*pfunc)(msg, level, rfmsg, it->first);
-                if (bret) break;
-            }
-            if (bret) break;
-        }
-        m_mutexMsgs.Unlock();
-        return bret;
-    }
-
-    void CThread::Execute()
-    {
-        string strThreadName = GetName();
-        DEBUG_LOG(g_logger, "%s[%d] excute", strThreadName.c_str(), m_uThreadID);
-
-        while (true)
-        {
-            MSG msg;
-            if (GetMessage(&msg))
-            {
-                if (msg.message == WM_QUIT)     break;
-                else                            HandleMessage(msg.message, msg.wParam, msg.lParam);
-            }
-            OnExecute();
-            Sleep(1);
-        }
-
-        int nRemains = 0;
-        m_mutexMsgs.Lock();
-        for (map<int, list<MSG> >::iterator it = m_mapMsgs.begin(); it != m_mapMsgs.end(); it++)
-            nRemains += it->second.size();
-        m_mutexMsgs.Unlock();
-
-        DEBUG_LOG(g_logger, "%s[%d] exit. remain tasks[%d]", strThreadName.c_str(), m_uThreadID, nRemains);
-    }
-
-    void CThread::OnExecute()
-    {
-    }
-
-    int CThread::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/)
-    {
-        return S_OK;
-    }
-
-    bool CThread::GetMessage(LPMSG lpMsg)
-    {
-        bool bret = false;
-        m_mutexMsgs.Lock();
-        if (!m_mapMsgs.empty())
-        {
-            map<int, list<MSG> >::reverse_iterator rit = m_mapMsgs.rbegin();
-            list<MSG>& msglist = rit->second;
-            if (!msglist.empty())
-            {
-                MSG msg = msglist.front();
-                msglist.pop_front();
-                if (lpMsg != NULL)
-                {
-                    *lpMsg = msg;
-//                     DEBUG_LOG(g_logger, "get msg. level[%d], msg[%d, (0x%p, 0x%p)]", rit->first, msg.message, msg.wParam, msg.lParam);
-                }
-                if (msglist.empty())
-                {
-                    m_mapMsgs.erase(rit->first);
-                }
-            }
-            bret = true;
-        }
-        m_mutexMsgs.Unlock();
-        return bret;
-    }
-
-    unsigned int __stdcall CThread::_ThreadEntry(void* pParam)
-    {
-        if (pParam == NULL) return -1;
-        ((CThread*)pParam)->Execute();
-        return 0;
-    }
-
-#else
-
-    CThread::CThread(bool bSuspend)
-    {
-        pthread_mutex_init(&m_mtxPause, NULL);
-        pthread_cond_init(&m_conPause, NULL);
-        m_eThreadState = TS_WORKING;
-
-        pthread_create(&m_uThreadID, NULL, _ThreadEntry, this);
-
-        if (bSuspend) Suspend();
-    }
-
-    CThread::~CThread()
-    {
-        Stop();
-    }
-
-    bool CThread::Suspend()
-    {
-        DEBUG_LOG(g_logger, "%s[%d] suspend", GetName(), m_uThreadID);
-
-        if (m_eThreadState == TS_WORKING)
-        {
-            m_eThreadState = TS_SUSPENDED;
-        }
-        return true;
-    }
-
-    bool CThread::Resume()
-    {
-        DEBUG_LOG(g_logger, "%s[%d] resume", GetName(), m_uThreadID);
-
-        if (m_eThreadState == TS_SUSPENDED)
-        {
-            m_eThreadState = TS_WORKING;
-            pthread_cond_signal(&m_conPause);
-        }
-        return true;
-    }
-
-    void CThread::Run()
-    {
-        pthread_join(m_uThreadID, NULL);
-    }
-
-    bool CThread::Stop()
-    {
-        if (m_eThreadState == TS_WORKING)
-        {
-            PostMessage(WM_QUIT, 0, 0, MAXINT);
-            return (pthread_join(m_uThreadID, NULL) == 0);
-        }
-        else
-        {
-            return (pthread_cancel(m_uThreadID) == 0);
-        }
-    }
-
-    unsigned int CThread::GetThreadID() const
-    {
-        return m_uThreadID;
-    }
-
-    EThreadState CThread::GetThreadState() const
-    {
-        return m_eThreadState;
-    }
+#endif
 
     bool CThread::PostMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/, int nLevel /*= 0*/)
     {
+#ifdef _MSC_VER
+        msg_t msg = { NULL, uMsg, wParam, lParam, 0, 0 };
+#else
         msg_t msg = { uMsg, wParam, lParam };
+#endif
         m_mutexMsgs.Lock();
         m_mapMsgs[nLevel].push_back(msg);
         m_mutexMsgs.Unlock();
@@ -313,13 +194,24 @@ namespace lslib
         return bret;
     }
 
+    int CThread::GetMessageSize()
+    {
+        int nSize = 0;
+        m_mutexMsgs.Lock();
+        for (map<int, list<msg_t> >::iterator it = m_mapMsgs.begin(); it != m_mapMsgs.end(); it++)
+            nSize += it->second.size();
+        m_mutexMsgs.Unlock();
+        return nSize;
+    }
+
     void CThread::Execute()
     {
         string strThreadName = GetName();
-        DEBUG_LOG(g_logger, "%s[%d] excute", strThreadName.c_str(), m_uThreadID);
+        DEBUG_LOG(g_logger, "%s[0x%p] excute", strThreadName.c_str(), m_uThreadID);
 
         while (true)
         {
+#ifndef _MSC_VER
             if (m_eThreadState == TS_SUSPENDED)
             {
                 pthread_mutex_lock(&m_mtxPause);
@@ -327,33 +219,39 @@ namespace lslib
                 pthread_mutex_unlock(&m_mtxPause);
             }
             else
+#endif
             {
+                DumpThreadInfo();
                 msg_t msg;
                 if (GetMessage(&msg))
                 {
-                    if (msg.message == WM_QUIT)
-                    {
-                        printf("stopped");
-                        break;
-                    }
-                    else HandleMessage(msg.message, msg.wParam, msg.lParam);
+                    if (msg.message == WM_QUIT)     break;
+                    else                            HandleMessage(msg.message, msg.wParam, msg.lParam);
                 }
                 OnExecute();
-                usleep(1000); // 1msec.  1sec = 1000msec = 1000*1000usec
+                Sleep(1); // 1msec
             }
         }
 
-        int nRemains = 0;
-        m_mutexMsgs.Lock();
-        for (map<int, list<msg_t> >::iterator it = m_mapMsgs.begin(); it != m_mapMsgs.end(); it++)
-            nRemains += it->second.size();
-        m_mutexMsgs.Unlock();
-
-        DEBUG_LOG(g_logger, "%s[%d] exit. remain tasks[%d]", strThreadName.c_str(), m_uThreadID, nRemains);
+        DEBUG_LOG(g_logger, "%s[0x%p] exit. remain tasks[%d]", strThreadName.c_str(), m_uThreadID, GetMessageSize());
     }
 
     void CThread::OnExecute()
     {
+    }
+
+    void CThread::DumpThreadInfo()
+    {
+        long stnow = Time::GetCurDateTime().GetDateTime();
+        if (stnow - m_lDumpTimeStamp < 10)  return; // every 10 second
+
+        OnDumpThreadInfo();
+        m_lDumpTimeStamp = stnow;
+    }
+
+    void CThread::OnDumpThreadInfo()
+    {
+        DEBUG_LOG(g_logger, "%s[0x%p] msg size[%d]", GetName(), m_uThreadID, GetMessageSize());
     }
 
     int CThread::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/)
@@ -389,13 +287,20 @@ namespace lslib
         return bret;
     }
 
+// #ifdef _MSC_VER
+//     unsigned __stdcall CThread::_ThreadEntry(void* pParam)
+//     {
+//         if (pParam == NULL) return -1;
+//         ((CThread*)pParam)->Execute();
+//         return 0;
+//     }
+// #else
     void* CThread::_ThreadEntry(void* pParam)
     {
         if (pParam == NULL) return (void*)-1;
         ((CThread*)pParam)->Execute();
         return (void*)0;
     }
-
-#endif
+// #endif
 
 }
