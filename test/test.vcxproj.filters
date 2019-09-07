@@ -59,6 +59,9 @@
     <ClInclude Include="testcase\cfghandler.hpp">
       <Filter>testcase</Filter>
     </ClInclude>
+    <ClInclude Include="testcase\mmr.hpp">
+      <Filter>testcase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

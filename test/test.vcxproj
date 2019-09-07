@@ -119,6 +119,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClInclude Include="testcase\lock.hpp" />
     <ClInclude Include="testcase\logger.hpp" />
     <ClInclude Include="testcase\math.hpp" />
+    <ClInclude Include="testcase\mmr.hpp" />
     <ClInclude Include="testcase\os.hpp" />
     <ClInclude Include="testcase\process.hpp" />
     <ClInclude Include="testcase\registry.hpp" />

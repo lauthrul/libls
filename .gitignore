@@ -19,3 +19,4 @@ libls/3rd-party/*/mysql
 libls/3rd-party/*/log4cxx_vs2008
 bin/
 dist/
+libls/doc/html/

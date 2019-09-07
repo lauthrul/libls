@@ -180,7 +180,7 @@ namespace lslib
             return false;
         }
 
-        int copy_single_file(_lpcstr path, _lpcstr target)
+        static int copy_single_file(_lpcstr path, _lpcstr target)
         {
             FILE* in, *out;
             if ( (in = fopen(path, "rb")) == NULL) return -1;

@@ -142,6 +142,9 @@ namespace lslib
         LSLIB_API const bool is_float(_lpcstr str)
         {
             _lpcstr p = str;
+            if (*p != '-' && *p != '.' && !isdigit(*p))
+                return false;
+            p++;
             int dotcnt = 0;
             while (*p != 0)
             {
@@ -535,7 +538,7 @@ namespace lslib
             return split(dest, src.c_str(), patten.c_str(), allow_empty);
         }
 
-        LSLIB_API _lbyte char_to_hex(_lchar c)
+        LSLIB_API _lbyte hex_char_to_byte(_lchar c)
         {
             if (c >= '0' && c <= '9') return c - '0';
             else if (c >= 'a' && c <= 'f') return 10 + c - 'a';
@@ -543,7 +546,7 @@ namespace lslib
             else return 0xff;
         }
 
-        LSLIB_API _lchar hex_to_char(_lbyte b)
+        LSLIB_API _lchar byte_to_hex_char(_lbyte b)
         {
             if (b >= 0x0 && b <= 0x9) return b + '0';
             else if (b >= 0xa && b <= 0xf) return b - 10 + 'a';
@@ -558,8 +561,8 @@ namespace lslib
             _lpcstr p = data;
             while (*p != 0)
             {
-                _lbyte high = char_to_hex(*p++);
-                _lbyte low = char_to_hex(*p++);
+                _lbyte high = hex_char_to_byte(*p++);
+                _lbyte low = hex_char_to_byte(*p++);
                 if (high != 0xff && low != 0xff) arr.push_back((high << 4) | low);
             }
             return arr;
@@ -575,8 +578,8 @@ namespace lslib
             string str;
             for (size_t i = 0; i < data.size(); i++)
             {
-                str += hex_to_char((data[i] & 0xf0) >> 4);
-                str += hex_to_char(data[i] & 0x0f);
+                str += byte_to_hex_char((data[i] & 0xf0) >> 4);
+                str += byte_to_hex_char(data[i] & 0x0f);
             }
             return str;
         }

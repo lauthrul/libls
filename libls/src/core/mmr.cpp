@@ -7,7 +7,7 @@ namespace lslib
     LSLIB_API _lpbyte lsalloc(size_t len)
     {
         _lpbyte buf = (_lpbyte)malloc(len);
-        memset(buf, 0, len);
+        if (buf != NULL) memset(buf, 0, len);
         return buf;
     }
 

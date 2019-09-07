@@ -16,7 +16,7 @@ namespace lslib
 {
     namespace crypto
     {
-        LSLIB_API string hex_to_str(_lpbyte data, size_t len)
+        static string hex_to_str(_lpbyte data, size_t len)
         {
             string strret;
             for (size_t i = 0; i < len; i++)
@@ -138,11 +138,11 @@ namespace lslib
             return pbuf;
         }
 
-        _lpbyte crypto_padding(__inout__ _lpbyte& data_buf, __inout__ int& data_len, int bock_size, crypto_padding_mode mode)
+        LSLIB_API _lpbyte crypto_padding(__inout__ _lpbyte& data_buf, __inout__ int& data_len, int block_size, crypto_padding_mode mode)
         {
             if (data_buf != NULL && data_len > 0)
             {
-                int padding_len = bock_size - data_len % bock_size;
+                int padding_len = block_size - data_len % block_size;
                 data_buf = (_lpbyte)realloc(data_buf, data_len + padding_len);
                 switch (mode)
                 {
@@ -159,7 +159,7 @@ namespace lslib
             return data_buf;
         }
 
-        _lpbyte crypto_unpadding(__inout__ _lpbyte& data_buf, __inout__ int& data_len, crypto_padding_mode mode)
+        LSLIB_API _lpbyte crypto_unpadding(__inout__ _lpbyte& data_buf, __inout__ int& data_len, crypto_padding_mode mode)
         {
             if (data_buf != NULL && data_len > 0)
             {
@@ -457,25 +457,27 @@ namespace lslib
             return strret;
         }
 
-        LSLIB_API string url_encode(_lpcstr data, int len)
+        LSLIB_API string url_encode(_lpcstr data, int len, __out__ int* out_len /*= NULL*/)
         {
-            int out_len = ::url_encode(data, len, NULL, 0);
-            char* pbuf = new char[out_len + 1];
-            memset(pbuf, 0, out_len + 1);
-            ::url_encode(data, len, pbuf, out_len);
-            string str; str.assign(pbuf, out_len);
+            int data_len = ::url_encode(data, len, NULL, 0);
+            char* pbuf = new char[data_len + 1];
+            memset(pbuf, 0, data_len + 1);
+            ::url_encode(data, len, pbuf, data_len);
+            string str; str.assign(pbuf, data_len);
             delete[] pbuf;
+            if (out_len) *out_len = data_len;
             return str;
         }
 
-        LSLIB_API string url_decode(_lpcstr data, int len)
+        LSLIB_API string url_decode(_lpcstr data, int len, __out__ int* out_len /*= NULL*/)
         {
             char* pbuf = new char[len + 1];
             memset(pbuf, 0, len + 1);
             memcpy(pbuf, data, len);
-            int out_len = ::url_decode(pbuf, len);
-            string str; str.assign(pbuf, out_len);
+            int data_len = ::url_decode(pbuf, len);
+            string str; str.assign(pbuf, data_len);
             delete[] pbuf;
+            if (out_len) *out_len = data_len;
             return str;
         }
 
