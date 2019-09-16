@@ -258,7 +258,7 @@ namespace lslib
         list<CLogManager::SLogEntity> CLogManager::m_lstLogEntitys;
         CMutexLock CLogManager::m_mtxLogEntityTmp;
         CMutexLock CLogManager::m_mtxLogEntity;
-        Time m_tmStart;
+        static Time m_tmStart;
 
         CLogManager::CLogManager() : CThread(false)
         {

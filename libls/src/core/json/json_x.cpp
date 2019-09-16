@@ -62,7 +62,7 @@ namespace lslib
         return NULL;
     }
 
-    CJsonValue* CJsonWrapper::GetSublingChildNode(CJsonValue* pParent, _lpcstr lpKey, int nIndex)
+    CJsonValue* CJsonWrapper::GetSublingChildNode(CJsonValue* pParent, int nIndex, _lpcstr lpKey)
     {
         if (pParent == NULL) return NULL;
 

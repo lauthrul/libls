@@ -15,6 +15,13 @@ namespace lslib
 {
     namespace net
     {
+        enum_str_begin(EHttpMethod)
+            enum_str_item(HTTP_GET)
+            enum_str_item(HTTP_POST)
+            enum_str_item(HTTP_DOWNLOAD)
+            enum_str_item(HTTP_UPLOAD)
+        enum_str_end(EHttpMethod)
+
         //////////////////////////////////////////////////////////////////////////
         static size_t OnWriteData(void* buffer, size_t size, size_t nmemb, void* lpVoid)
         {
@@ -407,13 +414,6 @@ label_exit:
                 // response header
                 curl_easy_setopt(pCurl, CURLOPT_HEADERFUNCTION, OnGetHeaderInfo);
                 curl_easy_setopt(pCurl, CURLOPT_HEADERDATA, &vResult.mapHeaders);
-                // set download callback
-                if (vParam.cb != NULL)
-                {
-                    curl_easy_setopt(pCurl, CURLOPT_NOPROGRESS, 0);
-                    curl_easy_setopt(pCurl, CURLOPT_PROGRESSFUNCTION, *vParam.cb);
-                    curl_easy_setopt(pCurl, CURLOPT_PROGRESSDATA, vParam.clientp);
-                }
 
                 string strFile = vParam.strFile;
                 if (strFile.empty())
@@ -624,6 +624,13 @@ label_exit:
             // response header
             curl_easy_setopt(pCurl, CURLOPT_HEADERFUNCTION, OnGetHeaderInfo);
             curl_easy_setopt(pCurl, CURLOPT_HEADERDATA, &vResult.mapHeaders);
+            // set download callback
+            if (vParam.cb != NULL)
+            {
+                curl_easy_setopt(pCurl, CURLOPT_NOPROGRESS, 0);
+                curl_easy_setopt(pCurl, CURLOPT_PROGRESSFUNCTION, *vParam.cb);
+                curl_easy_setopt(pCurl, CURLOPT_PROGRESSDATA, vParam.clientp);
+            }
 
             CURLcode ret = CURLE_OK;
             int nTry = (vParam.nTryCount > 0) ? vParam.nTryCount : 1;
@@ -662,7 +669,7 @@ label_exit:
         string CHttpClient::DumpParamText(SHttpParam* pParam)
         {
             string strText;
-            strText += strtool::format("method: %s, ", GetHttpMethodStr(pParam->eMethod).c_str());
+            strText += strtool::format("method: %s, ", enum_str(EHttpMethod, pParam->eMethod).c_str());
             strText += strtool::format("url: %s, ", pParam->strUrl.c_str());
             strText += strtool::format("connettimeout: %d, ", pParam->nConnetTimeout);
             strText += strtool::format("performtimeout: %d, ", pParam->nPerformTimeout);

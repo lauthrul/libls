@@ -19,7 +19,7 @@ namespace lslib
         /// @param dst_zip  目标文件路径
         /// @param src_file 待压缩的文件
         /// @param pwd      添加密码
-        /// @param cb       在压缩包中的文件名
+        /// @param name_in_zip  在压缩包中的文件名
         /// @return 成功返回0，失败返回错误码
         /// @note linux下密码参数pwd将被忽略
         LSLIB_API int zip_file(_lpcstr dst_zip, _lpcstr src_file, _lpstr pwd = NULL, _lpcstr name_in_zip = NULL);
