@@ -18,6 +18,8 @@
 #define CFG_KEY_PRICE               "price"
 #define     CFG_DEFAULT_PRICE       0.02
 
+#define CFG_KEY_AVATAR              "avatar"
+
 void test_cfghandler()
 {
     string strValue;
@@ -62,6 +64,16 @@ void test_cfghandler()
     CCfgHandler::SetCfg(CFG_MODULE_System, CFG_KEY_PRICE, ++fValue, CFG_FILE);
     printf("[set] price: %f\n", fValue);
 
+    //
+    _ldword len = 0;
+    _lpbyte pbuf = os::get_file_buffer("avatar.jpg", &len);
+    CCfgHandler::SetCfg(CFG_MODULE_System, CFG_KEY_AVATAR, pbuf, len, CFG_FILE);
+    os::release_file_buffer(pbuf);
+
+    len = CCfgHandler::GetCfgBlob((_lpvoid&)pbuf, CFG_MODULE_System, CFG_KEY_AVATAR, CFG_FILE);
+    os::save_buffer_to_file(pbuf, len, "avatar_new.jpg", 0);
+    os::release_file_buffer(pbuf);
+
     printf("===load conifg===\n", fValue);
     SCfgData_list lst;
     CCfgHandler::LoadCfg(lst, CFG_FILE);
@@ -71,15 +83,19 @@ void test_cfghandler()
         const SCfgData& data = *it;
         switch (data.eValueType)
         {
-        case CVT_INT:
-            value = strtool::format("%d", data.v_int);
-            break;
-        case CVT_FLOAT:
-            value = strtool::format("%f", data.v_float);
-            break;
-        case CVT_STRING:
-            value = data.v_str;
-            break;
+            case CVT_INT:
+                value = strtool::format("%d", data.v_int);
+                break;
+            case CVT_FLOAT:
+                value = strtool::format("%f", data.v_float);
+                break;
+            case CVT_STRING:
+                value = data.v_str;
+                break;
+            case CVT_BLOB:
+                _lbyte_array arr; arr.assign(data.v_blob.begin(), data.v_blob.end());
+                value = "[hex] " + strtool::byte_array_to_hex_str(arr);
+                break;
         }
         printf("%-20s %-20s %-20s %-20s\n", data.strModule.c_str(), data.strKey.c_str(), enum_str(ECfgValueType, data.eValueType).c_str(), value.c_str());
     }

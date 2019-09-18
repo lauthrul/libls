@@ -1,15 +1,15 @@
 #pragma once
 
-//////////////////////////////////////////////////////////////////////////
-namespace lslib
-{
-    /// 系统操作相关API
-    namespace os
-    {
 #ifndef MAX_PATH
 #define MAX_PATH    260
 #endif
 
+//////////////////////////////////////////////////////////////////////////
+namespace lslib
+{
+    /// 系统相关
+    namespace os
+    {
         /// 获取当前系统路径分隔符
         LSLIB_API const _lchar get_slash();
 

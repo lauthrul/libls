@@ -473,13 +473,13 @@ EXTRACT_ALL            = YES
 # be included in the documentation.
 # The default value is: NO.
 
-EXTRACT_PRIVATE        = YES
+EXTRACT_PRIVATE        = NO
 
 # If the EXTRACT_PRIV_VIRTUAL tag is set to YES, documented private virtual
 # methods of a class will be included in the documentation.
 # The default value is: NO.
 
-EXTRACT_PRIV_VIRTUAL   = YES
+EXTRACT_PRIV_VIRTUAL   = NO
 
 # If the EXTRACT_PACKAGE tag is set to YES, all members with package or internal
 # scope will be included in the documentation.
@@ -829,15 +829,45 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = E:\Mine\Code\libls\libls\src\core\crypto\crypto.h \
-                         E:\Mine\Code\libls\libls\src\core\crypto\crypto.cpp \
-                         E:\Mine\Code\libls\libls\src\core\string \
-                         E:\Mine\Code\libls\libls\src\core\type.h \
-                         E:\Mine\Code\libls\libls\src\core\mmr.h \
-                         E:\Mine\Code\libls\libls\src\core\zip\zip_x.h \
-                         E:\Mine\Code\libls\libls\src\core\zip\zip_x.cpp \
-                         E:\Mine\Code\libls\libls\src\core\os\os.h \
-                         E:\Mine\Code\libls\libls\src\core\os\os.cpp
+INPUT                  = src\core\crypto\crypto.h \
+                         src\core\crypto\crypto.cpp \
+                         src\core\json\json_x.h \
+                         src\core\json\json_x.cpp \
+                         src\core\lock\lock.h \
+                         src\core\lock\lock.cpp \
+                         src\core\logger\logger.h \
+                         src\core\logger\logger.cpp \
+                         src\core\math\math.h \
+                         src\core\math\math.cpp \
+                         src\core\net\httpclient.h \
+                         src\core\net\httpclient.cpp \
+                         src\core\os\os.h \
+                         src\core\os\os.cpp \
+                         src\core\process\process.h \
+                         src\core\process\process.cpp \
+                         src\core\registry\registry.h \
+                         src\core\registry\registry.cpp \
+                         src\core\string\strtool.h \
+                         src\core\string\strtool.cpp \
+                         src\core\thread\idle_thread.h \
+                         src\core\thread\idle_thread.cpp \
+                         src\core\thread\thread.h \
+                         src\core\thread\thread.cpp \
+                         src\core\time\timer.h \
+                         src\core\time\timer.cpp \
+                         src\core\xml\xml.h \
+                         src\core\xml\xml.cpp \
+                         src\core\zip\zip_x.h \
+                         src\core\zip\zip_x.cpp \
+                         src\core\mmr.h \
+                         src\core\mmr.cpp \
+                         src\core\type.h \
+                         src\utils\cfghandler.h \
+                         src\utils\cfghandler.cpp \
+                         src\utils\cmdline.h \
+                         src\utils\cmdline.cpp \
+                         src\utils\utils.h \
+                         src\utils\utils.cpp
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -893,7 +923,7 @@ EXCLUDE_SYMLINKS       = NO
 # Note that the wildcards are matched against the file with absolute path, so to
 # exclude all test directories for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       = */string/string.*
+EXCLUDE_PATTERNS       =
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
@@ -2113,7 +2143,7 @@ ENABLE_PREPROCESSING   = YES
 # The default value is: NO.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-MACRO_EXPANSION        = NO
+MACRO_EXPANSION        = YES
 
 # If the EXPAND_ONLY_PREDEF and MACRO_EXPANSION tags are both set to YES then
 # the macro expansion is limited to the macros specified with the PREDEFINED and
@@ -2153,7 +2183,10 @@ INCLUDE_FILE_PATTERNS  =
 # recursively expanded use the := operator instead of the = operator.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-PREDEFINED             = _MSC_VER
+PREDEFINED             = _MSC_VER \
+                         USE_LOG4CXX \
+                         USE_LIBCURL \
+                         USE_LIBICONV
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The
@@ -2172,7 +2205,7 @@ EXPAND_AS_DEFINED      =
 # The default value is: YES.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-SKIP_FUNCTION_MACROS   = NO
+SKIP_FUNCTION_MACROS   = YES
 
 #---------------------------------------------------------------------------
 # Configuration options related to external references

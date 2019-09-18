@@ -12,7 +12,7 @@ using namespace log4cxx;
 
 namespace lslib
 {
-    /** @brief 日志操作相关API
+    /** @brief 日志相关
         @details 使用log4cxx时，配置文件参考log4cxx说明。使用内部实现时，配置如下：
         @code{.xml}
         <logger version="1.0">
@@ -75,113 +75,9 @@ namespace lslib
 
 #ifdef USE_LOG4CXX
         typedef log4cxx::LoggerPtr _loggerptr;
-        LSLIB_API void Log(_loggerptr logger, ELOG_LEVEL level,  _lpcstr file, int line, _lpcstr function, int threadId, ...);
 #else
-
-        //////////////////////////////////////////////////////////////////////////
-        struct SLogLayout
-        {
-            string strName;
-            string strFormat;
-        };
-
-        //////////////////////////////////////////////////////////////////////////
-        enum ELogAppenderType
-        {
-            APPENDER_CONSOLE, APPENDER_FILE
-        };
-        enum ELogAppenderRoolling
-        {
-            NO_ROLLING,
-            FILE_ROLLING,
-            DAILY_ROLLING
-        };
-        struct SLogAppender
-        {
-            string strName;
-            ELogAppenderType eType;
-            string strFile;
-            ELogAppenderRoolling eRooling;
-            string strDatePattern;
-            int nMaxFileSize;
-            int nMaxFileCounts;
-
-            // program data
-            string strLogDate;
-            int nLogFileIndex;
-            int nWritedSize;
-            FILE* fp;
-
-            SLogAppender() : nLogFileIndex(-1), nWritedSize(-1), fp(NULL) {};
-        };
-
-        //////////////////////////////////////////////////////////////////////////
-        struct SLogger
-        {
-            string strName;
-            ELOG_LEVEL eLevel;
-            SLogLayout layout;
-            SLogAppender appender;
-        };
+        struct SLogger;
         typedef SLogger* _loggerptr;
-
-        //////////////////////////////////////////////////////////////////////////
-        struct SLogConfig
-        {
-            string m_strFile;
-            map<string, SLogLayout> m_mapLayouts;
-            map<string, SLogAppender> m_mapAppenders;
-            map<string, SLogger> m_mapLogger;
-
-            SLogConfig();
-            SLogConfig(_lpcstr lpstrFilePath);
-
-            bool Parse();
-            bool Parse(_lpcstr lpstrFilePath);
-
-            SLogLayout* GetLayout(_lpcstr name);
-            SLogAppender* GetAppender(_lpcstr name);
-            SLogger* GetLogger(_lpcstr name);
-        };
-
-        //////////////////////////////////////////////////////////////////////////
-        class CLogManager : public CThread
-        {
-        public:
-            CLogManager();
-            virtual ~CLogManager();
-
-        public:
-            virtual _lpcstr GetName() { return "CLogManager"; }
-            virtual void OnExecute();
-
-        public:
-            static void Init(_lpcstr configFile);
-            static bool IsInited();
-            static void Destroy();
-            static _loggerptr GetLogger(_lpcstr lpstrLoggerName);
-            static void SetLogLevel(_loggerptr pLogger, ELOG_LEVEL eLevel);
-            LSLIB_API static void Log(_loggerptr logger, ELOG_LEVEL level,  _lpcstr file, int line, _lpcstr function, int threadId, ...);
-
-        private:
-            static bool m_bInited;
-            static SLogConfig m_logConfig;
-            struct SLogEntity
-            {
-                _loggerptr logger;
-                ELOG_LEVEL level;
-                string file;
-                int line;
-                string function;
-                int threadId;
-                string msg;
-            };
-            static list<SLogEntity> m_lstLogEntitysTmp;
-            static list<SLogEntity> m_lstLogEntitys;
-            static CMutexLock m_mtxLogEntityTmp;
-            static CMutexLock m_mtxLogEntity;
-        };
-
 #endif // USE_LOG4CXX
 
         //////////////////////////////////////////////////////////////////////////
@@ -202,28 +98,25 @@ namespace lslib
         /// @param eLevel 日志级别
         LSLIB_API void SetLogLevel(_loggerptr pLogger, ELOG_LEVEL eLevel);
 
-        /**
-         * params:
-         *   logger: (_loggerptr) logger instance
-         *   fmt: (const char*) log string format
-         */
-#ifdef USE_LOG4CXX
+
+        /// @brief 打印日志
+        /// @param logger   日志实例
+        /// @param level    日志级别
+        /// @param file     代码文件
+        /// @param line     代码行
+        /// @param function 代码函数
+        /// @param threadId 线程ID
+        /// @param ...      日志内容，支持格式化输出
+        LSLIB_API void Log(_loggerptr logger, ELOG_LEVEL level, _lpcstr file, int line, _lpcstr function, int threadId, ...);
+
 #define FATAL_LOG(logger, ...)             Log(logger, LOG_LEVEL_FATAL, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
 #define ERROR_LOG(logger, ...)             Log(logger, LOG_LEVEL_ERROR, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
 #define WARN_LOG(logger, ...)              Log(logger, LOG_LEVEL_WARN, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
 #define INFO_LOG(logger, ...)              Log(logger, LOG_LEVEL_INFO, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
 #define DEBUG_LOG(logger, ...)             Log(logger, LOG_LEVEL_DEBUG, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
 #define TRACE_LOG(logger, ...)             Log(logger, LOG_LEVEL_TRACE, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
-#else
-#define FATAL_LOG(logger, ...)             CLogManager::Log(logger, LOG_LEVEL_FATAL, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
-#define ERROR_LOG(logger, ...)             CLogManager::Log(logger, LOG_LEVEL_ERROR, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
-#define WARN_LOG(logger, ...)              CLogManager::Log(logger, LOG_LEVEL_WARN, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
-#define INFO_LOG(logger, ...)              CLogManager::Log(logger, LOG_LEVEL_INFO, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
-#define DEBUG_LOG(logger, ...)             CLogManager::Log(logger, LOG_LEVEL_DEBUG, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
-#define TRACE_LOG(logger, ...)             CLogManager::Log(logger, LOG_LEVEL_TRACE, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
-#endif // USE_LOG4CXX
 
-//////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
         /*LSLIB_API */extern _loggerptr g_logger; // 全局日志实例
         /*LSLIB_API */extern _loggerptr g_netlogger; // 全局网络日志实例
 

@@ -1,7 +1,6 @@
 #include <dirent.h>
 #include "stdafx.h"
 #include "os.h"
-
 #include <sys/stat.h>
 
 #if defined _MSC_VER
@@ -795,11 +794,11 @@ namespace lslib
             struct stat st;
             stat(file, &st);
             Time tm;
-            tm.SetDataTime(st.st_ctime);
+            tm.SetTimeStamp(st.st_ctime);
             attr.createTime = tm.GetDateTimeStr();
-            tm.SetDataTime(st.st_mtime);
+            tm.SetTimeStamp(st.st_mtime);
             attr.writeTime = tm.GetDateTimeStr();
-            tm.SetDataTime(st.st_atime);
+            tm.SetTimeStamp(st.st_atime);
             attr.accessTime = tm.GetDateTimeStr();
             return attr;
         }

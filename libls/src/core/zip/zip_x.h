@@ -2,7 +2,7 @@
 
 namespace lslib
 {
-    /// 压缩相关API
+    /// 压缩/解压相关
     namespace zip
     {
         /// @brief 压缩/解压回调函数

@@ -8,7 +8,7 @@ namespace lslib
     typedef Json::Value         CJsonValue;
 
     //////////////////////////////////////////////////////////////////////////
-    /// @brief json相关操作API
+    /// @brief json相关
     class LSLIB_API  CJsonWrapper
     {
     public:

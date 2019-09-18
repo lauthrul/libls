@@ -4,12 +4,10 @@
 #include <malloc.h>
 #include <memory.h>
 
+#define Decrease(t1, t2)    (int)((t1)>(t2) ? (t1)-(t2) : (t2)-(t1))
+
 namespace lslib
 {
-
-#define Decrease(t1, t2)    ((t1)>(t2) ? (t1)-(t2) : (t2)-(t1))
-
-    /***************************Timer*******************************************/
     Time::Time()
     {
         ftime( &m_time );
@@ -19,34 +17,118 @@ namespace lslib
     {
     }
 
-    Time Time::GetCurDateTime()
+    bool Time::operator == (const Time& value) const
     {
-        return Time();
+        return (m_time.time == value.m_time.time
+                && m_time.millitm == value.m_time.millitm
+                && m_time.timezone == value.m_time.timezone
+                && m_time.dstflag == value.m_time.dstflag);
     }
 
-    string Time::GetCurDateStr()
+    bool Time::operator != (const Time& value) const
     {
-        Time tm = GetCurDateTime();
-        return tm.GetDateStr();
+        return !operator == (value);
     }
 
-    string Time::GetCurTimeStr(bool bMs /*= false*/)
+    bool Time::operator < (const Time& value) const
     {
-        Time tm = GetCurDateTime();
-        return tm.GetTimeStr(bMs);
+        return (m_time.time < value.m_time.time
+                && m_time.millitm < value.m_time.millitm
+                && m_time.timezone < value.m_time.timezone
+                && m_time.dstflag < value.m_time.dstflag);
     }
 
-    string Time::GetCurDateTimeStr(bool bMs /*= false*/)
+    bool Time::operator <= (const Time& value) const
     {
-        return GetCurDateStr() + " " + GetCurTimeStr(bMs);
+        return operator < (value) || operator == (value);
     }
 
-    Time Time::Parser(const char* datetime, const char* fmt /*= "%04d-%02d-%02d %02d:%02d:%02d"*/)
+    bool Time::operator > (const Time& value) const
     {
-        string strFmt = strtool::is_empty(fmt) ? "%04d-%02d-%02d %02d:%02d:%02d" : fmt;
+        return !operator <= (value);
+    }
+
+    bool Time::operator >= (const Time& value) const
+    {
+        return !operator < (value);
+    }
+
+    void Time::SetYear(int value)         { SetTime(value, e_YEAR); }
+    void Time::SetMonth(int value)        { SetTime(value, e_MONTH); }
+    void Time::SetDay(int value)          { SetTime(value, e_DAY); }
+    void Time::SetHour(int value)         { SetTime(value, e_HOUR); }
+    void Time::SetMinute(int value)       { SetTime(value, e_MINUTE); }
+    void Time::SetSecond(int value)       { SetTime(value, e_SECOND); }
+    void Time::SetMilliSec(int value)     { SetTime(value, e_MILLISEC); }
+    void Time::SetTimeStamp(time_t value) { m_time.time = value; }
+
+    int Time::GetYear()                   { return GetTime(e_YEAR); }
+    int Time::GetMonth()                  { return GetTime(e_MONTH); }
+    int Time::GetDay()                    { return GetTime(e_DAY); }
+    int Time::GetYearDay()                { return GetTime(e_YEARDAY); }
+    int Time::GetWeekDay()                { return GetTime(e_WEEKDAY); }
+    int Time::GetHour()                   { return GetTime(e_HOUR); }
+    int Time::GetMinute()                 { return GetTime(e_MINUTE); }
+    int Time::GetSecond()                 { return GetTime(e_SECOND); }
+    int Time::GetMilliSec()               { return GetTime(e_MILLISEC); }
+    time_t Time::GetTimeStamp()           { return m_time.time; }
+
+    string Time::GetDateStr(_lpcstr fmt /*= DATE_FMT*/)
+    {
+        string strfmt = strtool::is_empty(fmt) ? DATE_FMT : fmt;
+        return strtool::format(fmt, GetYear(), GetMonth(), GetDay());
+    }
+
+    string Time::GetTimeStr(bool ms /*= false*/, _lpcstr fmt /*= TIME_FMT*/)
+    {
+        string strfmt;
+        if (ms)
+        {
+            strfmt = strtool::is_empty(fmt) ? MILLTIME_FMT : fmt;
+            return strtool::format(fmt, GetHour(), GetMinute(), GetSecond(), GetMilliSec());
+        }
+        else
+        {
+            strfmt = strtool::is_empty(fmt) ? TIME_FMT : fmt;
+            return strtool::format(fmt, GetHour(), GetMinute(), GetSecond());
+        }
+    }
+
+    string Time::GetDateTimeStr(bool ms /*= false*/, _lpcstr fmt /*= DATE_TIME_FMT*/)
+    {
+        string strfmt;
+        if (ms)
+        {
+            strfmt = strtool::is_empty(fmt) ? DATE_MILLTIME_FMT : fmt;
+            return strtool::format(fmt, GetYear(), GetMonth(), GetDay(), GetHour(), GetMinute(), GetSecond(), GetMilliSec());
+        }
+        else
+        {
+            strfmt = strtool::is_empty(fmt) ? DATE_TIME_FMT : fmt;
+            return strtool::format(fmt, GetYear(), GetMonth(), GetDay(), GetHour(), GetMinute(), GetSecond());
+        }
+    }
+
+    Time Time::Parse(_lpcstr datetime, bool ms /*= false*/, _lpcstr fmt /*= DATE_TIME_FMT*/)
+    {
         Time tm;
-        int year, month, day, hour, minute, second;
-        if ( sscanf(datetime, strFmt.c_str(), &year, &month, &day, &hour, &minute, &second) > 0)
+        if (strtool::is_empty(datetime)) return tm;
+
+        int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0, millsec = 0;
+        string strfmt;
+        int ret = 0;
+        if (ms)
+        {
+            strfmt = strtool::is_empty(fmt) ? DATE_MILLTIME_FMT : fmt;
+            ret = sscanf(datetime, strfmt.c_str(), &year, &month, &day, &hour, &minute, &second, &millsec);
+        }
+        else
+        {
+            strfmt = strtool::is_empty(fmt) ? DATE_TIME_FMT : fmt;
+            ret = sscanf(datetime, strfmt.c_str(), &year, &month, &day, &hour, &minute, &second);
+        }
+
+        if (ret > 0)
         {
             tm.SetYear(year);
             tm.SetMonth(month);
@@ -54,69 +136,85 @@ namespace lslib
             tm.SetHour(hour);
             tm.SetMinute(minute);
             tm.SetSecond(second);
+            tm.SetMilliSec(millsec);
         }
         return tm;
     }
 
-    bool Time::operator != (const Time& value) const
+    time_t Time::CurrentTimeStamp()
     {
-        if ( &value == NULL ) return true;
-        if ( m_time.time != value.m_time.time && m_time.millitm != value.m_time.millitm
-                && m_time.timezone != value.m_time.timezone && m_time.dstflag != value.m_time.dstflag )
-            return true;
-        return false;
+        return Time().GetTimeStamp();
     }
 
-    bool Time::operator == (const Time& value) const
+    string Time::CurrentDateStr(_lpcstr fmt /*= DATE_FMT*/)
     {
-        if ( &value == NULL ) return false;
-        if ( m_time.time == value.m_time.time && m_time.millitm == value.m_time.millitm
-                && m_time.timezone == value.m_time.timezone && m_time.dstflag == value.m_time.dstflag )
-            return true;
-        return false;
+        return Time().GetDateStr(fmt);
     }
 
-    bool Time::operator < (const Time& value) const
+    string Time::CurrentTimeStr(bool ms /*= false*/, _lpcstr fmt /*= TIME_FMT*/)
     {
-        if ( &value == NULL ) return false;
-        if ( m_time.time < value.m_time.time && m_time.millitm < value.m_time.millitm
-                && m_time.timezone < value.m_time.timezone && m_time.dstflag < value.m_time.dstflag )
-            return true;
-        return false;
+        return Time().GetTimeStr(ms, fmt);
     }
 
-    bool Time::operator <= (const Time& value) const
+    string Time::CurrentDateTimeStr(bool ms /*= false*/, _lpcstr fmt /*= DATE_TIME_FMT*/)
     {
-        if ( &value == NULL ) return false;
-        if ( m_time.time <= value.m_time.time && m_time.millitm <= value.m_time.millitm
-                && m_time.timezone <= value.m_time.timezone && m_time.dstflag <= value.m_time.dstflag )
-            return true;
-        return false;
+        return Time().GetDateTimeStr(ms, fmt);
     }
 
-    bool Time::operator > (const Time& value) const
+    void Time::AddYear(int value)
     {
-        if ( &value == NULL ) return true;
-        if ( m_time.time > value.m_time.time && m_time.millitm > value.m_time.millitm
-                && m_time.timezone > value.m_time.timezone && m_time.dstflag > value.m_time.dstflag )
-            return true;
-        return false;
+        struct tm* temptm = localtime(&(m_time.time));
+        temptm->tm_year += value;
+        time_t ltime = mktime(temptm);
+        if (ltime > 0)
+            m_time.time = ltime;
     }
 
-    bool Time::operator >= (const Time& value) const
+    void Time::AddMonth(int value)
     {
-        if ( &value == NULL ) return true;
-        if ( m_time.time >= value.m_time.time && m_time.millitm >= value.m_time.millitm
-                && m_time.timezone >= value.m_time.timezone && m_time.dstflag >= value.m_time.dstflag )
-            return true;
-        return false;
+        struct tm* temptm = localtime(&(m_time.time));
+        int year = value / 12;
+        int month = value % 12;
+        if (month + temptm->tm_mon >= 12)
+        {
+            temptm->tm_year += ++year;
+            temptm->tm_mon += month - 12;
+        }
+        else
+        {
+            temptm->tm_year += year;
+            temptm->tm_mon += month;
+        }
+        time_t ltime = mktime(temptm);
+        if (ltime > 0)
+            m_time.time = ltime;
+    }
+
+    void Time::AddDay(int value)
+    {
+        m_time.time += value * 60 * 60 * 24;
+    }
+
+    void Time::AddHour(int value)
+    {
+        m_time.time += value * 60 * 60;
+    }
+
+    void Time::AddMinute(int value)
+    {
+        m_time.time += value * 60;
+    }
+
+    void Time::AddSecond(int value)
+    {
+        m_time.time += value;
     }
 
     void Time::AddMilliSec(int value)
     {
         int sec = value / 1000;
         int millisec = value % 1000;
-        if ( millisec + m_time.millitm >= 1000 )
+        if (millisec + m_time.millitm >= 1000)
         {
             m_time.time += ++sec;
             m_time.millitm += millisec - 1000;
@@ -128,60 +226,60 @@ namespace lslib
         }
     }
 
-    void Time::AddSecond(int value)
+    void Time::DecreaseYear(int value)
     {
-        m_time.time += value;
+        struct tm* temptm = localtime(&(m_time.time));
+        temptm->tm_year -= value;
+        time_t ltime = mktime(temptm);
+        if (ltime > 0)
+            m_time.time = ltime;
     }
 
-    void Time::AddMinute(int value)
-    {
-        m_time.time += value * 60;
-    }
-
-    void Time::AddHour(int value)
-    {
-        m_time.time += value * 60 * 60;
-    }
-
-    void Time::AddDay(int value)
-    {
-        m_time.time += value * 60 * 60 * 24;
-    }
-
-    void Time::AddMonth(int value)
+    void Time::DecreaseMonth(int value)
     {
         struct tm* temptm = localtime(&(m_time.time));
         int year = value / 12;
         int month = value % 12;
-        if ( month + temptm->tm_mon >= 12 )
+        if (temptm->tm_mon - month >= 0)
         {
-            temptm->tm_year += ++year;
-            temptm->tm_mon += month - 12;
+            temptm->tm_year -= year;
+            temptm->tm_mon -= month;
         }
         else
         {
-            temptm->tm_year += year;
-            temptm->tm_mon += month;
+            temptm->tm_year -= --year;
+            temptm->tm_mon += 12 - month;
         }
         time_t ltime = mktime(temptm);
-        if ( ltime > 0 )
+        if (ltime > 0)
             m_time.time = ltime;
     }
 
-    void Time::AddYear(int value)
+    void Time::DecreaseDay(int value)
     {
-        struct tm* temptm = localtime(&(m_time.time));
-        temptm->tm_year += value;
-        time_t ltime = mktime(temptm);
-        if ( ltime > 0 )
-            m_time.time = ltime;
+        m_time.time -= value * 60 * 60 * 24;
+    }
+
+    void Time::DecreaseHour(int value)
+    {
+        m_time.time -= value * 60 * 60;
+    }
+
+    void Time::DecreaseMinute(int value)
+    {
+        m_time.time -= value * 60;
+    }
+
+    void Time::DecreaseSecond(int value)
+    {
+        m_time.time -= value;
     }
 
     void Time::DecreaseMilliSec(int value)
     {
         int sec = value / 1000;
         int millisec = value % 1000;
-        if ( m_time.millitm - millisec >= 0 )
+        if (m_time.millitm - millisec >= 0)
         {
             m_time.time -= sec;
             m_time.millitm -= millisec;
@@ -193,263 +291,34 @@ namespace lslib
         }
     }
 
-    void Time::DecreaseSecond(int value)
-    {
-        m_time.time -= value;
-    }
+    int Time::BetweenYear(const Time& first, const Time& second)        { return BetweenTime(first, second, e_YEAR); }
+    int Time::BetweenMonth(const Time& first, const Time& second)       { return BetweenTime(first, second, e_MONTH); }
+    int Time::BetweenDay(const Time& first, const Time& second)         { return BetweenTime(first, second, e_DAY); }
+    int Time::BetweenHour(const Time& first, const Time& second)        { return BetweenTime(first, second, e_HOUR); }
+    int Time::BetweenMinute(const Time& first, const Time& second)      { return BetweenTime(first, second, e_MINUTE); }
+    int Time::BetweenSecond(const Time& first, const Time& second)      { return BetweenTime(first, second, e_SECOND); }
+    int Time::BetweenMilliSec(const Time& first, const Time& second)    { return BetweenTime(first, second, e_MILLISEC); }
 
-    void Time::DecreaseMinute(int value)
-    {
-        m_time.time -= value * 60;
-    }
+    int Time::BetweenYear(const Time& value)                            { return BetweenTime(value, *this, e_YEAR); }
+    int Time::BetweenMonth(const Time& value)                           { return BetweenTime(value, *this, e_MONTH); }
+    int Time::BetweenDay(const Time& value)                             { return BetweenTime(value, *this, e_DAY); }
+    int Time::BetweenHour(const Time& value)                            { return BetweenTime(value, *this, e_HOUR); }
+    int Time::BetweenMinute(const Time& value)                          { return BetweenTime(value, *this, e_MINUTE); }
+    int Time::BetweenSecond(const Time& value)                          { return BetweenTime(value, *this, e_SECOND); }
+    int Time::BetweenMilliSec(const Time& value)                        { return BetweenTime(value, *this, e_MILLISEC); }
 
-    void Time::DecreaseHour(int value)
-    {
-        m_time.time -= value * 60 * 60;
-    }
+    int Time::BetweenAllDay(const Time& first, const Time& second)      { return BetweenAllTime(first, second, e_DAY); }
+    int Time::BetweenAllHour(const Time& first, const Time& second)     { return BetweenAllTime(first, second, e_HOUR); }
+    int Time::BetweenAllMinute(const Time& first, const Time& second)   { return BetweenAllTime(first, second, e_MINUTE); }
+    int Time::BetweenAllSecond(const Time& first, const Time& second)   { return BetweenAllTime(first, second, e_SECOND); }
+    int Time::BetweenAllMilliSec(const Time& first, const Time& second) { return BetweenAllTime(first, second, e_MILLISEC); }
 
-    void Time::DecreaseDay(int value)
-    {
-        m_time.time -= value * 60 * 60 * 24;
-    }
+    int Time::BetweenAllDay(const Time& value)                          { return BetweenAllTime(value, *this, e_DAY); }
+    int Time::BetweenAllHour(const Time& value)                         { return BetweenAllTime(value, *this, e_HOUR); }
+    int Time::BetweenAllMinute(const Time& value)                       { return BetweenAllTime(value, *this, e_MINUTE); }
+    int Time::BetweenAllSecond(const Time& value)                       { return BetweenAllTime(value, *this, e_SECOND); }
+    int Time::BetweenAllMilliSec(const Time& value)                     { return BetweenAllTime(value, *this, e_MILLISEC); }
 
-    void Time::DecreaseMonth(int value)
-    {
-        struct tm* temptm = localtime(&(m_time.time));
-        int year = value / 12;
-        int month = value % 12;
-        if ( temptm->tm_mon - month >= 0 )
-        {
-            temptm->tm_year -= year;
-            temptm->tm_mon -= month;
-        }
-        else
-        {
-            temptm->tm_year -= --year;
-            temptm->tm_mon += 12 - month;
-        }
-        time_t ltime = mktime(temptm);
-        if ( ltime > 0 )
-            m_time.time = ltime;
-    }
-
-    void Time::DecreaseYear(int value)
-    {
-        struct tm* temptm = localtime(&(m_time.time));
-        temptm->tm_year -= value;
-        time_t ltime = mktime(temptm);
-        if ( ltime > 0 )
-            m_time.time = ltime;
-    }
-
-    void Time::SetTimer()
-    {
-        ftime( &m_time );
-    }
-
-    void Time::SetTimer(const Time& value)
-    {
-        if ( &value == NULL )
-        {
-            ftime( &m_time );
-            return;
-        }
-        if ( this == &value ) return;
-        m_time.time = value.m_time.time;
-        m_time.millitm = value.m_time.millitm;
-        m_time.timezone = value.m_time.timezone;
-        m_time.dstflag = value.m_time.dstflag;
-    }
-
-    void Time::SetMilliSec(int value)
-    {
-        SetTime(value, e_MILLISEC);
-    }
-
-    void Time::SetSecond(int value)
-    {
-        SetTime(value, e_SECOND);
-    }
-
-    void Time::SetMinute(int value)
-    {
-        SetTime(value, e_MINUTE);
-    }
-
-    void Time::SetHour(int value)
-    {
-        SetTime(value, e_HOUR);
-    }
-
-    void Time::SetDay(int value)
-    {
-        SetTime(value, e_DAY);
-    }
-
-    void Time::SetMonth(int value)
-    {
-        SetTime(value, e_MONTH);
-    }
-
-    void Time::SetYear(int value)
-    {
-        SetTime(value, e_YEAR);
-    }
-
-    int Time::GetMilliSec()
-    {
-        return GetTime(e_MILLISEC);
-    }
-
-    int Time::GetSecond()
-    {
-        return GetTime(e_SECOND);
-    }
-
-    int Time::GetMinute()
-    {
-        return GetTime(e_MINUTE);
-    }
-
-    int Time::GetHour()
-    {
-        return GetTime(e_HOUR);
-    }
-
-    int Time::GetDay()
-    {
-        return GetTime(e_DAY);
-    }
-
-    int Time::GetMonth()
-    {
-        return GetTime(e_MONTH);
-    }
-
-    int Time::GetYear()
-    {
-        return GetTime(e_YEAR);
-    }
-
-    int Time::GetWeekDay()
-    {
-        return GetTime(e_WEEKDAY);
-    }
-
-    int Time::GetYearDay()
-    {
-        return GetTime(e_YEARDAY);
-    }
-
-    int Time::BetweenMilliSec(const Time& first, const Time& tow)
-    {
-        return BetweenTime(first, tow, e_MILLISEC);
-    }
-
-    int Time::BetweenSecond(const Time& first, const Time& tow)
-    {
-        return BetweenTime(first, tow, e_SECOND);
-    }
-
-    int Time::BetweenMinute(const Time& first, const Time& tow)
-    {
-        return BetweenTime(first, tow, e_MINUTE);
-    }
-
-    int Time::BetweenHour(const Time& first, const Time& tow)
-    {
-        return BetweenTime(first, tow, e_HOUR);
-    }
-
-    int Time::BetweenDay(const Time& first, const Time& tow)
-    {
-        return BetweenTime(first, tow, e_DAY);
-    }
-
-    int Time::BetweenMonth(const Time& first, const Time& tow)
-    {
-        return BetweenTime(first, tow, e_MONTH);
-    }
-
-    int Time::BetweenYear(const Time& first, const Time& tow)
-    {
-        return BetweenTime(first, tow, e_YEAR);
-    }
-
-    int Time::BetweenMilliSec(const Time& value)
-    {
-        return BetweenTime(value, *this, e_MILLISEC);
-    }
-
-    int Time::BetweenSecond(const Time& value)
-    {
-        return BetweenTime(value, *this, e_SECOND);
-    }
-
-    int Time::BetweenMinute(const Time& value)
-    {
-        return BetweenTime(value, *this, e_MINUTE);
-    }
-
-    int Time::BetweenHour(const Time& value)
-    {
-        return BetweenTime(value, *this, e_HOUR);
-    }
-
-    int Time::BetweenDay(const Time& value)
-    {
-        return BetweenTime(value, *this, e_DAY);
-    }
-
-    int Time::BetweenMonth(const Time& value)
-    {
-        return BetweenTime(value, *this, e_MONTH);
-    }
-
-    int Time::BetweenYear(const Time& value)
-    {
-        return BetweenTime(value, *this, e_YEAR);
-    }
-
-    int Time::BetweenAllMilliSec(const Time& first, const Time& tow)
-    {
-        return BetweenAllTime(first, tow, e_MILLISEC);
-    }
-
-    int Time::BetweenAllSecond(const Time& first, const Time& tow)
-    {
-        return BetweenAllTime(first, tow, e_SECOND);
-    }
-
-    int Time::BetweenAllMinute(const Time& first, const Time& tow)
-    {
-        return BetweenAllTime(first, tow, e_MINUTE);
-    }
-
-    int Time::BetweenAllHour(const Time& first, const Time& tow)
-    {
-        return BetweenAllTime(first, tow, e_HOUR);
-    }
-
-    int Time::BetweenAllMilliSec(const Time& value)
-    {
-        return BetweenAllTime(value, *this, e_MILLISEC);
-    }
-
-    int Time::BetweenAllSecond(const Time& value)
-    {
-        return BetweenAllTime(value, *this, e_SECOND);
-    }
-
-    int Time::BetweenAllMinute(const Time& value)
-    {
-        return BetweenAllTime(value, *this, e_MINUTE);
-    }
-
-    int Time::BetweenAllHour(const Time& value)
-    {
-        return BetweenAllTime(value, *this, e_HOUR);
-    }
 
     void Time::SetTime(int value, TimeType timetype)
     {
@@ -458,39 +327,25 @@ namespace lslib
         switch ( timetype )
         {
             case e_MILLISEC:
-                if ( value >= 1000 ) value = 999;
-                if ( value <= 0 ) value = 0;
-                m_time.millitm = value;
+                m_time.millitm = CLAMP(value, 0, 999);
                 break;
             case e_SECOND:
-                if ( value >= 60 ) value = 59;
-                if ( value <= 0 ) value = 0;
-                temptm->tm_sec = value;
+                temptm->tm_sec = CLAMP(value, 0, 59);
                 break;
             case e_MINUTE:
-                if ( value >= 60 ) value = 59;
-                if ( value <= 0 ) value = 0;
-                temptm->tm_min = value;
+                temptm->tm_min = CLAMP(value, 0, 59);
                 break;
             case e_HOUR:
-                if ( value >= 24 ) value = 23;
-                if ( value <= 0 ) value = 0;
-                temptm->tm_hour = value;
+                temptm->tm_hour = CLAMP(value, 0, 23);
                 break;
             case e_DAY:
-                if ( value >= 32 ) value = 31;
-                if ( value <= 0 ) value = 1;
-                temptm->tm_mday = value;
+                temptm->tm_mday = CLAMP(value, 1, 31);
                 break;
             case e_MONTH:
-                if ( value >= 12 ) value = 12;
-                if ( value <= 1 ) value = 1;
-                temptm->tm_mon = value - 1;
+                temptm->tm_mon = CLAMP(value, 1, 12);
                 break;
             case e_YEAR:
-                if ( value <= 1970 ) value = 1970;
-                if ( value >= 2038 ) value = 2037;
-                temptm->tm_year = value - 1900;
+                temptm->tm_year = CLAMP(value, 1970, 2038) - 1900;
                 break;
         }
         time_t ltime = mktime(temptm);
@@ -536,98 +391,67 @@ namespace lslib
         return ret;
     }
 
-    int Time::BetweenTime(const Time& first, const Time& tow, TimeType timetype)
+    int Time::BetweenTime(const Time& first, const Time& second, TimeType timetype)
     {
         int ret = 0;
-        struct tm* temptm1 = localtime(&(tow.m_time.time));
-        if ( temptm1 == NULL ) return 0;
-        struct tm* temptm2 = (struct tm*)malloc(sizeof(tm));
-        if ( temptm2 == NULL ) return 0;
-        memset(temptm2, 0x00, sizeof(tm));
-        memcpy(temptm2, temptm1, sizeof(tm));
-        temptm1 = localtime(&(first.m_time.time));
+        struct tm tm1, tm2, *tmp;
+
+        tmp = localtime(&(first.m_time.time));
+        if (tmp == NULL) return 0;
+        tm1 = *tmp;
+
+        tmp = localtime(&(second.m_time.time));
+        if (tmp == NULL) return 0;
+        tm2 = *tmp;
+
         switch ( timetype )
         {
             case e_MILLISEC:
-                ret = Decrease(first.m_time.millitm, tow.m_time.millitm);
+                ret = Decrease(first.m_time.millitm, second.m_time.millitm);
                 break;
             case e_SECOND:
-                ret = Decrease(temptm1->tm_sec, temptm2->tm_sec);
+                ret = Decrease(tm1.tm_sec, tm2.tm_sec);
                 break;
             case e_MINUTE:
-                ret = Decrease(temptm1->tm_min, temptm2->tm_min);
+                ret = Decrease(tm1.tm_min, tm2.tm_min);
                 break;
             case e_HOUR:
-                ret = Decrease(temptm1->tm_hour, temptm2->tm_hour);
+                ret = Decrease(tm1.tm_hour, tm2.tm_hour);
                 break;
             case e_DAY:
-                ret = Decrease(temptm1->tm_mday, temptm2->tm_mday);
+                ret = Decrease(tm1.tm_mday, tm2.tm_mday);
                 break;
             case e_MONTH:
-                ret = Decrease(temptm1->tm_mon, temptm2->tm_mon);
+                ret = Decrease(tm1.tm_mon, tm2.tm_mon);
                 break;
             case e_YEAR:
-                ret = Decrease(temptm1->tm_year, temptm2->tm_year);
+                ret = Decrease(tm1.tm_year, tm2.tm_year);
                 break;
         }
-        free(temptm2);
         return ret;
     }
 
-    int Time::BetweenAllTime(const Time& first, const Time& tow, TimeType timetype)
+    int Time::BetweenAllTime(const Time& first, const Time& second, TimeType timetype)
     {
         int ret = 0;
         switch ( timetype )
         {
             case e_MILLISEC:
-                ret = Decrease(first.m_time.millitm, tow.m_time.millitm) + Decrease(first.m_time.time, tow.m_time.time) * 1000;
+                ret = Decrease(first.m_time.millitm, second.m_time.millitm) + Decrease(first.m_time.time, second.m_time.time) * 1000;
                 break;
             case e_SECOND:
-                ret = Decrease(first.m_time.time, tow.m_time.time);
+                ret = Decrease(first.m_time.time, second.m_time.time);
                 break;
             case e_MINUTE:
-                ret = Decrease(first.m_time.time, tow.m_time.time) / 60;
+                ret = Decrease(first.m_time.time, second.m_time.time) / 60;
                 break;
             case e_HOUR:
-                ret = Decrease(first.m_time.time, tow.m_time.time) / 3600;
+                ret = Decrease(first.m_time.time, second.m_time.time) / (60 * 60);
+                break;
+            case e_DAY:
+                ret = Decrease(first.m_time.time, second.m_time.time) / (60 * 60 * 24);
                 break;
         }
         return ret;
     }
-
-    long Time::GetDateTime()
-    {
-        return m_time.time;
-    }
-
-    void Time::SetDataTime(long value)
-    {
-        m_time.time = value;
-    }
-
-    string Time::GetDateStr()
-    {
-        char szTemp[16] = {0};
-        sprintf(szTemp, "%04d-%02d-%02d", GetYear(), GetMonth(), GetDay());
-        return szTemp;
-    }
-
-    string Time::GetTimeStr(bool bMs /*= false*/)
-    {
-        char szTemp[32] = {0};
-        if (bMs)
-            sprintf(szTemp, "%02d:%02d:%02d.%03d", GetHour(), GetMinute(), GetSecond(), GetMilliSec());
-        else
-            sprintf(szTemp, "%02d:%02d:%02d", GetHour(), GetMinute(), GetSecond());
-        return szTemp;
-    }
-
-    string Time::GetDateTimeStr(bool bMs /*= false*/)
-    {
-        return GetDateStr() + " " + GetTimeStr(bMs);
-    }
-
-    /***************************Timer64*****************************************/
-
-
 }

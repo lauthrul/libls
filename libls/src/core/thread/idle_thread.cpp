@@ -40,7 +40,7 @@ namespace lslib
     _ldword GenerateUniqueID()
     {
         static int nIndex = 0;
-        return Time::GetCurDateTime().GetDateTime() + nIndex++;
+        return (_ldword)Time::CurrentTimeStamp() + nIndex++;
     }
 
     string DumpTaskInfo(const SIdleThreadTask* pTask, bool bBrief /*= false*/)
@@ -232,7 +232,7 @@ namespace lslib
     {
 #ifdef _MSC_VER
         static Time stm;
-        Time tm = Time::GetCurDateTime();
+        Time tm;
         if (tm.BetweenAllMilliSec(stm) < 10) // retry cb notify every 10 ms
             return;
         stm = tm;

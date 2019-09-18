@@ -91,17 +91,13 @@ namespace lslib
         virtual int HandleMessage(msgid_t msgid, wparam_t wparam, lparam_t lparam);
 
     private:
-// #ifdef _MSC_VER
-//         static unsigned __stdcall _ThreadEntry(void* pParam);
-// #else
         static void* _ThreadEntry(void* pParam);
-// #endif
 
     protected:
         EThreadState m_eThreadState;
         CMutexLock m_mutexMsgs;
         map<int, list<msg_t> > m_mapMsgs;// <level, list<msg_t>>
-        long m_lDumpTimeStamp;
+        time_t m_tDumpTimeStamp;
 
 #ifdef _MSC_VER
         int m_nPriority;

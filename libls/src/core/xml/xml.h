@@ -9,7 +9,7 @@ namespace lslib
 {
     typedef TiXmlElement XmlNode;
 
-    /// @brief XML相关操作API
+    /// @brief XML相关操作
     class LSLIB_API Xml
     {
     public:

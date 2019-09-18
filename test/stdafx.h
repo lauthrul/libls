@@ -7,8 +7,11 @@
 
 #include "targetver.h"
 
+#pragma warning(disable:4251)
+#pragma warning(disable:4805)
+#pragma warning(disable:4800)
+#pragma warning(disable:4996)
 
-// TODO: 在此处引用程序需要的其他头文件
 #ifdef __MINGW32__
 #else
 #define USE_LOG4CXX

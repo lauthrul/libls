@@ -271,7 +271,7 @@ namespace lslib
             //////////////////////////////////////////////////////////////////////////
 
 label_exit:
-            vResult.nTimeSpend = Time::GetCurDateTime().BetweenAllMilliSec(tmStart);
+            vResult.nTimeSpend = Time().BetweenAllMilliSec(tmStart);
             strText = DumpResultText(&vResult);
             DEBUG_LOG(g_netlogger, "finish http get[%s], result[%s]", vParam.strUrl.c_str(), strText.c_str());
 
@@ -309,7 +309,7 @@ label_exit:
             //////////////////////////////////////////////////////////////////////////
 
 label_exit:
-            vResult.nTimeSpend = Time::GetCurDateTime().BetweenAllMilliSec(tmStart);
+            vResult.nTimeSpend = Time().BetweenAllMilliSec(tmStart);
             strText = DumpResultText(&vResult);
             DEBUG_LOG(g_netlogger, "finish http post[%s], result[%s]", vParam.strUrl.c_str(), strText.c_str());
 
@@ -477,7 +477,7 @@ label_exit:
             //////////////////////////////////////////////////////////////////////////
 
 label_exit:
-            vResult.nTimeSpend = Time::GetCurDateTime().BetweenAllMilliSec(tmStart);
+            vResult.nTimeSpend = Time().BetweenAllMilliSec(tmStart);
             strText = DumpResultText(&vResult);
             DEBUG_LOG(g_netlogger, "finish http download[%s], result[%s]", strRequest.c_str(), strText.c_str());
 
@@ -579,7 +579,7 @@ label_exit:
             //////////////////////////////////////////////////////////////////////////
 
 label_exit:
-            vResult.nTimeSpend = Time::GetCurDateTime().BetweenAllMilliSec(tmStart);
+            vResult.nTimeSpend = Time().BetweenAllMilliSec(tmStart);
             strText = DumpResultText(&vResult);
             DEBUG_LOG(g_netlogger, "finish http upload[%s], result[%s]", vParam.strUrl.c_str(), strText.c_str());
 

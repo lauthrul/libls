@@ -459,10 +459,8 @@ namespace lslib
             return replace(str.c_str(), needle.c_str(), replacement.c_str(), index, counts);
         }
 
-        LSLIB_API string format(_lpcstr pfmt, ...)
+        LSLIB_API string format(_lpcstr pfmt, const va_list& args)
         {
-            va_list args;
-            va_start(args, pfmt);
 #ifdef WIN32
             int len = vsnprintf(NULL, 0, pfmt, args);
             char* pbuf = (char*)malloc(len + 1);
@@ -472,9 +470,17 @@ namespace lslib
             char* pbuf = NULL;
             vasprintf(&pbuf, pfmt, args);
 #endif
-            va_end(args);
-            string strret = pbuf;
+            string str = pbuf;
             delete[] pbuf;
+            return str;
+        }
+
+        LSLIB_API string format(_lpcstr pfmt, ...)
+        {
+            va_list args;
+            va_start(args, pfmt);
+            string strret = format(pfmt, args);
+            va_end(args);
             return strret;
         }
 
@@ -482,18 +488,8 @@ namespace lslib
         {
             va_list args;
             va_start(args, pfmt);
-#ifdef WIN32
-            int len = vsnprintf(NULL, 0, pfmt, args);
-            char* pbuf = (char*)malloc(len + 1);
-            memset(pbuf, 0, len + 1);
-            vsnprintf(pbuf, len, pfmt, args);
-#else
-            char* pbuf = NULL;
-            vasprintf(&pbuf, pfmt, args);
-#endif
+            str += format(pfmt, args);
             va_end(args);
-            str += pbuf;
-            delete[] pbuf;
             return str;
         }
 
@@ -577,6 +573,17 @@ namespace lslib
         {
             string str;
             for (size_t i = 0; i < data.size(); i++)
+            {
+                str += byte_to_hex_char((data[i] & 0xf0) >> 4);
+                str += byte_to_hex_char(data[i] & 0x0f);
+            }
+            return str;
+        }
+
+        LSLIB_API string byte_array_to_hex_str(_lbyte data[], int len)
+        {
+            string str;
+            for (size_t i = 0; i < len; i++)
             {
                 str += byte_to_hex_char((data[i] & 0xf0) >> 4);
                 str += byte_to_hex_char(data[i] & 0x0f);

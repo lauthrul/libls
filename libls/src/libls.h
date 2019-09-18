@@ -140,3 +140,7 @@ using namespace std;
 #ifndef MIN
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #endif
+
+#ifndef CLAMP
+#define CLAMP(x, a, b) (MIN(b, MAX(a, x)))
+#endif

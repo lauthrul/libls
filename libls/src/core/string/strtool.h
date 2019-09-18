@@ -9,7 +9,7 @@ namespace lslib
 
     //////////////////////////////////////////////////////////////////////////
     /// @brief string的封装类
-    /// @deprecated 谨慎使用
+    /// @note 谨慎使用
     class LSLIB_API lstring
     {
     public:
@@ -26,7 +26,7 @@ namespace lslib
     };
 
     //////////////////////////////////////////////////////////////////////////
-    /// @brief 字符串操作相关API
+    /// @brief 字符串操作相关
     namespace strtool
     {
         /// 判断字符串是否为空
@@ -228,6 +228,11 @@ namespace lslib
 
         /// @brief 格式化字符串
         /// @param pfmt 将要格式化成的字符串格式
+        /// @param args 可变参列表，与pfmt格式一一对应
+        LSLIB_API string format(_lpcstr pfmt, const va_list& args);
+
+        /// @brief 格式化字符串
+        /// @param pfmt 将要格式化成的字符串格式
         /// @param ...  可变参数，与pfmt格式一一对应
         LSLIB_API string format(_lpcstr pfmt, ...);
 
@@ -273,5 +278,10 @@ namespace lslib
         /// @brief 将字节数组转为16进制字符串
         /// @details 如 { 0xda, 0x3f, 0xed, 0x13, 0x4a } -> "da3fed134a"
         LSLIB_API string byte_array_to_hex_str(_lbyte_array data);
+
+        /// @brief 将字节数组转为16进制字符串
+        /// @details 如 { 0xda, 0x3f, 0xed, 0x13, 0x4a } -> "da3fed134a"
+        LSLIB_API string byte_array_to_hex_str(_lbyte data[], int len);
+
     }
 }

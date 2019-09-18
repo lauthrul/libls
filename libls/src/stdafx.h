@@ -17,6 +17,8 @@
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // 某些 CString 构造函数将是显式的
 
 
+#pragma warning(disable:4251)
+#pragma warning(disable:4805)
 #pragma warning(disable:4800)
 #pragma warning(disable:4996)
 

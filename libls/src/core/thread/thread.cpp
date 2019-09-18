@@ -7,7 +7,7 @@ using namespace lslib::logger;
 namespace lslib
 {
 
-    CThread::CThread(bool bSuspend) : m_lDumpTimeStamp(0)
+    CThread::CThread(bool bSuspend) : m_tDumpTimeStamp(0)
     {
 #ifdef _MSC_VER
         if (bSuspend)
@@ -242,11 +242,11 @@ namespace lslib
 
     void CThread::DumpThreadInfo()
     {
-        long stnow = Time::GetCurDateTime().GetDateTime();
-        if (stnow - m_lDumpTimeStamp < 10)  return; // every 10 second
+        time_t stnow = Time::CurrentTimeStamp();
+        if (stnow - m_tDumpTimeStamp < 10)  return; // every 10 second
 
         OnDumpThreadInfo();
-        m_lDumpTimeStamp = stnow;
+        m_tDumpTimeStamp = stnow;
     }
 
     void CThread::OnDumpThreadInfo()

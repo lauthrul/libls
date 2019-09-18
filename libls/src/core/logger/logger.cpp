@@ -36,17 +36,8 @@ namespace lslib
 
             va_list args;
             va_start(args, threadId); // last fixed param
-
             char* format = va_arg(args, char*); // first arg
-#ifdef WIN32
-            int len = vsnprintf(NULL, 0, format, args); // next args
-            char* pbuf = (char*)malloc(len + 1);
-            memset(pbuf, 0, len + 1);
-            vsnprintf(pbuf, len, format, args);
-#else
-            char* pbuf = NULL;
-            vasprintf(&pbuf, format, args);
-#endif
+            string str = strtool::format(format, args);
             va_end(args);
 
             ::log4cxx::spi::LocationInfo location(file, function, line);
@@ -54,40 +45,145 @@ namespace lslib
             {
                 case LOG_LEVEL_FATAL:
                     if (logger->isFatalEnabled())
-                        logger->forcedLog(::log4cxx::Level::getFatal(), pbuf, location);
+                        logger->forcedLog(::log4cxx::Level::getFatal(), str, location);
                     break;
                 case LOG_LEVEL_ERROR:
                     if (logger->isErrorEnabled())
-                        logger->forcedLog(::log4cxx::Level::getError(), pbuf, location);
+                        logger->forcedLog(::log4cxx::Level::getError(), str, location);
                     break;
                 case LOG_LEVEL_WARN:
                     if (logger->isWarnEnabled())
-                        logger->forcedLog(::log4cxx::Level::getWarn(), pbuf, location);
+                        logger->forcedLog(::log4cxx::Level::getWarn(), str, location);
                     break;
                 case LOG_LEVEL_INFO:
                     if (logger->isInfoEnabled())
-                        logger->forcedLog(::log4cxx::Level::getInfo(), pbuf, location);
+                        logger->forcedLog(::log4cxx::Level::getInfo(), str, location);
                     break;
                 case LOG_LEVEL_DEBUG:
                     if (logger->isDebugEnabled())
-                        logger->forcedLog(::log4cxx::Level::getDebug(), pbuf, location);
+                        logger->forcedLog(::log4cxx::Level::getDebug(), str, location);
                     break;
                 case LOG_LEVEL_TRACE:
                     if (logger->isTraceEnabled())
-                        logger->forcedLog(::log4cxx::Level::getTrace(), pbuf, location);
+                        logger->forcedLog(::log4cxx::Level::getTrace(), str, location);
                     break;
-
-//                 case LOG_LEVEL_FATAL: LOG4CXX_FATAL(logger, pbuf); break;
-//                 case LOG_LEVEL_ERROR: LOG4CXX_ERROR(logger, pbuf); break;
-//                 case LOG_LEVEL_WARN: LOG4CXX_WARN(logger, pbuf); break;
-//                 case LOG_LEVEL_INFO: LOG4CXX_INFO(logger, pbuf); break;
-//                 case LOG_LEVEL_DEBUG: LOG4CXX_DEBUG(logger, pbuf); break;
-//                 case LOG_LEVEL_TRACE: LOG4CXX_TRACE(logger, pbuf); break;
             }
-            free(pbuf);
         }
 
 #else
+        //////////////////////////////////////////////////////////////////////////
+        struct SLogLayout
+        {
+            string strName;
+            string strFormat;
+        };
+
+        enum ELogAppenderType
+        {
+            APPENDER_CONSOLE, APPENDER_FILE
+        };
+
+        enum ELogAppenderRoolling
+        {
+            NO_ROLLING,
+            FILE_ROLLING,
+            DAILY_ROLLING
+        };
+
+        struct SLogAppender
+        {
+            string strName;
+            ELogAppenderType eType;
+            string strFile;
+            ELogAppenderRoolling eRooling;
+            string strDatePattern;
+            int nMaxFileSize;
+            int nMaxFileCounts;
+
+            // program data
+            string strLogDate;
+            int nLogFileIndex;
+            int nWritedSize;
+            FILE* fp;
+
+            SLogAppender() : nLogFileIndex(-1), nWritedSize(-1), fp(NULL) {};
+        };
+
+        struct SLogger
+        {
+            string strName;
+            ELOG_LEVEL eLevel;
+            SLogLayout layout;
+            SLogAppender appender;
+        };
+
+        struct SLogConfig
+        {
+            string m_strFile;
+            map<string, SLogLayout> m_mapLayouts;
+            map<string, SLogAppender> m_mapAppenders;
+            map<string, SLogger> m_mapLogger;
+
+            SLogConfig();
+            SLogConfig(_lpcstr lpstrFilePath);
+
+            bool Parse();
+            bool Parse(_lpcstr lpstrFilePath);
+
+            SLogLayout* GetLayout(_lpcstr name);
+            SLogAppender* GetAppender(_lpcstr name);
+            SLogger* GetLogger(_lpcstr name);
+        };
+
+        struct SLogEntity
+        {
+            _loggerptr logger;
+            ELOG_LEVEL level;
+            string file;
+            int line;
+            string function;
+            int threadId;
+            string msg;
+        };
+        declare_stl_obj(SLogEntity);
+
+        //////////////////////////////////////////////////////////////////////////
+        class CLogManager : public CThread
+        {
+        public:
+            CLogManager();
+            virtual ~CLogManager();
+
+        public:
+            virtual _lpcstr GetName() { return "CLogManager"; }
+            virtual void OnExecute();
+
+        public:
+            static void Init(_lpcstr configFile);
+            static bool IsInited();
+            static void Destroy();
+            static _loggerptr GetLogger(_lpcstr lpstrLoggerName);
+            static void SetLogLevel(_loggerptr pLogger, ELOG_LEVEL eLevel);
+            static void Log(_loggerptr logger, ELOG_LEVEL level, _lpcstr file, int line, _lpcstr function, int threadId, ...);
+            static void Log(const SLogEntity& entity);
+
+        private:
+            static bool m_bInited;
+            static SLogConfig m_logConfig;
+            static SLogEntity_list m_lstLogEntitysTmp;
+            static SLogEntity_list m_lstLogEntitys;
+            static CMutexLock m_mtxLogEntityTmp;
+            static CMutexLock m_mtxLogEntity;
+            static Time m_tmStart;
+        };
+
+        bool CLogManager::m_bInited = false;
+        SLogConfig CLogManager::m_logConfig;
+        SLogEntity_list CLogManager::m_lstLogEntitysTmp;
+        SLogEntity_list CLogManager::m_lstLogEntitys;
+        CMutexLock CLogManager::m_mtxLogEntityTmp;
+        CMutexLock CLogManager::m_mtxLogEntity;
+        Time CLogManager::m_tmStart;
 
         //////////////////////////////////////////////////////////////////////////
         SLogConfig::SLogConfig()
@@ -173,10 +269,10 @@ namespace lslib
                         string writeTime = os::get_file_attr(appender.strFile.c_str()).writeTime;
                         if (!writeTime.empty())
                         {
-                            Time tm; tm.Parser(writeTime.c_str());
+                            Time tm; tm.Parse(writeTime.c_str());
                             appender.strLogDate = tm.GetDateStr();
                         }
-                        else appender.strLogDate = Time::GetCurDateStr();
+                        else appender.strLogDate = Time::CurrentDateStr();
                     }
 
                     if (appender.nWritedSize < 0)
@@ -252,14 +348,6 @@ namespace lslib
 
         //////////////////////////////////////////////////////////////////////////
 
-        bool CLogManager::m_bInited = false;
-        SLogConfig CLogManager::m_logConfig;
-        list<CLogManager::SLogEntity> CLogManager::m_lstLogEntitysTmp;
-        list<CLogManager::SLogEntity> CLogManager::m_lstLogEntitys;
-        CMutexLock CLogManager::m_mtxLogEntityTmp;
-        CMutexLock CLogManager::m_mtxLogEntity;
-        static Time m_tmStart;
-
         CLogManager::CLogManager() : CThread(false)
         {
         }
@@ -304,7 +392,7 @@ namespace lslib
 
         void CLogManager::Log(_loggerptr logger, ELOG_LEVEL level, _lpcstr file, int line, _lpcstr function, int threadId, ...)
         {
-            if (!m_bInited || logger == NULL) return;
+            if (/*!m_bInited || */logger == NULL) return;
 
             m_mtxLogEntityTmp.Lock();
             {
@@ -318,24 +406,21 @@ namespace lslib
 
                 va_list args;
                 va_start(args, threadId); // last fixed param
-
                 char* format = va_arg(args, char*); // first arg
-#ifdef WIN32
-                int len = vsnprintf(NULL, 0, format, args); // next args
-                char* pbuf = (char*)malloc(len + 1);
-                memset(pbuf, 0, len + 1);
-                vsnprintf(pbuf, len, format, args);
-#else
-                char* pbuf = NULL;
-                vasprintf(&pbuf, format, args);
-#endif
+                entity.msg = strtool::format(format, args);
                 va_end(args);
-
-                entity.msg = pbuf;
-                free(pbuf);
 
                 m_lstLogEntitysTmp.push_back(entity);
             }
+            m_mtxLogEntityTmp.Unlock();
+        }
+
+        void CLogManager::Log(const SLogEntity& entity)
+        {
+            if (/*!m_bInited || */entity.logger == NULL) return;
+
+            m_mtxLogEntityTmp.Lock();
+            m_lstLogEntitysTmp.push_back(entity);
             m_mtxLogEntityTmp.Unlock();
         }
 
@@ -379,7 +464,7 @@ namespace lslib
                                 case DAILY_ROLLING:
                                     {
                                         // rolling
-                                        str = Time::GetCurDateStr();
+                                        str = Time::CurrentDateStr();
                                         if (str > appender.strLogDate)
                                         {
                                             if (appender.fp != NULL) fclose(appender.fp);
@@ -456,6 +541,25 @@ namespace lslib
                 m_lstLogEntitys.erase(it++);
             }
             m_mtxLogEntity.Unlock();
+        }
+
+        void Log(_loggerptr logger, ELOG_LEVEL level, _lpcstr file, int line, _lpcstr function, int threadId, ...)
+        {
+            SLogEntity entity;
+            entity.logger = logger;
+            entity.level = level;
+            entity.file = file;
+            entity.line = line;
+            entity.function = function;
+            entity.threadId = threadId;
+
+            va_list args;
+            va_start(args, threadId); // last fixed param
+            char* format = va_arg(args, char*); // first arg
+            entity.msg = strtool::format(format, args);
+            va_end(args);
+
+            CLogManager::Log(entity);
         }
 
 #endif // USE_LOG4CXX

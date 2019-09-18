@@ -4,12 +4,7 @@
 
 #include "curl/curl.h"
 
-namespace lslib
-{
-    /// 网络相关API
-    namespace net
-    {
-        //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 #define TRYCOUNT_HTTPGET                2
 #define TRYCOUNT_HTTPPOST               2
@@ -24,6 +19,12 @@ namespace lslib
 
 #define GZIP_THRESHOLD_SIZE             (100*1024)
 
+//////////////////////////////////////////////////////////////////////////
+namespace lslib
+{
+    /// 网络相关
+    namespace net
+    {
         //////////////////////////////////////////////////////////////////////////
         /// HTTP请求类型
         enum EHttpMethod
@@ -264,7 +265,6 @@ namespace lslib
             /// @return 返回执行结果 参考@ref SHttpResult
             static SHttpResult      UploadFile(const SHttpUploadParam& vParam);
 
-            // for debug print
         protected:
             static int              Perform(CURL* pCurl, const SHttpParam& vParam, __inout__ SHttpResult& vResult);
             static string           DumpParamText(SHttpParam* pParam);
