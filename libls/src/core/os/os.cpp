@@ -382,6 +382,9 @@ namespace lslib
         LSLIB_API string get_module_file_path()
         {
 #ifdef _WIN32
+//             char szModuleFileName[MAX_PATH] = {0};
+//             GetModuleFileName(NULL, szModuleFileName, MAX_PATH - 1);
+//             return szModuleFileName;
             return _pgmptr;
 #else
             char arg1[20];

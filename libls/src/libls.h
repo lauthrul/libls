@@ -1,4 +1,4 @@
-// Copyright (c) 2019 lauthrul(laturhul@foxmail.com)
+// Copyright (c) 2019 lauthrul(lauthrul@foxmail.com)
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or
