@@ -129,29 +129,8 @@
     <ClCompile Include="src\core\process\process.cpp">
       <Filter>core\process</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\xml\tinystr.cpp">
-      <Filter>core\xml</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\xml\tinyxml.cpp">
-      <Filter>core\xml</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\xml\tinyxmlerror.cpp">
-      <Filter>core\xml</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\xml\tinyxmlparser.cpp">
-      <Filter>core\xml</Filter>
-    </ClCompile>
     <ClCompile Include="src\core\xml\xml.cpp">
       <Filter>core\xml</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\json\json_reader.cpp">
-      <Filter>core\json</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\json\json_value.cpp">
-      <Filter>core\json</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\json\json_writer.cpp">
-      <Filter>core\json</Filter>
     </ClCompile>
     <ClCompile Include="src\core\json\json_x.cpp">
       <Filter>core\json</Filter>
@@ -251,43 +230,10 @@
     <ClInclude Include="src\core\process\process.h">
       <Filter>core\process</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\xml\tinystr.h">
-      <Filter>core\xml</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\xml\tinyxml.h">
-      <Filter>core\xml</Filter>
-    </ClInclude>
     <ClInclude Include="src\core\xml\xml.h">
       <Filter>core\xml</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\json\autolink.h">
-      <Filter>core\json</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\json\config.h">
-      <Filter>core\json</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\json\features.h">
-      <Filter>core\json</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\json\forwards.h">
-      <Filter>core\json</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\json\json.h">
-      <Filter>core\json</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\json\json_batchallocator.h">
-      <Filter>core\json</Filter>
-    </ClInclude>
     <ClInclude Include="src\core\json\json_x.h">
-      <Filter>core\json</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\json\reader.h">
-      <Filter>core\json</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\json\value.h">
-      <Filter>core\json</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\json\writer.h">
       <Filter>core\json</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\cmdline.h">
@@ -305,17 +251,6 @@
     <ClInclude Include="src\utils\cfghandler.h">
       <Filter>utils</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\core\json\json_internalarray.inl">
-      <Filter>core\json</Filter>
-    </None>
-    <None Include="src\core\json\json_internalmap.inl">
-      <Filter>core\json</Filter>
-    </None>
-    <None Include="src\core\json\json_valueiterator.inl">
-      <Filter>core\json</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

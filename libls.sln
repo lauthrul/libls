@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cfgtool", "cfgtool\cfgtool.vcxproj", "{EDE241A2-E400-4AFD-A3F4-7AD0D6FF7A07}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libls_util", "libls_util\libls_util.vcxproj", "{43DFE974-3784-4A9C-ACFB-6B42C7C3D5F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,10 @@ Global
 		{EDE241A2-E400-4AFD-A3F4-7AD0D6FF7A07}.Debug|Win32.Build.0 = Debug|Win32
 		{EDE241A2-E400-4AFD-A3F4-7AD0D6FF7A07}.Release|Win32.ActiveCfg = Release|Win32
 		{EDE241A2-E400-4AFD-A3F4-7AD0D6FF7A07}.Release|Win32.Build.0 = Release|Win32
+		{43DFE974-3784-4A9C-ACFB-6B42C7C3D5F4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{43DFE974-3784-4A9C-ACFB-6B42C7C3D5F4}.Debug|Win32.Build.0 = Debug|Win32
+		{43DFE974-3784-4A9C-ACFB-6B42C7C3D5F4}.Release|Win32.ActiveCfg = Release|Win32
+		{43DFE974-3784-4A9C-ACFB-6B42C7C3D5F4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

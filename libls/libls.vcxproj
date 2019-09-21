@@ -54,8 +54,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\src\core;$(ProjectDir)\src\utils;$(ProjectDir)\3rd-party\include;$(ProjectDir)\3rd-party\include\iconv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LSLIB_EXPORTS;JSON_DLL_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libls_util\src;$(ProjectDir)\src;$(ProjectDir)\3rd-party\include;$(ProjectDir)\3rd-party\include\iconv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LSLIB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -64,8 +64,8 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>log4cxx.lib;libeay32.lib;libcurld.lib;version.lib;libiconv.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)\3rd-party\bin\log4cxx\$(Configuration)\;$(ProjectDir)\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;$(ProjectDir)\3rd-party\bin\openssl\dll\lib;$(ProjectDir)\3rd-party\bin\iconv\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>log4cxx.lib;libeay32.lib;libcurld.lib;version.lib;libiconv.lib;psapi.lib;libls_util.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libls_util\bin\$(Configuration)\;$(ProjectDir)\3rd-party\bin\log4cxx\$(Configuration)\;$(ProjectDir)\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;$(ProjectDir)\3rd-party\bin\openssl\dll\lib;$(ProjectDir)\3rd-party\bin\iconv\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -80,8 +80,8 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\src\core;$(ProjectDir)\src\utils;$(ProjectDir)\3rd-party\include;$(ProjectDir)\3rd-party\include\iconv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LSLIB_EXPORTS;JSON_DLL_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libls_util\src;$(ProjectDir)\src;$(ProjectDir)\3rd-party\include;$(ProjectDir)\3rd-party\include\iconv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LSLIB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -89,8 +89,8 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>log4cxx.lib;libeay32.lib;libcurl.lib;version.lib;libiconv.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)\3rd-party\bin\log4cxx\$(Configuration)\;$(ProjectDir)\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;$(ProjectDir)\3rd-party\bin\openssl\dll\lib;$(ProjectDir)\3rd-party\bin\iconv\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>log4cxx.lib;libeay32.lib;libcurl.lib;version.lib;libiconv.lib;psapi.lib;libls_util.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libls_util\bin\$(Configuration)\;$(ProjectDir)\3rd-party\bin\log4cxx\$(Configuration)\;$(ProjectDir)\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;$(ProjectDir)\3rd-party\bin\openssl\dll\lib;$(ProjectDir)\3rd-party\bin\iconv\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -153,24 +153,6 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\core\json\json_reader.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\core\json\json_value.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\core\json\json_writer.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="src\core\json\json_x.cpp" />
     <ClCompile Include="src\core\lock\lock.cpp" />
     <ClCompile Include="src\core\logger\logger.cpp" />
@@ -184,36 +166,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClCompile Include="src\core\thread\idle_thread.cpp" />
     <ClCompile Include="src\core\thread\thread.cpp" />
     <ClCompile Include="src\core\time\timer.cpp" />
-    <ClCompile Include="src\core\xml\tinystr.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\core\xml\tinyxml.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\core\xml\tinyxmlerror.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\core\xml\tinyxmlparser.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\core\xml\xml.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="src\core\xml\xml.cpp" />
     <ClCompile Include="src\core\zip\miniz\mzip.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -260,16 +213,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClInclude Include="src\core\crypto\sha1.h" />
     <ClInclude Include="src\core\crypto\sha256.h" />
     <ClInclude Include="src\core\crypto\url_encode.h" />
-    <ClInclude Include="src\core\json\autolink.h" />
-    <ClInclude Include="src\core\json\config.h" />
-    <ClInclude Include="src\core\json\features.h" />
-    <ClInclude Include="src\core\json\forwards.h" />
-    <ClInclude Include="src\core\json\json.h" />
-    <ClInclude Include="src\core\json\json_batchallocator.h" />
     <ClInclude Include="src\core\json\json_x.h" />
-    <ClInclude Include="src\core\json\reader.h" />
-    <ClInclude Include="src\core\json\value.h" />
-    <ClInclude Include="src\core\json\writer.h" />
     <ClInclude Include="src\core\lock\lock.h" />
     <ClInclude Include="src\core\logger\logger.h" />
     <ClInclude Include="src\core\math\math.h" />
@@ -283,8 +227,6 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClInclude Include="src\core\thread\thread.h" />
     <ClInclude Include="src\core\time\timer.h" />
     <ClInclude Include="src\core\type.h" />
-    <ClInclude Include="src\core\xml\tinystr.h" />
-    <ClInclude Include="src\core\xml\tinyxml.h" />
     <ClInclude Include="src\core\xml\xml.h" />
     <ClInclude Include="src\core\zip\miniz\miniz.h" />
     <ClInclude Include="src\core\zip\miniz\mzip.h" />
@@ -297,11 +239,6 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClInclude Include="src\utils\cfghandler.h" />
     <ClInclude Include="src\utils\cmdline.h" />
     <ClInclude Include="src\utils\utils.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\core\json\json_internalarray.inl" />
-    <None Include="src\core\json\json_internalmap.inl" />
-    <None Include="src\core\json\json_valueiterator.inl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

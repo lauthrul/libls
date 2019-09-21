@@ -1,11 +1,10 @@
 #include "stdafx.h"
 #include "thread.h"
-#include "logger/logger.h"
-using namespace lslib::logger;
 
 //////////////////////////////////////////////////////////////////////////
 namespace lslib
 {
+    using namespace logger;
 
     CThread::CThread(bool bSuspend) : m_tDumpTimeStamp(0)
     {

@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "tinyxml.h"
+#include "xml/tinyxml.h"
 
 namespace lslib
 {

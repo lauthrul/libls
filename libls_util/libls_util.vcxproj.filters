@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src/targetver.h" />
+    <ClInclude Include="src/stdafx.h" />
+    <ClInclude Include="src\json\autolink.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="src\json\config.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="src\json\features.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="src\json\forwards.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="src\json\json.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="src\json\json_batchallocator.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="src\json\reader.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="src\json\value.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="src\json\writer.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xml\tinystr.h">
+      <Filter>xml</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xml\tinyxml.h">
+      <Filter>xml</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src/stdafx.cpp" />
+    <ClCompile Include="src\json\json_reader.cpp">
+      <Filter>json</Filter>
+    </ClCompile>
+    <ClCompile Include="src\json\json_value.cpp">
+      <Filter>json</Filter>
+    </ClCompile>
+    <ClCompile Include="src\json\json_writer.cpp">
+      <Filter>json</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xml\tinystr.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xml\tinyxml.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xml\tinyxmlerror.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xml\tinyxmlparser.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="json">
+      <UniqueIdentifier>{311b6bab-50a8-42b2-a41f-0697cce1a6ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xml">
+      <UniqueIdentifier>{7a971024-5f5f-43e4-a3c7-79071a19cd1c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\json\json_internalarray.inl">
+      <Filter>json</Filter>
+    </None>
+    <None Include="src\json\json_internalmap.inl">
+      <Filter>json</Filter>
+    </None>
+    <None Include="src\json\json_valueiterator.inl">
+      <Filter>json</Filter>
+    </None>
+  </ItemGroup>
+</Project>

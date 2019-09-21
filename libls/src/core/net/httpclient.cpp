@@ -4,7 +4,6 @@
 #ifdef USE_LIBCURL
 
 #include "openssl/crypto.h"
-using namespace lslib::logger;
 
 #ifdef WIN32
 #else
@@ -13,6 +12,8 @@ using namespace lslib::logger;
 
 namespace lslib
 {
+    using namespace logger;
+
     namespace net
     {
         enum_str_begin(EHttpMethod)
