@@ -495,6 +495,7 @@ namespace lslib
 
         LSLIB_API const int split(__out__ string_array& dest, _lpcstr src, _lpcstr patten, bool allow_empty /*= true*/)
         {
+            dest.clear();
             if (is_empty(src)) return 0;
             if (is_empty(patten))
             {

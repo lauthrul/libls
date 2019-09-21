@@ -88,10 +88,7 @@ namespace lslib
                 str = strtool::replace(str, s_slashs[i], get_slash());
             _lchar buf[MAX_PATH] = { 0 };
             strncpy(buf, str.c_str(), MIN(MAX_PATH, str.length()));
-#ifdef _MSC_VER
-            PathMakePretty(buf);
-#else
-#endif
+
             _lpcstr p = buf;
             str.clear();
             while (*p != 0)

@@ -6,9 +6,6 @@ namespace lslib
 {
     using namespace logger;
 
-#define DEFAULT_CRYPT_KEY       "l53d70p3"
-#define DEFAULT_CRYPT_IV        "12345678"
-
     const int FLAG_MODULE_BEGIN = 0x01010101;
     const int FLAG_ITEM_BEGIN   = 0x02020202;
     const int FLAG_ITEM_END     = 0x03030303;

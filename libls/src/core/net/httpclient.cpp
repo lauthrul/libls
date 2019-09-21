@@ -16,10 +16,10 @@ namespace lslib
     namespace net
     {
         enum_str_begin(EHttpMethod)
-            enum_str_item(HTTP_GET)
-            enum_str_item(HTTP_POST)
-            enum_str_item(HTTP_DOWNLOAD)
-            enum_str_item(HTTP_UPLOAD)
+        enum_str_item(HTTP_GET)
+        enum_str_item(HTTP_POST)
+        enum_str_item(HTTP_DOWNLOAD)
+        enum_str_item(HTTP_UPLOAD)
         enum_str_end(EHttpMethod)
 
         //////////////////////////////////////////////////////////////////////////
@@ -418,35 +418,22 @@ label_exit:
                 string strFile = vParam.strFile;
                 if (strFile.empty())
                     strFile = os::path_get_name(vParam.strUrl.c_str());
-                FILE* pFile = NULL;
-                if (infoHeader[0]) pFile = fopen(strFile.c_str(), "ab+" );
-                else pFile = fopen(strFile.c_str(), "wb+" );
-                if (pFile == NULL)
-                {
-                    vResult.nCode = CURLE_WRITE_ERROR;
-                    goto label_exit;
-                }
 
-                pair<FILE*, size_t*> param;
-                param.first = pFile;
-                param.second = (size_t*)&vResult.nDataLen;
-                curl_easy_setopt(pCurl, CURLOPT_WRITEDATA, &param);
-                curl_easy_setopt(pCurl, CURLOPT_WRITEFUNCTION, OnWriteFileData);
+                vector<char> vctRespBuf;
+                curl_easy_setopt(pCurl, CURLOPT_WRITEDATA, (void*)&vctRespBuf);
+                curl_easy_setopt(pCurl, CURLOPT_WRITEFUNCTION, OnWriteData);
 
                 CURLcode ret = CURLE_OK;
                 for (int i = 0; i < TRYCOUNT_DOWNLOAD; i++)
                 {
                     if (infoHeader[0])
                     {
-                        fseek(pFile, 0, SEEK_END);
-                        int nSize = ftell(pFile);
-
+                        int nSize = os::get_file_size(strFile.c_str());
                         if (nSize == infoHeader[1] && infoHeader[1] > 0) //already finished download
                         {
                             INFO_LOG(g_netlogger, "already finished download[%s], size: %d, file size: %d", strRequest.c_str(), nSize, infoHeader[1]);
 
                             vResult.nCode = CURLE_OK;
-                            fclose(pFile);
                             goto label_exit;
                         }
 
@@ -463,14 +450,14 @@ label_exit:
 
                 curl_slist_free_all(headers);
                 curl_easy_cleanup(pCurl);
-                fclose(pFile);
 
-                if (ret != CURLE_OK)
+                if (ret != CURLE_OK || !(vResult.nCode >= 200 && vResult.nCode < 300))
                 {
-                    os::rm(vParam.strFile.c_str());
+                    vResult.strData.assign(vctRespBuf.begin(), vctRespBuf.end());
                 }
                 else
                 {
+                    os::save_buffer_to_file((_lpbyte)vctRespBuf.data(), vctRespBuf.size(), strFile.c_str(), infoHeader[0] ? 1 : 0);
                     vResult.strData = "[file://" + strFile + "]";
                 }
             }
