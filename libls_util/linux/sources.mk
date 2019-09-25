@@ -23,26 +23,10 @@ CPP_DEPS :=
 C_DEPS := 
 HEADERS := 
 
-INCLUDE_PATH := -I../src -I../src/core -I../src/utils -I../../libls_util/src 
+INCLUDE_PATH := -I../src
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-core/crypto \
-core/json \
-core/lock \
-core/logger \
-core/math \
-core \
-core/net \
-core/os \
-core/string \
-core/thread \
-core/time \
-core/task \
-core/xml \
-core/zip/miniz \
-core/zip \
-core/zip/zipunzip \
 . \
-utils \
-
+xml \
+jsonn \

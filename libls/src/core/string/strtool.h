@@ -256,8 +256,24 @@ namespace lslib
         /// @param[in] src          待分割的源字符串
         /// @param[in] patten       分割符
         /// @param[in] allow_empty  分割后是否保存空的分组
+        /// @note 返回值分割后的分组长度
+        LSLIB_API const int split(__out__ string_list &dest, _lpcstr src, _lpcstr patten, bool allow_empty = true);
+
+        /// @brief 分割字符串
+        /// @param[out] dest        保存分割后的分组数据
+        /// @param[in] src          待分割的源字符串
+        /// @param[in] patten       分割符
+        /// @param[in] allow_empty  分割后是否保存空的分组
         /// @return 返回值分割后的分组长度
         LSLIB_API const int split(__out__ string_array& dest, const string& src, const string& patten, bool allow_empty = true);
+
+        /// @brief 分割字符串
+        /// @param[out] dest        保存分割后的分组数据
+        /// @param[in] src          待分割的源字符串
+        /// @param[in] patten       分割符
+        /// @param[in] allow_empty  分割后是否保存空的分组
+        /// @return 返回值分割后的分组长度
+        LSLIB_API const int split(__out__ string_list& dest, const string& src, const string& patten, bool allow_empty = true);
 
         /// @brief 将一个16进制字符转为字节
         /// @details 如 'a' -> 0xa

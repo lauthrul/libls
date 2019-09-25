@@ -4,20 +4,25 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-$(SRC_DIR)/core/json/json_x.cpp 
+$(SRC_DIR)/core/task/TaskAgent.cpp \
+$(SRC_DIR)/core/task/TaskManager.cpp 
 
 HEADERS += \
-$(SRC_DIR)/core/json/json_x.h \
+$(SRC_DIR)/core/task/TaskDefine.h \
+$(SRC_DIR)/core/task/TaskAgent.h \
+$(SRC_DIR)/core/task/TaskManager.h 
 
 OBJS += \
-./core/json/json_x.o 
+./core/task/TaskAgent.o \
+./core/task/TaskManager.o 
 
 CPP_DEPS += \
-./core/json/json_x.d 
+./core/task/TaskAgent.d \
+./core/task/TaskManager.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
-core/json/%.o: $(SRC_DIR)/core/json/%.cpp
+core/task/%.o: $(SRC_DIR)/core/task/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
 	$(GCPP) $(INCLUDE_PATH) -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"

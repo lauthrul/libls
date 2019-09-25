@@ -689,7 +689,11 @@ Reader::decodeString( Token &token, std::string &decoded )
             }
             break;
          default:
-            return addError( "Bad escape sequence in string", token, current );
+             // return addError( "Bad escape sequence in string", token, current );
+
+             // support ansi Chinese. like: ×ØÎ²ù\±¦±¦ (d7 d8 ce b2 f9 5c b1 a6 b1 a6)
+             // or there will be an error throw when meet char 5c ['\']
+             decoded += c;
          }
       }
       else

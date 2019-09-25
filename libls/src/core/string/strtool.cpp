@@ -530,9 +530,25 @@ namespace lslib
             return dest.size();
         }
 
+        LSLIB_API const int split(__out__ string_list &dest, _lpcstr src, _lpcstr patten, bool allow_empty /*= true*/)
+        {
+            string_array arr;
+            split(arr, src, patten, allow_empty);
+            dest.assign(arr.begin(), arr.end());
+            return dest.size();
+        }
+
         LSLIB_API const int split(__out__ string_array& dest, const string& src, const string& patten, bool allow_empty /*= true*/)
         {
             return split(dest, src.c_str(), patten.c_str(), allow_empty);
+        }
+
+        LSLIB_API const int split(__out__ string_list& dest, const string& src, const string& patten, bool allow_empty /*= true*/)
+        {
+            string_array arr;
+            split(arr, src, patten, allow_empty);
+            dest.assign(arr.begin(), arr.end());
+            return dest.size();
         }
 
         LSLIB_API _lbyte hex_char_to_byte(_lchar c)

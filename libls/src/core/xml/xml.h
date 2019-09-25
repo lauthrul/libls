@@ -18,10 +18,10 @@ namespace lslib
 
     public:
         /// 解析字符串
-        bool Parse(_lpcstr lpstr);
+        bool Parse(_lpcstr lpstr, TiXmlEncoding encoding = TIXML_DEFAULT_ENCODING);
 
         /// 解析文件
-        bool ParseFile(_lpcstr lpstrFile);
+        bool ParseFile(_lpcstr lpstrFile, TiXmlEncoding encoding = TIXML_DEFAULT_ENCODING);
 
         /// @brief 获取节点
         /// @param pParent      开始获取的父节点

@@ -10,23 +10,8 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include utils/subdir.mk
-# -include core/zip/zipunzip/subdir.mk
--include core/zip/miniz/subdir.mk
--include core/zip/subdir.mk
--include core/xml/subdir.mk
--include core/time/subdir.mk
--include core/thread/subdir.mk
--include core/task/subdir.mk
--include core/string/subdir.mk
--include core/os/subdir.mk
--include core/net/subdir.mk
--include core/math/subdir.mk
--include core/logger/subdir.mk
--include core/lock/subdir.mk
--include core/json/subdir.mk
--include core/crypto/subdir.mk
--include core/subdir.mk
+-include json/subdir.mk
+-include xml/subdir.mk
 -include subdir.mk
 -include objects.mk
 
@@ -56,7 +41,7 @@ ifeq ($(PREFIX),)
 PREFIX := /usr/local
 endif
 
-TARGET := libls.so
+TARGET := libls_util.a
 
 -include ../makefile.defs
 
@@ -84,7 +69,7 @@ all: $(TARGET)
 $(TARGET): $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	$(GCPP) -shared -o "$(TARGET)" $(OBJS) $(USER_OBJS) $(LIBS)
+	ar -rc "$(TARGET)" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
@@ -105,7 +90,6 @@ clean:
 	-@echo ' '
 
 post-build:
-	-cp  -f $(TARGET) ../../test/Debug/
 	-@echo ' '
 
 .PHONY: all install dist clean dependents post-build

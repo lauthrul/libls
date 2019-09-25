@@ -122,6 +122,9 @@ using namespace std;
 #include "core/logger/logger.h"
 #include "core/net/httpclient.h"
 #include "core/thread/idle_thread.h"
+#include "core/task/TaskDefine.h"
+#include "core/task/TaskAgent.h"
+#include "core/task/TaskManager.h"
 #ifdef _MSC_VER
 #include "core/registry/registry.h"
 #include "core/process/process.h"

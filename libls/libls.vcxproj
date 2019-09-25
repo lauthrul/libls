@@ -78,11 +78,9 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(SolutionDir)\libls_util\src;$(ProjectDir)\src;$(ProjectDir)\3rd-party\include;$(ProjectDir)\3rd-party\include\iconv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LSLIB_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -163,6 +161,8 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClCompile Include="src\core\process\process.cpp" />
     <ClCompile Include="src\core\registry\registry.cpp" />
     <ClCompile Include="src\core\string\strtool.cpp" />
+    <ClCompile Include="src\core\task\TaskAgent.cpp" />
+    <ClCompile Include="src\core\task\TaskManager.cpp" />
     <ClCompile Include="src\core\thread\idle_thread.cpp" />
     <ClCompile Include="src\core\thread\thread.cpp" />
     <ClCompile Include="src\core\time\timer.cpp" />
@@ -223,6 +223,9 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClInclude Include="src\core\process\process.h" />
     <ClInclude Include="src\core\registry\registry.h" />
     <ClInclude Include="src\core\string\strtool.h" />
+    <ClInclude Include="src\core\task\TaskAgent.h" />
+    <ClInclude Include="src\core\task\TaskDefine.h" />
+    <ClInclude Include="src\core\task\TaskManager.h" />
     <ClInclude Include="src\core\thread\idle_thread.h" />
     <ClInclude Include="src\core\thread\thread.h" />
     <ClInclude Include="src\core\time\timer.h" />

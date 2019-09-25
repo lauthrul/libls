@@ -1,4 +1,4 @@
-INCLUDE_PATH := 
+INCLUDE_PATH := -I/usr/local/include/libls
 LIB_PATH := 
 LIB := -lls
 

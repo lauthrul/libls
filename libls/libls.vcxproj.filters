@@ -55,6 +55,9 @@
     <Filter Include="utils">
       <UniqueIdentifier>{09e6c49e-015d-419d-aa07-1d58ea53db4d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="core\task">
+      <UniqueIdentifier>{e41906fc-eb6c-416a-a753-3ffad9954a96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\mmr.cpp">
@@ -149,6 +152,12 @@
     </ClCompile>
     <ClCompile Include="src\utils\cfghandler.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\task\TaskAgent.cpp">
+      <Filter>core\task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\task\TaskManager.cpp">
+      <Filter>core\task</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -250,6 +259,15 @@
     </ClInclude>
     <ClInclude Include="src\utils\cfghandler.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\task\TaskAgent.h">
+      <Filter>core\task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\task\TaskDefine.h">
+      <Filter>core\task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\task\TaskManager.h">
+      <Filter>core\task</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

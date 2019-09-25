@@ -12,17 +12,17 @@ namespace lslib
     {
     }
 
-    bool Xml::Parse(_lpcstr lpstr)
+    bool Xml::Parse(_lpcstr lpstr, TiXmlEncoding encoding /*= TIXML_DEFAULT_ENCODING*/)
     {
-        m_xmlDoc.Parse(lpstr);
+        m_xmlDoc.Parse(lpstr, 0, encoding);
         if (m_xmlDoc.ErrorId() != 0) return false;
         m_xmlRoot = m_xmlDoc.RootElement();
         return true;
     }
 
-    bool Xml::ParseFile(_lpcstr lpstrFile)
+    bool Xml::ParseFile(_lpcstr lpstrFile, TiXmlEncoding encoding /*= TIXML_DEFAULT_ENCODING*/)
     {
-        m_xmlDoc.LoadFile(lpstrFile);
+        m_xmlDoc.LoadFile(lpstrFile, encoding);
         if (m_xmlDoc.ErrorId() != 0) return false;
         m_xmlRoot = m_xmlDoc.RootElement();
         return true;

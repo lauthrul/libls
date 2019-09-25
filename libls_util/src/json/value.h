@@ -876,7 +876,7 @@ public: // overridden from ValueArrayAllocator
    /** \brief base class for Value iterators.
     *
     */
-   class JSON_API ValueIteratorBase
+   class ValueIteratorBase
    {
    public:
       typedef unsigned int size_t;
@@ -946,7 +946,7 @@ public: // overridden from ValueArrayAllocator
    /** \brief const iterator for object and array value.
     *
     */
-   class JSON_API ValueConstIterator : public ValueIteratorBase
+   class ValueConstIterator : public ValueIteratorBase
    {
       friend class Value;
    public:
@@ -1004,7 +1004,7 @@ public: // overridden from ValueArrayAllocator
 
    /** \brief Iterator for object and array value.
     */
-   class JSON_API ValueIterator : public ValueIteratorBase
+   class ValueIterator : public ValueIteratorBase
    {
       friend class Value;
    public:

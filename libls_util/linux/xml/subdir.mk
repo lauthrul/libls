@@ -4,20 +4,30 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-$(SRC_DIR)/core/json/json_x.cpp 
+$(SRC_DIR)/xml/tinystr.cpp \
+$(SRC_DIR)/xml/tinyxml.cpp \
+$(SRC_DIR)/xml/tinyxmlerror.cpp \
+$(SRC_DIR)/xml/tinyxmlparser.cpp \
 
 HEADERS += \
-$(SRC_DIR)/core/json/json_x.h \
+$(SRC_DIR)/xml/tinystr.h \
+$(SRC_DIR)/xml/tinyxml.h \
 
 OBJS += \
-./core/json/json_x.o 
+./xml/tinystr.o \
+./xml/tinyxml.o \
+./xml/tinyxmlerror.o \
+./xml/tinyxmlparser.o \
 
 CPP_DEPS += \
-./core/json/json_x.d 
+./xml/tinystr.d \
+./xml/tinyxml.d \
+./xml/tinyxmlerror.d \
+./xml/tinyxmlparser.d \
 
 
 # Each subdirectory must supply rules for building sources it contributes
-core/json/%.o: $(SRC_DIR)/core/json/%.cpp
+xml/%.o: $(SRC_DIR)/xml/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
 	$(GCPP) $(INCLUDE_PATH) -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
