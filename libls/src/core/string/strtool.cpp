@@ -312,6 +312,19 @@ namespace lslib
             return trim(str.c_str(), c);
         }
 
+        LSLIB_API string trim(_lpcstr str, _lpcstr trm)
+        {
+            string str_wrapper = str;
+            str_wrapper = trim_left(str_wrapper.c_str(), trm);
+            str_wrapper = trim_right(str_wrapper.c_str(), trm);
+            return str_wrapper;
+        }
+
+        LSLIB_API string trim(const string& str, const string& trm)
+        {
+            return trim(str.c_str(), trm.c_str());
+        }
+
         LSLIB_API string trim_left(_lpcstr str, _lchar c)
         {
             string str_wrapper = str;
@@ -326,6 +339,19 @@ namespace lslib
             return trim_left(str.c_str(), c);
         }
 
+        LSLIB_API string trim_left(_lpcstr str, _lpcstr trm)
+        {
+            _lpcstr p = str;
+            while (strncmp(p, trm, strlen(trm)) == 0)
+                p += strlen(trm);
+            return p;
+        }
+
+        LSLIB_API string trim_left(const string& str, const string& trm)
+        {
+            return trim_left(str.c_str(), trm.c_str());
+        }
+
         LSLIB_API string trim_right(_lpcstr str, _lchar c)
         {
             string str_wrapper = str;
@@ -338,6 +364,22 @@ namespace lslib
         LSLIB_API string trim_right(const string& str, _lchar c)
         {
             return trim_right(str.c_str(), c);
+        }
+
+        LSLIB_API string trim_right(_lpcstr str, _lpcstr trm)
+        {
+            string str_wrapper = str;
+            string trm_wrapper = trm;
+            reverse(str_wrapper.begin(), str_wrapper.end());
+            reverse(trm_wrapper.begin(), trm_wrapper.end());
+            string strret = trim_left(str_wrapper, trm_wrapper);
+            reverse(strret.begin(), strret.end());
+            return strret;
+        }
+
+        LSLIB_API string trim_right(const string& str, const string& trm)
+        {
+            return trim_right(str.c_str(), trm.c_str());
         }
 
         LSLIB_API string replace(_lpcstr str, _lchar needle, _lchar replacement, size_t index /*= 0*/, int counts /*= -1*/)

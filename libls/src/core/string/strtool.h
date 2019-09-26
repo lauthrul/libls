@@ -170,6 +170,16 @@ namespace lslib
         /// @param c ´ýÈ¥³ýµÄ×Ö·û
         LSLIB_API string trim(const string& str, _lchar c);
 
+        /// @brief È¥³ý×Ö·û´®Ç°ºóÖ¸¶¨µÄ×Ö·û´®
+        /// @param str ´ý²Ù×÷×Ö·û´®
+        /// @param trm ´ýÈ¥³ýµÄ×Ö·û´®
+        LSLIB_API string trim(_lpcstr str, _lpcstr trm);
+
+        /// @brief È¥³ý×Ö·û´®Ç°ºóÖ¸¶¨µÄ×Ö·û´®
+        /// @param str ´ý²Ù×÷×Ö·û´®
+        /// @param trm ´ýÈ¥³ýµÄ×Ö·û´®
+        LSLIB_API string trim(const string& str, const string& trm);
+
         /// @brief È¥³ý×Ö·û´®¿ªÍ·Ö¸¶¨µÄ×Ö·û
         /// @param str ´ý²Ù×÷×Ö·û´®
         /// @param c ´ýÈ¥³ýµÄ×Ö·û
@@ -180,6 +190,16 @@ namespace lslib
         /// @param c ´ýÈ¥³ýµÄ×Ö·û
         LSLIB_API string trim_left(const string& str, _lchar c);
 
+        /// @brief È¥³ý×Ö·û´®¿ªÍ·Ö¸¶¨µÄ×Ö·û´®
+        /// @param str ´ý²Ù×÷×Ö·û´®
+        /// @param trm ´ýÈ¥³ýµÄ×Ö·û´®
+        LSLIB_API string trim_left(_lpcstr str, _lpcstr trm);
+
+        /// @brief È¥³ý×Ö·û´®¿ªÍ·Ö¸¶¨µÄ×Ö·û´®
+        /// @param str ´ý²Ù×÷×Ö·û´®
+        /// @param trm ´ýÈ¥³ýµÄ×Ö·û´®
+        LSLIB_API string trim_left(const string& str, const string& trm);
+
         /// @brief È¥³ý×Ö·û´®½áÎ²Ö¸¶¨µÄ×Ö·û
         /// @param str ´ý²Ù×÷×Ö·û´®
         /// @param c ´ýÈ¥³ýµÄ×Ö·û
@@ -189,6 +209,16 @@ namespace lslib
         /// @param str ´ý²Ù×÷×Ö·û´®
         /// @param c ´ýÈ¥³ýµÄ×Ö·û
         LSLIB_API string trim_right(const string& str, _lchar c);
+
+        /// @brief È¥³ý×Ö·û´®½áÎ²Ö¸¶¨µÄ×Ö·û´®
+        /// @param str ´ý²Ù×÷×Ö·û´®
+        /// @param trm ´ýÈ¥³ýµÄ×Ö·û´®
+        LSLIB_API string trim_right(_lpcstr str, _lpcstr trm);
+
+        /// @brief È¥³ý×Ö·û´®½áÎ²Ö¸¶¨µÄ×Ö·û´®
+        /// @param str ´ý²Ù×÷×Ö·û´®
+        /// @param trm ´ýÈ¥³ýµÄ×Ö·û´®
+        LSLIB_API string trim_right(const string& str, const string& trm);
 
         /// @brief ×Ö·û´®Ìæ»»
         /// @param str ´ý²Ù×÷×Ö·û´®
