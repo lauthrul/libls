@@ -31,10 +31,10 @@ namespace lslib
     struct LSLIB_API SIdleThreadTask
     {
         _ldword                     m_dwUniqueID;
-        _ldword                       m_dwTID;
-        string                     m_strTaskName;
-        _ldword                       m_pParam;  // parameter data
-        _ldword                       m_pResult; // result data
+        _ldword                     m_dwTID;
+        string                      m_strTaskName;
+        _ldword                     m_pParam;  // parameter data
+        _ldword                     m_pResult; // result data
         bool                        m_bKeepSingle;
 
         enum EIdleTaskType {ITT_CLIENT, ITT_STATIC, ITT_THREAD};

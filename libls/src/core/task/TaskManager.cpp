@@ -324,7 +324,7 @@ namespace lslib
 
     void CTaskManager::Notice(SInvoker* pInvoker, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/)
     {
-        if (pInvoker == NULL) return;
+        if (pInvoker == NULL || pInvoker->nMsgID <= 0) return;
 
 #ifdef _MSC_VER
         for (list<HWND>::iterator it = m_lstCBWnds.begin(); it != m_lstCBWnds.end(); it++)
@@ -341,12 +341,14 @@ namespace lslib
         }
     }
 
-    void CTaskManager::Notice(int nTID, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/)
+    void CTaskManager::Notice(int nMsgID, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/)
     {
+        if (nMsgID <= 0) return;
+
 #ifdef _MSC_VER
         for (list<HWND>::iterator it = m_lstCBWnds.begin(); it != m_lstCBWnds.end(); it++)
         {
-            ::PostMessage(*it, nTID, wParam, lParam);
+            ::PostMessage(*it, nMsgID, wParam, lParam);
         }
 #endif // _MSC_VER
 
@@ -354,7 +356,7 @@ namespace lslib
         {
             CThread* pThread = *it;
             if (pThread == NULL) continue;
-            pThread->PostMessage(nTID, wParam, lParam);
+            pThread->PostMessage(nMsgID, wParam, lParam);
         }
     }
 

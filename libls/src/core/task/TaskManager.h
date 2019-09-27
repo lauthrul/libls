@@ -64,7 +64,7 @@ namespace lslib
 
         void                                Recycle(STask* pTask);
         void                                Notice(SInvoker* pInvoker, wparam_t wParam = 0, lparam_t lParam = 0);
-        void                                Notice(int nTID, wparam_t wParam = 0, lparam_t lParam = 0);
+        void                                Notice(int nMsgID, wparam_t wParam = 0, lparam_t lParam = 0);
 
         virtual int                         HandleCustomMessage(msgid_t uMsg, wparam_t wParam, lparam_t lParam, bool& bHandled);
         virtual int                         HandleMessage(msgid_t uMsg, wparam_t wParam, lparam_t lParam);
