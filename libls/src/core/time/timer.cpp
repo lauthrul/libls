@@ -109,7 +109,7 @@ namespace lslib
         }
     }
 
-    Time Time::Parse(lpcstr datetime, bool ms /*= false*/, lpcstr fmt /*= DATE_TIME_FMT*/)
+    Time Time::FromStr(lpcstr datetime, bool ms /*= false*/, lpcstr fmt /*= DATE_TIME_FMT*/)
     {
         Time tm;
         if (strtool::is_empty(datetime)) return tm;

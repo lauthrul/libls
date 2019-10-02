@@ -269,7 +269,7 @@ namespace lslib
                         string writeTime = os::get_file_attr(appender.strFile.c_str()).writeTime;
                         if (!writeTime.empty())
                         {
-                            Time tm; tm.Parse(writeTime.c_str());
+                            Time tm; tm.FromStr(writeTime.c_str());
                             appender.strLogDate = tm.GetDateStr();
                         }
                         else appender.strLogDate = Time::CurrentDateStr();

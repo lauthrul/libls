@@ -329,7 +329,7 @@ namespace lslib
 #ifdef _MSC_VER
         for (list<HWND>::iterator it = m_lstCBWnds.begin(); it != m_lstCBWnds.end(); it++)
         {
-            ::PostMessage(*it, pInvoker->nID, wParam, lParam);
+            ::PostMessage(*it, pInvoker->nMsgID, wParam, lParam);
         }
 #endif // _MSC_VER
 
@@ -337,7 +337,7 @@ namespace lslib
         {
             CThread* pThread = *it;
             if (pThread == NULL) continue;
-            pThread->PostMessage(pInvoker->nID, wParam, lParam);
+            pThread->PostMessage(pInvoker->nMsgID, wParam, lParam);
         }
     }
 

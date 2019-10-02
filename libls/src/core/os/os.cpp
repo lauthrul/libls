@@ -808,7 +808,7 @@ namespace lslib
             ldword size = get_file_size(file);
             if (size <= 0) return NULL;
 
-            lpbyte buf = new byte[size + 1];
+            lpbyte buf = new lbyte[size + 1];
             memset(buf, 0, size + 1);
             FILE* fp = fopen(file, "rb");
             if (fp)

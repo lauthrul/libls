@@ -68,7 +68,7 @@ namespace lslib
         /// @param fmt 指定日期及时间格式
         /// @param ms 是否包含毫秒
         /// @return 返回Time时间
-        static Time Parse(lpcstr datetime, bool ms = false, lpcstr fmt = DATE_TIME_FMT);
+        static Time FromStr(lpcstr datetime, bool ms = false, lpcstr fmt = DATE_TIME_FMT);
 
         /// @brief 根据时间戳创建Time对象
         static Time FromTimeStamp(time_t stamp);
