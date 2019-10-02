@@ -145,7 +145,7 @@ namespace lslib
             int threadId;
             string msg;
         };
-        declare_stl_obj(SLogEntity);
+        define_stl_type(SLogEntity);
 
         //////////////////////////////////////////////////////////////////////////
         class CLogManager : public CThread

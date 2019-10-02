@@ -9,15 +9,15 @@ using namespace std;
 //////////////////////////////////////////////////////////////////////////
 namespace lslib
 {
-#define regist_ls_type(type) \
+#define define_ls_type(type) \
     typedef type l##type; \
     typedef type* lp##type;
 
-    regist_ls_type(void);                       // 1 bytes
-    regist_ls_type(bool);                       // 1 bytes
-    regist_ls_type(int);                        // 4 bytes
-    regist_ls_type(float);                      // 4 bytes
-    regist_ls_type(double);                     // 8 bytes
+    define_ls_type(void);                       // 1 bytes
+    define_ls_type(bool);                       // 1 bytes
+    define_ls_type(int);                        // 4 bytes
+    define_ls_type(float);                      // 4 bytes
+    define_ls_type(double);                     // 8 bytes
 
     typedef unsigned char           lbyte;      // 1 bytes
     typedef lbyte*                  lpbyte;
@@ -43,7 +43,7 @@ namespace lslib
     typedef lwchar*                 lpwstr;
     typedef const lwchar*           lpcwstr;
 
-#define declare_stl_obj(type) \
+#define define_stl_type(type) \
     typedef vector<type>            type##_array; \
     typedef list<type>              type##_list; \
     typedef set<type>               type##_set;
@@ -51,44 +51,44 @@ namespace lslib
 #define declare_stl_map(key_type, type, name) \
     typedef map<key_type, type>     name;
 
-    declare_stl_obj(lvoid);
-    declare_stl_obj(lpvoid);
+    define_stl_type(lvoid);
+    define_stl_type(lpvoid);
 
-    declare_stl_obj(lbool);
-    declare_stl_obj(lpbool);
+    define_stl_type(lbool);
+    define_stl_type(lpbool);
 
-    declare_stl_obj(lint);
-    declare_stl_obj(lpint);
+    define_stl_type(lint);
+    define_stl_type(lpint);
 
-    declare_stl_obj(lfloat);
-    declare_stl_obj(lpfloat);
+    define_stl_type(lfloat);
+    define_stl_type(lpfloat);
 
-    declare_stl_obj(ldouble);
-    declare_stl_obj(lpdouble);
+    define_stl_type(ldouble);
+    define_stl_type(lpdouble);
 
-    declare_stl_obj(luint);
-    declare_stl_obj(lpuint);
+    define_stl_type(luint);
+    define_stl_type(lpuint);
 
-    declare_stl_obj(lbyte);
-    declare_stl_obj(lpbyte);
+    define_stl_type(lbyte);
+    define_stl_type(lpbyte);
 
-    declare_stl_obj(lword);
-    declare_stl_obj(lpword);
+    define_stl_type(lword);
+    define_stl_type(lpword);
 
-    declare_stl_obj(ldword);
-    declare_stl_obj(lpdword);
+    define_stl_type(ldword);
+    define_stl_type(lpdword);
 
-    declare_stl_obj(luchar);
-    declare_stl_obj(lpustr);
-    declare_stl_obj(lpcustr);
+    define_stl_type(luchar);
+    define_stl_type(lpustr);
+    define_stl_type(lpcustr);
 
-    declare_stl_obj(lchar);
-    declare_stl_obj(lpstr);
-    declare_stl_obj(lpcstr);
+    define_stl_type(lchar);
+    define_stl_type(lpstr);
+    define_stl_type(lpcstr);
 
-    declare_stl_obj(lwchar);
-    declare_stl_obj(lpwstr);
-    declare_stl_obj(lpcwstr);
+    define_stl_type(lwchar);
+    define_stl_type(lpwstr);
+    define_stl_type(lpcwstr);
 
 //////////////////////////////////////////////////////////////////////////
 // enum related functions

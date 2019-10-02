@@ -38,7 +38,7 @@ namespace lslib
         /// @param[in]  count   排列数
         /// @param[out] result  保存排列结果
         template <typename T>
-        void permutation(const vector<T>& v, size_t count, __out__ vector<vector<T> >& result)
+        void permutation(vector<T> v, size_t count, __out__ vector<vector<T> >& result)
         {
             assert(count <= v.size());
             do
@@ -59,7 +59,7 @@ namespace lslib
         /// @param[in]  count   组合数
         /// @param[out] result  保存组合结果
         template <typename T>
-        void combination(const vector<T>& v, size_t count, __out__ vector<vector<T> >& result)
+        void combination(vector<T> v, size_t count, __out__ vector<vector<T> >& result)
         {
             assert(count <= v.size());
             vector<bool> bitset(v.size() - count, 0);
