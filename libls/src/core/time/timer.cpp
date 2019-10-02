@@ -349,14 +349,14 @@ namespace lslib
                 temptm->tm_mday = CLAMP(value, 1, 31);
                 break;
             case e_MONTH:
-                temptm->tm_mon = CLAMP(value, 1, 12);
+                temptm->tm_mon = CLAMP(value - 1, 0, 11);
                 break;
             case e_YEAR:
                 temptm->tm_year = CLAMP(value, 1970, 2038) - 1900;
                 break;
         }
         time_t ltime = mktime(temptm);
-        if ( ltime > 0 )
+        if ( ltime >= 0 )
             m_time.time = ltime;
     }
 
