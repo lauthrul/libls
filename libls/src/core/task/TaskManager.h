@@ -35,7 +35,7 @@ namespace lslib
         virtual ~CTaskManager();
 
     public:
-        virtual _lpcstr                     GetName() { return "CTaskManager"; };
+        virtual lpcstr                     GetName() { return "CTaskManager"; };
 
     public:
         // common functions

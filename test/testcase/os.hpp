@@ -4,8 +4,8 @@ using namespace lslib::os;
 void path_test()
 {
     // test for:
-    //     LSLIB_API const _lchar get_slash();
-    //     LSLIB_API const bool is_slash(_lchar c);
+    //     LSLIB_API const lchar get_slash();
+    //     LSLIB_API const bool is_slash(lchar c);
     //     LSLIB_API string path_get_dir(_lpcstr path);
     //     LSLIB_API string path_get_name(_lpcstr path);
     //     LSLIB_API string path_get_filename(_lpcstr path);
@@ -28,7 +28,7 @@ void path_test()
         for (int i = 0; i < 128; i++)
         {
             ret = is_slash(i);
-            if (ret) printf("[%c] is slash: %d\n", (_lchar)i, ret);
+            if (ret) printf("[%c] is slash: %d\n", (lchar)i, ret);
         }
     }
 

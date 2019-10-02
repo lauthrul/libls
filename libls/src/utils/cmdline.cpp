@@ -6,13 +6,13 @@ namespace lslib
 {
     namespace utils
     {
-        int ICmdRuntine::ParserCmdLine(_lpcstr cmd, __out__ string_array& outarr)
+        int ICmdRuntine::ParserCmdLine(lpcstr cmd, __out__ string_array& outarr)
         {
             if (strtool::is_empty(cmd)) return 0;
 
-            _lchar buf[MAX_PATH + 1] = {0};
-            _lpcstr p = cmd;
-            _lpcstr q = p;
+            lchar buf[MAX_PATH + 1] = {0};
+            lpcstr p = cmd;
+            lpcstr q = p;
             do
             {
                 while (isspace(*q)) // skip blank

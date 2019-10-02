@@ -48,19 +48,19 @@ namespace lslib
         /// @brief 获取日期字符串，如2019-09-17
         /// @param fmt 指定日期格式
         /// @return 返回日期字符串
-        string GetDateStr(_lpcstr fmt = DATE_FMT);
+        string GetDateStr(lpcstr fmt = DATE_FMT);
 
         /// @brief 获取当前时间字符串，如16:02:36
         /// @param fmt 指定时间格式
         /// @param ms 是否包含毫秒
         /// @return 返回时间字符串
-        string GetTimeStr(bool ms = false, _lpcstr fmt = TIME_FMT);
+        string GetTimeStr(bool ms = false, lpcstr fmt = TIME_FMT);
 
         /// @brief 获取当前日期及时间字符串，如2019-09-17 16:02:36
         /// @param fmt 指定日期及时间格式
         /// @param ms 是否包含毫秒
         /// @return 返回日期及时间字符串
-        string GetDateTimeStr(bool ms = false, _lpcstr fmt = DATE_TIME_FMT);
+        string GetDateTimeStr(bool ms = false, lpcstr fmt = DATE_TIME_FMT);
 
     public:
         /// @brief 根据字符串解析日期及时间
@@ -68,7 +68,10 @@ namespace lslib
         /// @param fmt 指定日期及时间格式
         /// @param ms 是否包含毫秒
         /// @return 返回Time时间
-        static Time Parse(_lpcstr datetime, bool ms = false, _lpcstr fmt = DATE_TIME_FMT);
+        static Time Parse(lpcstr datetime, bool ms = false, lpcstr fmt = DATE_TIME_FMT);
+
+        /// @brief 根据时间戳创建Time对象
+        static Time FromTimeStamp(time_t stamp);
 
         /// @brief 获取当前时间戳，如1568707393
         static time_t CurrentTimeStamp();
@@ -76,19 +79,19 @@ namespace lslib
         /// @brief 获取当前日期字符串，如2019-09-17
         /// @param fmt 指定日期格式
         /// @return 返回日期字符串
-        static string CurrentDateStr(_lpcstr fmt = DATE_FMT);
+        static string CurrentDateStr(lpcstr fmt = DATE_FMT);
 
         /// @brief 获取当前时间字符串，如16:02:36
         /// @param fmt 指定时间格式
         /// @param ms 是否包含毫秒
         /// @return 返回时间字符串
-        static string CurrentTimeStr(bool ms = false, _lpcstr fmt = TIME_FMT);
+        static string CurrentTimeStr(bool ms = false, lpcstr fmt = TIME_FMT);
 
         /// @brief 获取当前日期及时间字符串，如2019-09-17 16:02:36
         /// @param fmt 指定日期及时间格式
         /// @param ms 是否包含毫秒
         /// @return 返回日期及时间字符串
-        static string CurrentDateTimeStr(bool ms = false, _lpcstr fmt = DATE_TIME_FMT);
+        static string CurrentDateTimeStr(bool ms = false, lpcstr fmt = DATE_TIME_FMT);
 
     public:
         void AddYear(int value);            ///< 增加年

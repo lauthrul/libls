@@ -65,12 +65,12 @@ void test_cfghandler()
     printf("[set] price: %f\n", fValue);
 
     //
-    _ldword len = 0;
-    _lpbyte pbuf = os::get_file_buffer("avatar.jpg", &len);
+    ldword len = 0;
+    lpbyte pbuf = os::get_file_buffer("avatar.jpg", &len);
     CCfgHandler::SetCfg(CFG_MODULE_System, CFG_KEY_AVATAR, pbuf, len, CFG_FILE);
     os::release_file_buffer(pbuf);
 
-    len = CCfgHandler::GetCfgBlob((_lpvoid&)pbuf, CFG_MODULE_System, CFG_KEY_AVATAR, CFG_FILE);
+    len = CCfgHandler::GetCfgBlob((lpvoid&)pbuf, CFG_MODULE_System, CFG_KEY_AVATAR, CFG_FILE);
     os::save_buffer_to_file(pbuf, len, "avatar_new.jpg", 0);
     os::release_file_buffer(pbuf);
 
@@ -93,7 +93,7 @@ void test_cfghandler()
                 value = data.v_str;
                 break;
             case CVT_BLOB:
-                _lbyte_array arr; arr.assign(data.v_blob.begin(), data.v_blob.end());
+                lbyte_array arr; arr.assign(data.v_blob.begin(), data.v_blob.end());
                 value = "[hex] " + strtool::byte_array_to_hex_str(arr);
                 break;
         }

@@ -73,13 +73,13 @@ namespace lslib
     int Time::GetMilliSec()               { return GetTime(e_MILLISEC); }
     time_t Time::GetTimeStamp()           { return m_time.time; }
 
-    string Time::GetDateStr(_lpcstr fmt /*= DATE_FMT*/)
+    string Time::GetDateStr(lpcstr fmt /*= DATE_FMT*/)
     {
         string strfmt = strtool::is_empty(fmt) ? DATE_FMT : fmt;
         return strtool::format(fmt, GetYear(), GetMonth(), GetDay());
     }
 
-    string Time::GetTimeStr(bool ms /*= false*/, _lpcstr fmt /*= TIME_FMT*/)
+    string Time::GetTimeStr(bool ms /*= false*/, lpcstr fmt /*= TIME_FMT*/)
     {
         string strfmt;
         if (ms)
@@ -94,7 +94,7 @@ namespace lslib
         }
     }
 
-    string Time::GetDateTimeStr(bool ms /*= false*/, _lpcstr fmt /*= DATE_TIME_FMT*/)
+    string Time::GetDateTimeStr(bool ms /*= false*/, lpcstr fmt /*= DATE_TIME_FMT*/)
     {
         string strfmt;
         if (ms)
@@ -109,7 +109,7 @@ namespace lslib
         }
     }
 
-    Time Time::Parse(_lpcstr datetime, bool ms /*= false*/, _lpcstr fmt /*= DATE_TIME_FMT*/)
+    Time Time::Parse(lpcstr datetime, bool ms /*= false*/, lpcstr fmt /*= DATE_TIME_FMT*/)
     {
         Time tm;
         if (strtool::is_empty(datetime)) return tm;
@@ -141,22 +141,29 @@ namespace lslib
         return tm;
     }
 
+    Time Time::FromTimeStamp(time_t stamp)
+    {
+        Time tm;
+        tm.SetTimeStamp(stamp);
+        return tm;
+    }
+
     time_t Time::CurrentTimeStamp()
     {
         return Time().GetTimeStamp();
     }
 
-    string Time::CurrentDateStr(_lpcstr fmt /*= DATE_FMT*/)
+    string Time::CurrentDateStr(lpcstr fmt /*= DATE_FMT*/)
     {
         return Time().GetDateStr(fmt);
     }
 
-    string Time::CurrentTimeStr(bool ms /*= false*/, _lpcstr fmt /*= TIME_FMT*/)
+    string Time::CurrentTimeStr(bool ms /*= false*/, lpcstr fmt /*= TIME_FMT*/)
     {
         return Time().GetTimeStr(ms, fmt);
     }
 
-    string Time::CurrentDateTimeStr(bool ms /*= false*/, _lpcstr fmt /*= DATE_TIME_FMT*/)
+    string Time::CurrentDateTimeStr(bool ms /*= false*/, lpcstr fmt /*= DATE_TIME_FMT*/)
     {
         return Time().GetDateTimeStr(ms, fmt);
     }

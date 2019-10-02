@@ -2,7 +2,7 @@
 
 void test_mmr()
 {
-    _lpbyte p = lsalloc(0);
+    lpbyte p = lsalloc(0);
     lsfree(p);
 
     p = lsalloc(9999999999999999999);

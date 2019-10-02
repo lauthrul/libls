@@ -202,7 +202,7 @@ namespace lslib
                     vIdleTask.m_ptrThreadTask = pInvoker->ptrHandler;
                     vIdleTask.m_pcbThread = pTask->pAgent; //
                     vIdleTask.m_bSyncCallback = true; // self thread callback, so set sync as true, in case other task pending callback
-                    vIdleTask.m_pParam = (_ldword)pTask;
+                    vIdleTask.m_pParam = (ldword)pTask;
 
                     if (pTask->pReq != NULL)
                         pTask->pReq->tDealTime = Time::CurrentTimeStamp();
@@ -254,7 +254,7 @@ namespace lslib
     {
         time_t tNow = Time::CurrentTimeStamp();
 
-        _ldword dwSize = 0;
+        ldword dwSize = 0;
         list<STask*>::iterator it = m_lstTrashbin.begin();
         while (it != m_lstTrashbin.end())
         {

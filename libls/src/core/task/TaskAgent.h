@@ -11,7 +11,7 @@ namespace lslib
         int     nMsgID;                                     ///< message id on which will fire after task finish. no trigge if messageID == 0
 
         SInvoker() : nID(0), ptrHandler(NULL), nMsgID(0) {};
-        SInvoker(int tid, _lpcstr name, PTR_THREAD_IDLETHREAD_TASKHANDLER handler, int msgid = 0)
+        SInvoker(int tid, lpcstr name, PTR_THREAD_IDLETHREAD_TASKHANDLER handler, int msgid = 0)
             : nID(tid), strTaskName(name), ptrHandler(handler), nMsgID(msgid)
         {}
     };

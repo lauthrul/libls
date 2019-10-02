@@ -64,7 +64,7 @@ namespace lslib
             return size * nmemb;
         }
 
-        LSLIB_API SHttpUrl CrackUrl(_lpcstr lpstrUrl)
+        LSLIB_API SHttpUrl CrackUrl(lpcstr lpstrUrl)
         {
             SHttpUrl sUrl;
             string strUrl = lpstrUrl;
@@ -217,7 +217,7 @@ namespace lslib
         static CURLSH* s_shobject = NULL;
         string CHttpClient::m_strDefaultAgent;
         string CHttpClient::m_strDefaultCookieFile;
-        void CHttpClient::Init(_lpcstr lpstrDefaultCookieFile /*= NULL*/, _lpcstr lpstrDefaultAgent /*= NULL*/)
+        void CHttpClient::Init(lpcstr lpstrDefaultCookieFile /*= NULL*/, lpcstr lpstrDefaultAgent /*= NULL*/)
         {
             if (s_shobject == NULL)
             {
@@ -235,12 +235,12 @@ namespace lslib
             return (s_shobject != NULL);
         }
 
-        void CHttpClient::SetDefaultCookieFile(_lpcstr lpstrDefaultCookieFile)
+        void CHttpClient::SetDefaultCookieFile(lpcstr lpstrDefaultCookieFile)
         {
             m_strDefaultCookieFile = lpstrDefaultCookieFile ? lpstrDefaultCookieFile : "";
         }
 
-        void CHttpClient::SetDefaultAgent(_lpcstr lpstrDefaultAgent)
+        void CHttpClient::SetDefaultAgent(lpcstr lpstrDefaultAgent)
         {
             m_strDefaultAgent = lpstrDefaultAgent ? lpstrDefaultAgent : "";
         }
@@ -458,7 +458,7 @@ label_exit:
                 }
                 else
                 {
-                    os::save_buffer_to_file((_lpbyte)vctRespBuf.data(), vctRespBuf.size(), strFile.c_str(), infoHeader[0] ? 1 : 0);
+                    os::save_buffer_to_file((lpbyte)vctRespBuf.data(), vctRespBuf.size(), strFile.c_str(), infoHeader[0] ? 1 : 0);
                     vResult.strData = "[file://" + strFile + "]";
                 }
             }

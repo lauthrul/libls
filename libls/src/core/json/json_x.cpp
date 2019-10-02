@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////
 namespace lslib
 {
-    bool CJsonWrapper::Parse(_lpcstr lpstrJson, __out__ CJsonValue* pRoot)
+    bool CJsonWrapper::Parse(lpcstr lpstrJson, __out__ CJsonValue* pRoot)
     {
         if (lpstrJson == NULL)
             return false;
@@ -18,15 +18,15 @@ namespace lslib
         return true;
     }
 
-    bool CJsonWrapper::ParseFile(_lpcstr lpstrFile, __out__ CJsonValue* pRoot)
+    bool CJsonWrapper::ParseFile(lpcstr lpstrFile, __out__ CJsonValue* pRoot)
     {
-        _lpbyte buf = os::get_file_buffer(lpstrFile, NULL);
-        bool bret = Parse((_lpcstr)buf, pRoot);
+        lpbyte buf = os::get_file_buffer(lpstrFile, NULL);
+        bool bret = Parse((lpcstr)buf, pRoot);
         os::release_file_buffer(buf);
         return bret;
     }
 
-    CJsonValue* CJsonWrapper::GetNode(CJsonValue* pParent, _lpcstr lpstrPath)
+    CJsonValue* CJsonWrapper::GetNode(CJsonValue* pParent, lpcstr lpstrPath)
     {
         if (pParent == NULL) return NULL;
 
@@ -46,7 +46,7 @@ namespace lslib
         return pNode;
     }
 
-    CJsonValue* CJsonWrapper::GetChildNode(CJsonValue* pParent, _lpcstr lpKeyOrIndex)
+    CJsonValue* CJsonWrapper::GetChildNode(CJsonValue* pParent, lpcstr lpKeyOrIndex)
     {
         if (pParent == NULL) return NULL;
 
@@ -62,7 +62,7 @@ namespace lslib
         return NULL;
     }
 
-    CJsonValue* CJsonWrapper::GetSublingChildNode(CJsonValue* pParent, int nIndex, _lpcstr lpKey)
+    CJsonValue* CJsonWrapper::GetSublingChildNode(CJsonValue* pParent, int nIndex, lpcstr lpKey)
     {
         if (pParent == NULL) return NULL;
 

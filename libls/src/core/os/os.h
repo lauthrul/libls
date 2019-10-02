@@ -11,59 +11,59 @@ namespace lslib
     namespace os
     {
         /// 获取当前系统路径分隔符
-        LSLIB_API const _lchar get_slash();
+        LSLIB_API const lchar get_slash();
 
         /// 判断字符是否为路径分隔符
-        LSLIB_API const bool is_slash(_lchar c);
+        LSLIB_API const bool is_slash(lchar c);
 
         /// 从路径中获取目录
-        LSLIB_API string path_get_dir(_lpcstr path);
+        LSLIB_API string path_get_dir(lpcstr path);
 
         /// 从路径中获取最后一段名称
-        LSLIB_API string path_get_name(_lpcstr path);
+        LSLIB_API string path_get_name(lpcstr path);
 
         /// 从路径中获取文件名称（不包含后缀）
-        LSLIB_API string path_get_filename(_lpcstr path);
+        LSLIB_API string path_get_filename(lpcstr path);
 
         /// 从路径中获取文件后缀（不包含'.'）
-        LSLIB_API string path_get_ext(_lpcstr path);
+        LSLIB_API string path_get_ext(lpcstr path);
 
         /// 美化路径(转为小写，并去除多余分隔符)
-        LSLIB_API string path_pretty(_lpcstr path);
+        LSLIB_API string path_pretty(lpcstr path);
 
         /// 组合路径
-        LSLIB_API string path_combine(_lpcstr path, _lpcstr join);
+        LSLIB_API string path_combine(lpcstr path, lpcstr join);
 
         /// 获取绝对路径
-        LSLIB_API string path_make_absolute(_lpcstr path);
+        LSLIB_API string path_make_absolute(lpcstr path);
 
 
         /// 检查文件或目录是否存在
-        LSLIB_API const bool is_exist(_lpcstr path);
+        LSLIB_API const bool is_exist(lpcstr path);
 
         /// 检查路径是否文件
-        LSLIB_API const bool is_file(_lpcstr path);
+        LSLIB_API const bool is_file(lpcstr path);
 
         /// 检查路径是否目录
-        LSLIB_API const bool is_dir(_lpcstr path);
+        LSLIB_API const bool is_dir(lpcstr path);
 
         /// 相对路径还是绝对路径
-        LSLIB_API const bool is_absolute(_lpcstr path);
+        LSLIB_API const bool is_absolute(lpcstr path);
 
         /// 复制文件或目录
-        LSLIB_API const int copy(_lpcstr path, _lpcstr target);
+        LSLIB_API const int copy(lpcstr path, lpcstr target);
 
         /// 移动文件或目录
-        LSLIB_API const int move(_lpcstr path, _lpcstr target);
+        LSLIB_API const int move(lpcstr path, lpcstr target);
 
         /// 重命名文件或目录
-        LSLIB_API const int rename(_lpcstr path, _lpcstr target);
+        LSLIB_API const int rename(lpcstr path, lpcstr target);
 
         /// 创建目录（可递归）
-        LSLIB_API const int mkdir(_lpcstr path);
+        LSLIB_API const int mkdir(lpcstr path);
 
         /// 删除文件或目录
-        LSLIB_API const int rm(_lpcstr path);
+        LSLIB_API const int rm(lpcstr path);
 
         /// 获取程序完整路径
         LSLIB_API string get_module_file_path();
@@ -97,7 +97,7 @@ namespace lslib
         LSLIB_API string get_program_files_path();
 
         /// 在资源管理器中打开一个路径并选中一个文件
-        LSLIB_API void open_dir(_lpcstr path, _lpcstr file);
+        LSLIB_API void open_dir(lpcstr path, lpcstr file);
 
         /// @brief 打开文件选择对话框
         /// @param[out] arr_files   选择的文件列表
@@ -112,13 +112,13 @@ namespace lslib
         ///      " PNG图片(*.png)\0*.png\0"
         ///      " BMP图片(*.bmp)\0*.bmp\0"
         ///      " 所有文件(*.*)\0*.*\0");
-        LSLIB_API bool open_file_select_dialog(__out__ string_array& arr_files, _lpcstr title, _lpcstr filter, bool multi, HWND owner);
+        LSLIB_API bool open_file_select_dialog(__out__ string_array& arr_files, lpcstr title, lpcstr filter, bool multi, HWND owner);
 
         /// @brief 打开目录选择对话框
         /// @param[out] target  选择的路径
         /// @param[in] title    对话框标题
         /// @param[in] owner    父窗口
-        LSLIB_API bool open_folder_select_dialog(__out__ string& target, _lpcstr title, HWND owner);
+        LSLIB_API bool open_folder_select_dialog(__out__ string& target, lpcstr title, HWND owner);
 
         enum os_type
         {
@@ -150,7 +150,7 @@ namespace lslib
         LSLIB_API os_type get_os_type();
 
         /// 获取文件版本号
-        LSLIB_API string get_product_version(_lpcstr path);
+        LSLIB_API string get_product_version(lpcstr path);
 
 #endif
 
@@ -182,24 +182,24 @@ namespace lslib
         /// @details
         /// 如：递归遍历用户图片目录下所有包含test和picture关键字的.jpg和.png文件：
         ///      EnumerateFiles(array_files, "C:\\Users\\ituser\\Pictures", "*.jpg;*.png", "test;picture", true);
-        LSLIB_API void enumerate_files(__out__ enum_file_array& array_files, _lpcstr path, _lpcstr extention, _lpcstr filter, bool recurse/* = false*/);
+        LSLIB_API void enumerate_files(__out__ enum_file_array& array_files, lpcstr path, lpcstr extention, lpcstr filter, bool recurse/* = false*/);
 
         /// 获取文件的大小
-        LSLIB_API _ldword get_file_size(_lpcstr file);
+        LSLIB_API ldword get_file_size(lpcstr file);
 
         /// 获取文件属性
-        LSLIB_API file_attr get_file_attr(_lpcstr file);
+        LSLIB_API file_attr get_file_attr(lpcstr file);
 
         /// @brief 获取文件内容
         /// @param[in] file 文件路径
         /// @param[out] outsize 保存读取的字节数
         /// @return 返回文件内容
         /// @post 返回结果需要调用 ::release_file_buffer 释放
-        LSLIB_API _lpbyte get_file_buffer(_lpcstr file, __out__ _lpdword outsize);
+        LSLIB_API lpbyte get_file_buffer(lpcstr file, __out__ lpdword outsize);
 
         /// @brief 释放文件内容
         /// @param data 通过 ::get_file_buffer 函数获取到的缓存
-        LSLIB_API bool release_file_buffer(_lpbyte data);
+        LSLIB_API bool release_file_buffer(lpbyte data);
 
         /// @brief 写入文件，文件不存在则创建
         /// @param data 需要写入的数据
@@ -207,6 +207,6 @@ namespace lslib
         /// @param file 目标文件路径
         /// @param flag 写入方式，- 0 覆盖， - 1 追加
         /// @return 返回写入大小
-        LSLIB_API _ldword save_buffer_to_file(_lpbyte data, _ldword size, _lpcstr file, int flag);
+        LSLIB_API ldword save_buffer_to_file(lpbyte data, ldword size, lpcstr file, int flag);
     } // os
 } // lslib

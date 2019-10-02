@@ -17,9 +17,9 @@ namespace lslib
     namespace os
     {
 
-        static _lchar s_slashs[] = { '\\', '/' };
+        static lchar s_slashs[] = { '\\', '/' };
 
-        LSLIB_API const _lchar get_slash()
+        LSLIB_API const lchar get_slash()
         {
 #ifdef _MSC_VER
             return s_slashs[0];
@@ -28,7 +28,7 @@ namespace lslib
 #endif
         }
 
-        LSLIB_API const bool is_slash(_lchar c)
+        LSLIB_API const bool is_slash(lchar c)
         {
             for (size_t i = 0; i < sizeof(s_slashs); i++)
             {
@@ -37,7 +37,7 @@ namespace lslib
             return false;
         }
 
-        LSLIB_API string path_get_dir(_lpcstr path)
+        LSLIB_API string path_get_dir(lpcstr path)
         {
             if (strtool::is_empty(path)) return "";
 
@@ -49,7 +49,7 @@ namespace lslib
             return str.substr(0, pos);
         }
 
-        LSLIB_API string path_get_name(_lpcstr path)
+        LSLIB_API string path_get_name(lpcstr path)
         {
             if (strtool::is_empty(path)) return "";
 
@@ -60,7 +60,7 @@ namespace lslib
             return str.substr(pos + 1);
         }
 
-        LSLIB_API string path_get_filename(_lpcstr path)
+        LSLIB_API string path_get_filename(lpcstr path)
         {
             if (strtool::is_empty(path)) return "";
 
@@ -69,7 +69,7 @@ namespace lslib
             return str.substr(0, pos);
         }
 
-        LSLIB_API string path_get_ext(_lpcstr path)
+        LSLIB_API string path_get_ext(lpcstr path)
         {
             if (strtool::is_empty(path)) return "";
 
@@ -79,17 +79,17 @@ namespace lslib
             return str.substr(pos + 1);
         }
 
-        LSLIB_API string path_pretty(_lpcstr path)
+        LSLIB_API string path_pretty(lpcstr path)
         {
             if (strtool::is_empty(path)) return "";
 
             string str = strtool::trim(path);
             for (size_t i = 0; i < sizeof(s_slashs); i++)
                 str = strtool::replace(str, s_slashs[i], get_slash());
-            _lchar buf[MAX_PATH] = { 0 };
+            lchar buf[MAX_PATH] = { 0 };
             strncpy(buf, str.c_str(), MIN(MAX_PATH, str.length()));
 
-            _lpcstr p = buf;
+            lpcstr p = buf;
             str.clear();
             while (*p != 0)
             {
@@ -103,10 +103,10 @@ namespace lslib
             return str;
         }
 
-        LSLIB_API string path_combine(_lpcstr path, _lpcstr join)
+        LSLIB_API string path_combine(lpcstr path, lpcstr join)
         {
 #ifdef _MSC_VER
-            _lchar szbuf[MAX_PATH + 1] = { 0 };
+            lchar szbuf[MAX_PATH + 1] = { 0 };
             PathCombine(szbuf, path_pretty(path).c_str(), path_pretty(join).c_str());
             return szbuf;
 #else
@@ -118,13 +118,13 @@ namespace lslib
 #endif
         }
 
-        LSLIB_API string path_make_absolute(_lpcstr path)
+        LSLIB_API string path_make_absolute(lpcstr path)
         {
             if (strtool::is_empty(path)) return "";
 
             string str = path_pretty(path);
 
-            _lchar resolved_path[MAX_PATH + 1] = { 0 };
+            lchar resolved_path[MAX_PATH + 1] = { 0 };
 #ifdef _WIN32
             _fullpath(resolved_path, str.data(), MAX_PATH);
 #else
@@ -133,7 +133,7 @@ namespace lslib
             return path_pretty(resolved_path);
         }
 
-        LSLIB_API const bool is_exist(_lpcstr path)
+        LSLIB_API const bool is_exist(lpcstr path)
         {
             if (strtool::is_empty(path)) return false;
 #ifdef _MSC_VER
@@ -143,7 +143,7 @@ namespace lslib
 #endif
         }
 
-        LSLIB_API const bool is_file(_lpcstr path)
+        LSLIB_API const bool is_file(lpcstr path)
         {
             if (strtool::is_empty(path)) return false;
             struct stat s;
@@ -151,7 +151,7 @@ namespace lslib
             return false;
         }
 
-        LSLIB_API const bool is_dir(_lpcstr path)
+        LSLIB_API const bool is_dir(lpcstr path)
         {
             if (strtool::is_empty(path)) return false;
             string str = path_pretty(path);
@@ -161,7 +161,7 @@ namespace lslib
             return false;
         }
 
-        LSLIB_API const bool is_absolute(_lpcstr path)
+        LSLIB_API const bool is_absolute(lpcstr path)
         {
             if (strtool::is_empty(path)) return false;
 
@@ -176,7 +176,7 @@ namespace lslib
             return false;
         }
 
-        static int copy_single_file(_lpcstr path, _lpcstr target)
+        static int copy_single_file(lpcstr path, lpcstr target)
         {
             FILE* in, *out;
             if ( (in = fopen(path, "rb")) == NULL) return -1;
@@ -190,7 +190,7 @@ namespace lslib
             return ret;
         }
 
-        LSLIB_API const int copy(_lpcstr path, _lpcstr target)
+        LSLIB_API const int copy(lpcstr path, lpcstr target)
         {
 #ifdef _MSC_VER
             TCHAR szPath[MAX_PATH + 2] = { 0 };
@@ -241,7 +241,7 @@ namespace lslib
 #endif
         }
 
-        LSLIB_API const int move(_lpcstr path, _lpcstr target)
+        LSLIB_API const int move(lpcstr path, lpcstr target)
         {
             if (strtool::is_empty(path) || strtool::is_empty(target)) return -1;
 #ifdef _MSC_VER
@@ -264,7 +264,7 @@ namespace lslib
 #endif
         }
 
-        LSLIB_API const int rename(_lpcstr path, _lpcstr target)
+        LSLIB_API const int rename(lpcstr path, lpcstr target)
         {
             if (strtool::is_empty(path) || strtool::is_empty(target)) return -1;
 #ifdef _MSC_VER
@@ -287,7 +287,7 @@ namespace lslib
 #endif
         }
 
-        LSLIB_API const int mkdir(_lpcstr path)
+        LSLIB_API const int mkdir(lpcstr path)
         {
             if (strtool::is_empty(path)) return false;
 #ifdef _MSC_VER
@@ -303,7 +303,7 @@ namespace lslib
 #endif
 
             int ret = 0;
-            _lchar slash = get_slash();
+            lchar slash = get_slash();
             string str = path_pretty(path);
             string strpath;
             {
@@ -341,7 +341,7 @@ namespace lslib
 #endif
         }
 
-        LSLIB_API const int rm(_lpcstr path)
+        LSLIB_API const int rm(lpcstr path)
         {
             if (strtool::is_empty(path)) return -1;
 
@@ -409,7 +409,7 @@ namespace lslib
 
         LSLIB_API string get_special_folder_path(int csidl, bool bcreate /*= false*/)
         {
-            _lchar sz[MAX_PATH + 1] = { 0 };
+            lchar sz[MAX_PATH + 1] = { 0 };
             if (SHGetSpecialFolderPath(NULL, sz, csidl, bcreate))
                 return string(sz) + get_slash();
             else return "";
@@ -449,7 +449,7 @@ namespace lslib
             return get_special_folder_path(CSIDL_PROGRAM_FILES, true);
         }
 
-        LSLIB_API void open_dir(_lpcstr path, _lpcstr file)
+        LSLIB_API void open_dir(lpcstr path, lpcstr file)
         {
             if (strtool::is_empty(path)) return;
 
@@ -459,10 +459,10 @@ namespace lslib
             ShellExecute(NULL, _T("open"), _T("explorer.exe"), str.c_str(), NULL, SW_SHOWNORMAL);
         }
 
-        LSLIB_API bool open_file_select_dialog(__out__ string_array& arr_files, _lpcstr title, _lpcstr filter, bool multi, HWND owner)
+        LSLIB_API bool open_file_select_dialog(__out__ string_array& arr_files, lpcstr title, lpcstr filter, bool multi, HWND owner)
         {
 #define nBuffSize (MAX_PATH*100)
-            _lchar szFileName[nBuffSize] = {   ""};
+            lchar szFileName[nBuffSize] = {   ""};
 
             OPENFILENAME ofn =
             { 0 };
@@ -488,7 +488,7 @@ namespace lslib
             if (::GetOpenFileName(&ofn))
             {
                 // For Explorer-style dialog boxes, the directory and file name strings are NULL separated, with an extra NULL character after the last file name.
-                _lpcstr p = szFileName;
+                lpcstr p = szFileName;
 
                 string strPath = p;
                 p += strPath.length() + 1;
@@ -504,7 +504,7 @@ namespace lslib
             return false;
         }
 
-        LSLIB_API bool open_folder_select_dialog(__out__ string& target, _lpcstr title, HWND owner)
+        LSLIB_API bool open_folder_select_dialog(__out__ string& target, lpcstr title, HWND owner)
         {
             BROWSEINFO bInfo = { 0 };
             bInfo.hwndOwner = owner;
@@ -513,7 +513,7 @@ namespace lslib
                             | BIF_USENEWUI /*包含一个编辑框 用户可以手动填写路径 对话框可以调整大小之类的*/
                             | BIF_UAHINT /*带TIPS提示*/
                             | BIF_NONEWFOLDERBUTTON /*不带新建文件夹按钮*/;
-            _lchar szPathName[MAX_PATH] = { 0 };
+            lchar szPathName[MAX_PATH] = { 0 };
             LPITEMIDLIST lpDlist = SHBrowseForFolder(&bInfo);
             if (lpDlist != NULL)
             {
@@ -608,7 +608,7 @@ namespace lslib
             return os_unknown;
         }
 
-        LSLIB_API string get_product_version(_lpcstr path)
+        LSLIB_API string get_product_version(lpcstr path)
         {
             string strFilePath = path;
 
@@ -643,7 +643,7 @@ namespace lslib
 
 #endif
 
-        LSLIB_API void enumerate_files(__out__ enum_file_array& array_files, _lpcstr path, _lpcstr extention, _lpcstr filter, bool recurse/* = false*/)
+        LSLIB_API void enumerate_files(__out__ enum_file_array& array_files, lpcstr path, lpcstr extention, lpcstr filter, bool recurse/* = false*/)
         {
             if (strtool::is_empty(path)) return;
             if (!is_dir(path)) return;
@@ -775,9 +775,9 @@ namespace lslib
 #endif
         }
 
-        LSLIB_API _ldword get_file_size(_lpcstr file)
+        LSLIB_API ldword get_file_size(lpcstr file)
         {
-            _ldword ret = 0;
+            ldword ret = 0;
             FILE* fp = fopen(file, "rb");
             if (fp)
             {
@@ -788,7 +788,7 @@ namespace lslib
             return ret;
         }
 
-        LSLIB_API file_attr get_file_attr(_lpcstr file)
+        LSLIB_API file_attr get_file_attr(lpcstr file)
         {
             file_attr attr;
             struct stat st;
@@ -803,12 +803,12 @@ namespace lslib
             return attr;
         }
 
-        LSLIB_API _lpbyte get_file_buffer(_lpcstr file, __out__ _lpdword outsize)
+        LSLIB_API lpbyte get_file_buffer(lpcstr file, __out__ lpdword outsize)
         {
-            _ldword size = get_file_size(file);
+            ldword size = get_file_size(file);
             if (size <= 0) return NULL;
 
-            _lpbyte buf = new byte[size + 1];
+            lpbyte buf = new byte[size + 1];
             memset(buf, 0, size + 1);
             FILE* fp = fopen(file, "rb");
             if (fp)
@@ -820,16 +820,16 @@ namespace lslib
             return buf;
         }
 
-        LSLIB_API bool release_file_buffer(_lpbyte data)
+        LSLIB_API bool release_file_buffer(lpbyte data)
         {
             if (data == NULL) return false;
             delete[] data;
             return true;
         }
 
-        LSLIB_API _ldword save_buffer_to_file(_lpbyte data, _ldword size, _lpcstr file, int flag)
+        LSLIB_API ldword save_buffer_to_file(lpbyte data, ldword size, lpcstr file, int flag)
         {
-            _ldword write_size = 0;
+            ldword write_size = 0;
             FILE* fp = NULL;
             if (flag == 0) fp = fopen(file, "wb+");
             else fp = fopen(file, "ab+");

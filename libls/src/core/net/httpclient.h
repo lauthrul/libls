@@ -61,7 +61,7 @@ namespace lslib
             {
                 Reset();
             }
-            SHttpParam(_lpcstr lpstrUrl)
+            SHttpParam(lpcstr lpstrUrl)
             {
                 Reset();
                 strUrl = lpstrUrl;
@@ -87,7 +87,7 @@ namespace lslib
             {
                 Reset();
             }
-            SHttpGetParam(_lpcstr lpstrUrl)
+            SHttpGetParam(lpcstr lpstrUrl)
             {
                 Reset();
                 strUrl = lpstrUrl;
@@ -113,7 +113,7 @@ namespace lslib
             {
                 Reset();
             }
-            SHttpPostParam(_lpcstr lpstrUrl, _lpcstr lpstrPost)
+            SHttpPostParam(lpcstr lpstrUrl, lpcstr lpstrPost)
             {
                 Reset();
                 strUrl = lpstrUrl;
@@ -143,7 +143,7 @@ namespace lslib
             {
                 Reset();
             }
-            SHttpDowloadParam(_lpcstr lpstrUrl, _lpcstr lpstrFile)
+            SHttpDowloadParam(lpcstr lpstrUrl, lpcstr lpstrFile)
             {
                 Reset();
                 strUrl = lpstrUrl;
@@ -172,7 +172,7 @@ namespace lslib
             {
                 Reset();
             }
-            SHttpUploadParam(_lpcstr lpstrUrl, _lpcstr lpstrFile)
+            SHttpUploadParam(lpcstr lpstrUrl, lpcstr lpstrFile)
             {
                 Reset();
                 strUrl = lpstrUrl;
@@ -223,7 +223,7 @@ namespace lslib
         };
 
         /// 解析URL结构
-        LSLIB_API SHttpUrl          CrackUrl(_lpcstr lpstrUrl);
+        LSLIB_API SHttpUrl          CrackUrl(lpcstr lpstrUrl);
 
         /// 还原URL结构为字符串
         LSLIB_API string            ReverseUrl(const SHttpUrl& vUrl);
@@ -234,16 +234,16 @@ namespace lslib
         {
         public:
             /// @brief 初始化HTTP客户端
-            static void             Init(_lpcstr lpstrDefaultCookieFile = NULL, _lpcstr lpstrDefaultAgent = NULL);
+            static void             Init(lpcstr lpstrDefaultCookieFile = NULL, lpcstr lpstrDefaultAgent = NULL);
 
             /// @brief 检查HTTP客户端是否已初始化
             static bool             IsInit();
 
             /// @brief 设置默认cookie保存文件
-            static void             SetDefaultCookieFile(_lpcstr lpstrDefaultCookieFile);
+            static void             SetDefaultCookieFile(lpcstr lpstrDefaultCookieFile);
 
             /// @brief 设置默认UA
-            static void             SetDefaultAgent(_lpcstr lpstrDefaultAgent);
+            static void             SetDefaultAgent(lpcstr lpstrDefaultAgent);
 
             /// @brief 执行HTTP GET请求
             /// @param vParam 参考@ref SHttpGetParam

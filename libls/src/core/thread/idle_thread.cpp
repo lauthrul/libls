@@ -37,10 +37,10 @@ namespace lslib
         return true;
     }
 
-    _ldword GenerateUniqueID()
+    ldword GenerateUniqueID()
     {
         static int nIndex = 0;
-        return (_ldword)Time::CurrentTimeStamp() + nIndex++;
+        return (ldword)Time::CurrentTimeStamp() + nIndex++;
     }
 
     string DumpTaskInfo(const SIdleThreadTask* pTask, bool bBrief /*= false*/)
@@ -273,7 +273,7 @@ namespace lslib
 #endif
     }
 
-    _ldword CIdleThread::RunTask(const SIdleThreadTask& task)
+    ldword CIdleThread::RunTask(const SIdleThreadTask& task)
     {
         if (task.m_bKeepSingle && IsTaskExist(task))
             return 0;
@@ -339,7 +339,7 @@ namespace lslib
     }
 #endif
 
-    bool CIdleThread::CancelTask(_ldword dwUniqueID)
+    bool CIdleThread::CancelTask(ldword dwUniqueID)
     {
         list<SIdleThreadTask*>::iterator it;
         bool bret = false;
@@ -383,7 +383,7 @@ namespace lslib
         return bret;
     }
 
-    bool CIdleThread::RegisterTaskCompareFn(_ldword dwTID, FnTaskCompare pFunc)
+    bool CIdleThread::RegisterTaskCompareFn(ldword dwTID, FnTaskCompare pFunc)
     {
         bool bret = true;
         m_mutexFnTaskCmp.Lock();
@@ -395,11 +395,11 @@ namespace lslib
         return bret;
     }
 
-    bool CIdleThread::UnRegisterTaskCompareFn(_ldword dwTID)
+    bool CIdleThread::UnRegisterTaskCompareFn(ldword dwTID)
     {
         bool bret = true;
         m_mutexFnTaskCmp.Lock();
-        map<_ldword, FnTaskCompare>::iterator it = m_mapfnTaksCmp.find(dwTID);
+        map<ldword, FnTaskCompare>::iterator it = m_mapfnTaksCmp.find(dwTID);
         if (it == m_mapfnTaksCmp.end())
             bret = false;
         else
@@ -496,7 +496,7 @@ namespace lslib
         m_nThreadNums = nNum;
     }
 
-    _ldword CIdleThreadManager::RunTask(const SIdleThreadTask& task, int nThreadIndex /*= -1*/)
+    ldword CIdleThreadManager::RunTask(const SIdleThreadTask& task, int nThreadIndex /*= -1*/)
     {
         if (task.m_bKeepSingle)
         {
@@ -519,7 +519,7 @@ namespace lslib
             }
         }
 
-        _ldword dwUniqueID = 0;
+        ldword dwUniqueID = 0;
         if (nThreadIndex >= 0 && nThreadIndex < m_nThreadNums)
         {
             dwUniqueID = m_pThreads[nThreadIndex]->RunTask(task);
@@ -576,7 +576,7 @@ namespace lslib
     }
 #endif
 
-    bool CIdleThreadManager::CancelTask(_ldword dwUniqueID, int nThreadIndex /*= -1*/)
+    bool CIdleThreadManager::CancelTask(ldword dwUniqueID, int nThreadIndex /*= -1*/)
     {
         bool bret = false;
         if (nThreadIndex >= 0 && nThreadIndex < m_nThreadNums)
@@ -586,7 +586,7 @@ namespace lslib
         else
         {
             m_mtxTaskThreadMap.Lock();
-            map<_ldword, int>::iterator it = m_mapTaskThreadMap.find(dwUniqueID);
+            map<ldword, int>::iterator it = m_mapTaskThreadMap.find(dwUniqueID);
             if (it != m_mapTaskThreadMap.end())
                 bret |= m_pThreads[it->second]->CancelTask(dwUniqueID);
             m_mtxTaskThreadMap.Unlock();
@@ -594,7 +594,7 @@ namespace lslib
         return bret;
     }
 
-    bool CIdleThreadManager::RegisterTaskCompareFn(_ldword dwTID, FnTaskCompare pFunc)
+    bool CIdleThreadManager::RegisterTaskCompareFn(ldword dwTID, FnTaskCompare pFunc)
     {
         bool bret = true;
         for (int i = 0; i < m_nThreadNums; i++)
@@ -602,7 +602,7 @@ namespace lslib
         return bret;
     }
 
-    bool CIdleThreadManager::UnRegisterTaskCompareFn(_ldword dwTID)
+    bool CIdleThreadManager::UnRegisterTaskCompareFn(ldword dwTID)
     {
         bool bret = true;
         for (int i = 0; i < m_nThreadNums; i++)

@@ -21,20 +21,20 @@ namespace lslib
         virtual HWND GetMessageHanlder() {  return NULL;    };
     };
 
-    typedef int (IIdleTreadClient::*PTR_CLIENT_IDLETHREAD_TASKHANDLER)  (_ldword, _ldword&);    // param: (point of parameter data, point of result data)
-    typedef int (*PTR_STATIC_IDLETHREAD_TASKHANDLER)                    (_ldword, _ldword&);
+    typedef int (IIdleTreadClient::*PTR_CLIENT_IDLETHREAD_TASKHANDLER)  (ldword, ldword&);    // param: (point of parameter data, point of result data)
+    typedef int (*PTR_STATIC_IDLETHREAD_TASKHANDLER)                    (ldword, ldword&);
 #endif
 
-    typedef int (CThread::*PTR_THREAD_IDLETHREAD_TASKHANDLER)           (_ldword, _ldword&);
+    typedef int (CThread::*PTR_THREAD_IDLETHREAD_TASKHANDLER)           (ldword, ldword&);
 
 
     struct LSLIB_API SIdleThreadTask
     {
-        _ldword                     m_dwUniqueID;
-        _ldword                     m_dwTID;
+        ldword                     m_dwUniqueID;
+        ldword                     m_dwTID;
         string                      m_strTaskName;
-        _ldword                     m_pParam;  // parameter data
-        _ldword                     m_pResult; // result data
+        ldword                     m_pParam;  // parameter data
+        ldword                     m_pResult; // result data
         bool                        m_bKeepSingle;
 
         enum EIdleTaskType {ITT_CLIENT, ITT_STATIC, ITT_THREAD};
@@ -88,7 +88,7 @@ namespace lslib
     typedef bool (*FnTaskCompare)       (const SIdleThreadTask& lhs, const SIdleThreadTask& rhs);
 
     //////////////////////////////////////////////////////////////////////////
-    extern LSLIB_API _ldword GenerateUniqueID();
+    extern LSLIB_API ldword GenerateUniqueID();
     extern LSLIB_API string DumpTaskInfo(const SIdleThreadTask* pTask, bool bBrief = false);
 
     //////////////////////////////////////////////////////////////////////////
@@ -101,18 +101,18 @@ namespace lslib
     public:
         bool    IsIdle();
         int     GetTaskRemain();
-        _ldword RunTask(const SIdleThreadTask& task);
+        ldword RunTask(const SIdleThreadTask& task);
 #ifdef _MSC_VER
         bool    CancelTask(IIdleTreadClient* pClient, PTR_CLIENT_IDLETHREAD_TASKHANDLER hanlder = NULL);
 #endif
-        bool    CancelTask(_ldword dwUniqueID);
-        bool    RegisterTaskCompareFn(_ldword dwTID, FnTaskCompare pFunc);
-        bool    UnRegisterTaskCompareFn(_ldword dwTID);
+        bool    CancelTask(ldword dwUniqueID);
+        bool    RegisterTaskCompareFn(ldword dwTID, FnTaskCompare pFunc);
+        bool    UnRegisterTaskCompareFn(ldword dwTID);
         bool    IsTaskExist(const SIdleThreadTask& task);
         bool    IsTaskExist(const SIdleThreadTask& task, FnTaskCompare pfunc);
 
     protected:
-        virtual _lpcstr GetName() { return "CIdleThread"; };
+        virtual lpcstr GetName() { return "CIdleThread"; };
         virtual void    OnExecute();
         virtual void    OnDumpThreadInfo();
 
@@ -125,7 +125,7 @@ namespace lslib
         list<SIdleThreadTask*>  m_lstTmpTasks;
         CMutexLock              m_mutexTasks;
         map<SIdleThreadTask*, int>  m_mapRetryCBNotify;     // <SIdleThreadTask*, result code>
-        map<_ldword, FnTaskCompare> m_mapfnTaksCmp;
+        map<ldword, FnTaskCompare> m_mapfnTaksCmp;
         CMutexLock              m_mutexFnTaskCmp;
     };
 
@@ -137,18 +137,18 @@ namespace lslib
         virtual ~CIdleThreadManager();
 
     public:
-        _ldword RunTask(const SIdleThreadTask& task, int nThreadIndex = -1);
+        ldword RunTask(const SIdleThreadTask& task, int nThreadIndex = -1);
 #ifdef _MSC_VER
         bool    CancelTask(IIdleTreadClient* pClient, PTR_CLIENT_IDLETHREAD_TASKHANDLER hanlder = NULL, int nThreadIndex = -1);
 #endif
-        bool    CancelTask(_ldword dwUniqueID, int nThreadIndex = -1);
-        bool    RegisterTaskCompareFn(_ldword dwTID, FnTaskCompare pFunc);
-        bool    UnRegisterTaskCompareFn(_ldword dwTID);
+        bool    CancelTask(ldword dwUniqueID, int nThreadIndex = -1);
+        bool    RegisterTaskCompareFn(ldword dwTID, FnTaskCompare pFunc);
+        bool    UnRegisterTaskCompareFn(ldword dwTID);
         int     GetThreadNums();
         int     GetLastThreadIndex();
 
     protected:
-        virtual _lpcstr GetName() { return "CIdleThreadManager"; };
+        virtual lpcstr GetName() { return "CIdleThreadManager"; };
         virtual int HandleMessage(msgid_t msgid, wparam_t wparam, lparam_t lparam);
 
         void    SetThreadNums(int nNum);
@@ -157,7 +157,7 @@ namespace lslib
         int                 m_nThreadNums;
         CIdleThread**       m_pThreads;
         CMutexLock          m_mtxTaskThreadMap;
-        map<_ldword, int>   m_mapTaskThreadMap;     // <UniqueID, ThreadIndex>
+        map<ldword, int>   m_mapTaskThreadMap;     // <UniqueID, ThreadIndex>
         static int          s_nLastThreadIndex;
     };
 }

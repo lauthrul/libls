@@ -23,8 +23,8 @@ void test_type()
 {
     char c;
     char c1;
-    _lchar lc;
-    _lchar lc1;
+    lchar lc;
+    lchar lc1;
 
     c  = '1';
     c = '123';

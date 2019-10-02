@@ -26,7 +26,7 @@ void test_md5()
     for (size_t i = 0; i < sizeof(texts) / sizeof(string); i++)
     {
         const string& str = texts[i];
-        cout << "crypto::md5(\"" << str << "\") = " << crypto::md5((_lpbyte)str.c_str(), str.length()) << endl;
+        cout << "crypto::md5(\"" << str << "\") = " << crypto::md5((lpbyte)str.c_str(), str.length()) << endl;
     }
 
     for (size_t i = 0; i < sizeof(files) / sizeof(string); i++)
@@ -43,7 +43,7 @@ void test_sha1()
     for (size_t i = 0; i < sizeof(texts) / sizeof(string); i++)
     {
         const string& str = texts[i];
-        cout << "crypto::sha1(\"" << str << "\") = " << crypto::sha1((_lpbyte)str.c_str(), str.length()) << endl;
+        cout << "crypto::sha1(\"" << str << "\") = " << crypto::sha1((lpbyte)str.c_str(), str.length()) << endl;
     }
 
     for (size_t i = 0; i < sizeof(files) / sizeof(string); i++)
@@ -60,7 +60,7 @@ void test_sha256()
     for (size_t i = 0; i < sizeof(texts) / sizeof(string); i++)
     {
         const string& str = texts[i];
-        cout << "crypto::sha256(\"" << str << "\") = " << crypto::sha256((_lpbyte)str.c_str(), str.length()) << endl;
+        cout << "crypto::sha256(\"" << str << "\") = " << crypto::sha256((lpbyte)str.c_str(), str.length()) << endl;
     }
 
     for (size_t i = 0; i < sizeof(files) / sizeof(string); i++)
@@ -79,16 +79,16 @@ void test_base64()
     {
         const string& str = texts[i];
 
-        str_en = crypto::base64_encode((_lpbyte)str.c_str(), str.length());
+        str_en = crypto::base64_encode((lpbyte)str.c_str(), str.length());
         cout << "crypto::base64_encode(\"" << str << "\") = " << str_en << endl;
 
-        _lpbyte de = crypto::base64_decode(str_en.c_str(), str_en.length(), NULL);
+        lpbyte de = crypto::base64_decode(str_en.c_str(), str_en.length(), NULL);
         cout << "crypto::base64_decode(\"" << str_en << "\") = " << de << endl;
         lsfree(de);
     }
 }
 
-void print_hex(_lpcstr str, int len)
+void print_hex(lpcstr str, int len)
 {
     for (int j = 0; j < len; j++)
         printf("%02x", (unsigned char)str[j]);
@@ -98,7 +98,7 @@ void test_des()
 {
     cout << "------------------" << endl;
     string key = "12345678"; // 8 bytes
-    _lchar iv[] = "12345678"; // 8 bytes
+    lchar iv[] = "12345678"; // 8 bytes
     printf("** test_des\n");
     printf("   key: %s\n", key.c_str());
     printf("   iv: (hex) ");
@@ -170,7 +170,7 @@ void test_3des()
 {
     cout << "------------------" << endl;
     string key = "12345678abcdefgh+-)(*&^%"; // 24 bytes
-    _lchar iv[] = "12345678"; // 8 bytes
+    lchar iv[] = "12345678"; // 8 bytes
     printf("** test_3des\n");
     printf("   key: %s\n", key.c_str());
     printf("   iv: (hex) ");
@@ -242,7 +242,7 @@ void test_aes()
 {
     cout << "------------------" << endl;
     string key = "1234567812345678";
-    _lchar iv[] = "1234567812345678"; // {0}; //{0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
+    lchar iv[] = "1234567812345678"; // {0}; //{0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
     printf("** test_aes\n");
     printf("   key: %s\n", key.c_str());
     printf("   iv: (hex) ");

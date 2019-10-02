@@ -12,7 +12,7 @@ namespace lslib
     {
     }
 
-    bool Xml::Parse(_lpcstr lpstr, TiXmlEncoding encoding /*= TIXML_DEFAULT_ENCODING*/)
+    bool Xml::Parse(lpcstr lpstr, TiXmlEncoding encoding /*= TIXML_DEFAULT_ENCODING*/)
     {
         m_xmlDoc.Parse(lpstr, 0, encoding);
         if (m_xmlDoc.ErrorId() != 0) return false;
@@ -20,7 +20,7 @@ namespace lslib
         return true;
     }
 
-    bool Xml::ParseFile(_lpcstr lpstrFile, TiXmlEncoding encoding /*= TIXML_DEFAULT_ENCODING*/)
+    bool Xml::ParseFile(lpcstr lpstrFile, TiXmlEncoding encoding /*= TIXML_DEFAULT_ENCODING*/)
     {
         m_xmlDoc.LoadFile(lpstrFile, encoding);
         if (m_xmlDoc.ErrorId() != 0) return false;
@@ -28,7 +28,7 @@ namespace lslib
         return true;
     }
 
-    XmlNode* Xml::GetNode(XmlNode* pParent, _lpcstr lpstrPath)
+    XmlNode* Xml::GetNode(XmlNode* pParent, lpcstr lpstrPath)
     {
         if (pParent == NULL) return NULL;
 
@@ -48,7 +48,7 @@ namespace lslib
         return pNode;
     }
 
-    XmlNode* Xml::GetChildNode(XmlNode* pParent, _lpcstr lpKeyOrIndex)
+    XmlNode* Xml::GetChildNode(XmlNode* pParent, lpcstr lpKeyOrIndex)
     {
         if (pParent == NULL) return NULL;
 
@@ -62,7 +62,7 @@ namespace lslib
         return NULL;
     }
 
-    XmlNode* Xml::GetSublingChildNode(XmlNode* pParent, int nIndex, _lpcstr lpKey)
+    XmlNode* Xml::GetSublingChildNode(XmlNode* pParent, int nIndex, lpcstr lpKey)
     {
         if (pParent == NULL) return NULL;
 
@@ -75,7 +75,7 @@ namespace lslib
         return NULL;
     }
 
-    string Xml::GetAttribute(const XmlNode& node, _lpcstr lpstrAttri)
+    string Xml::GetAttribute(const XmlNode& node, lpcstr lpstrAttri)
     {
         const char* attr = node.Attribute(lpstrAttri);
         return attr != NULL ? attr : "";

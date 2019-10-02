@@ -84,14 +84,14 @@ namespace lslib
 
         /// @brief 初始化日志模块
         /// @param lpstrCfgXml 日志配置文件路径
-        LSLIB_API void InitLogger(_lpcstr lpstrCfgXml);
+        LSLIB_API void InitLogger(lpcstr lpstrCfgXml);
 
         /// 销毁日志模块
         LSLIB_API void DestroyLogger();
 
         /// @brief 获取日志实例
         /// @param lpstrLoggerName 配置文件路径中对应的日志实例名称
-        LSLIB_API _loggerptr GetLogger(_lpcstr lpstrLoggerName);
+        LSLIB_API _loggerptr GetLogger(lpcstr lpstrLoggerName);
 
         /// @brief 设置日志级别
         /// @param pLogger 日志实例
@@ -107,7 +107,7 @@ namespace lslib
         /// @param function 代码函数
         /// @param threadId 线程ID
         /// @param ...      日志内容，支持格式化输出
-        LSLIB_API void Log(_loggerptr logger, ELOG_LEVEL level, _lpcstr file, int line, _lpcstr function, int threadId, ...);
+        LSLIB_API void Log(_loggerptr logger, ELOG_LEVEL level, lpcstr file, int line, lpcstr function, int threadId, ...);
 
 #define FATAL_LOG(logger, ...)             Log(logger, LOG_LEVEL_FATAL, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)
 #define ERROR_LOG(logger, ...)             Log(logger, LOG_LEVEL_ERROR, __FILE__, __LINE__, __FUNCTION__, __THREAD__, __VA_ARGS__)

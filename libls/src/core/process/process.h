@@ -20,13 +20,13 @@ namespace lslib
         /// @param[in] lpProcessName 进程名称
         /// @param[in] bCaseSensitive 是否区分大小写
         /// @return 返回成功或失败
-        LSLIB_API bool get_process_info_by_name(__out__ PROCESSENTRY32_list& pe_lst, _lpcstr lpProcessName, bool bCaseSensitive = false);
+        LSLIB_API bool get_process_info_by_name(__out__ PROCESSENTRY32_list& pe_lst, lpcstr lpProcessName, bool bCaseSensitive = false);
 
         /// @brief 根据进程名字获取第一个满足条件的进程ID
         /// @param lpProcessName 进程名称
         /// @param bCaseSensitive 是否区分大小写
         /// @return 成功返回进程ID，失败返回0
-        LSLIB_API DWORD get_process_id_by_name(_lpcstr lpProcessName, bool bCaseSensitive = false);
+        LSLIB_API DWORD get_process_id_by_name(lpcstr lpProcessName, bool bCaseSensitive = false);
 
         /// @brief 根据进程ID获取进程路径
         /// @param pid 进程ID
@@ -37,7 +37,7 @@ namespace lslib
         /// @param lpProcessName 进程名称
         /// @param bCaseSensitive 是否区分大小写
         /// @return 成功返回进程路径，失败返回空字符串
-        LSLIB_API string get_process_path_by_name(_lpcstr lpProcessName, bool bCaseSensitive = false);
+        LSLIB_API string get_process_path_by_name(lpcstr lpProcessName, bool bCaseSensitive = false);
 
         /// @brief 结束进程ID
         /// @param pid 进程ID
@@ -48,7 +48,7 @@ namespace lslib
         /// @param lpProcessName 进程名称
         /// @param bCaseSensitive 是否区分大小写
         /// @return 返回成功或失败
-        LSLIB_API bool kill_process_by_name(_lpcstr lpProcessName, bool bCaseSensitive = false);
+        LSLIB_API bool kill_process_by_name(lpcstr lpProcessName, bool bCaseSensitive = false);
 
     } // process
 

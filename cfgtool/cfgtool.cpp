@@ -11,7 +11,7 @@
 using namespace lslib;
 
 //////////////////////////////////////////////////////////////////////////
-void print_table_row(_lpcstr c1, _lpcstr c2, _lpcstr c3, _lpcstr c4)
+void print_table_row(lpcstr c1, lpcstr c2, lpcstr c3, lpcstr c4)
 {
     printf("%-30s %-30s %-30s %-30s \n", c1, c2, c3, c4);
 }
@@ -30,7 +30,7 @@ void print_table_tail()
     printf("%s\n", str.c_str());
 }
 
-int view_config(_lpcstr file)
+int view_config(lpcstr file)
 {
     if (strtool::is_empty(file))
         return -1;
@@ -55,7 +55,7 @@ int view_config(_lpcstr file)
                 value = data.v_str;
                 break;
             case CVT_BLOB:
-                value = "[hex] " + strtool::byte_array_to_hex_str((_lpbyte)data.v_blob.c_str(), data.v_bloblen);
+                value = "[hex] " + strtool::byte_array_to_hex_str((lpbyte)data.v_blob.c_str(), data.v_bloblen);
                 break;
         }
         print_table_row(data.strModule.c_str(), data.strKey.c_str(), enum_str(ECfgValueType, data.eValueType).c_str(), value.c_str());
@@ -65,7 +65,7 @@ int view_config(_lpcstr file)
     return 0;
 }
 
-int set_cfg(_lpcstr module, _lpcstr key, _lpcstr type, _lpcstr value, int value_len, _lpcstr file)
+int set_cfg(lpcstr module, lpcstr key, lpcstr type, lpcstr value, int value_len, lpcstr file)
 {
     if (strtool::is_empty(module) || strtool::is_empty(key) || strtool::is_empty(type) || strtool::is_empty(value))
         return -1;
@@ -83,7 +83,7 @@ int set_cfg(_lpcstr module, _lpcstr key, _lpcstr type, _lpcstr value, int value_
             ret = CCfgHandler::SetCfg(module, key, value, file);
             break;
         case CVT_BLOB:
-            ret = CCfgHandler::SetCfg(module, key, (_lpvoid)value, value_len, file);
+            ret = CCfgHandler::SetCfg(module, key, (lpvoid)value, value_len, file);
             break;
     }
 
@@ -94,7 +94,7 @@ int set_cfg(_lpcstr module, _lpcstr key, _lpcstr type, _lpcstr value, int value_
     return 0;
 }
 
-int get_cfg(_lpcstr module, _lpcstr key, _lpcstr type, _lpcstr file)
+int get_cfg(lpcstr module, lpcstr key, lpcstr type, lpcstr file)
 {
     if (strtool::is_empty(module) || strtool::is_empty(key) || strtool::is_empty(type))
         return -1;
@@ -112,8 +112,8 @@ int get_cfg(_lpcstr module, _lpcstr key, _lpcstr type, _lpcstr file)
             value = CCfgHandler::GetCfgText(module, key, "", file);
             break;
         case CVT_BLOB:
-            _lpbyte pbuf = NULL;
-            int len = CCfgHandler::GetCfgBlob((_lpvoid&)pbuf, module, key, file);
+            lpbyte pbuf = NULL;
+            int len = CCfgHandler::GetCfgBlob((lpvoid&)pbuf, module, key, file);
             value = "[hex] " + strtool::byte_array_to_hex_str(pbuf, len);
             lsfree(pbuf);
             break;
@@ -125,9 +125,9 @@ int get_cfg(_lpcstr module, _lpcstr key, _lpcstr type, _lpcstr file)
     return 0;
 }
 
-int main(int argc, _lpcstr argv[])
+int main(int argc, lpcstr argv[])
 {
-    _lpcstr usage = "usage: \n"
+    lpcstr usage = "usage: \n"
                     "   view config:        cfgtool <file> view\n"
                     "   get config:         cfgtool <file> get <type> <module> <key>\n"
                     "   set config:         cfgtool <file> set <type> <module> <key> <value> [value len]\n"
@@ -143,8 +143,8 @@ int main(int argc, _lpcstr argv[])
     if (argc < 3) ret = -1;
     else
     {
-        _lpcstr file = argv[1];
-        _lpcstr action = argv[2];
+        lpcstr file = argv[1];
+        lpcstr action = argv[2];
 
         if (strcmp(action, "view") == 0)
         {
@@ -155,9 +155,9 @@ int main(int argc, _lpcstr argv[])
             if (argc < 6) ret = -1;
             else
             {
-                _lpcstr type = argv[3];
-                _lpcstr module = argv[4];
-                _lpcstr key = argv[5];
+                lpcstr type = argv[3];
+                lpcstr module = argv[4];
+                lpcstr key = argv[5];
                 ret = get_cfg(module, key, type, file);
             }
         }
@@ -166,10 +166,10 @@ int main(int argc, _lpcstr argv[])
             if (argc < 7) ret = -1;
             else
             {
-                _lpcstr type = argv[3];
-                _lpcstr module = argv[4];
-                _lpcstr key = argv[5];
-                _lpcstr value = argv[6];
+                lpcstr type = argv[3];
+                lpcstr module = argv[4];
+                lpcstr key = argv[5];
+                lpcstr value = argv[6];
                 int value_len = (argc >= 8) ? atoi(argv[7]) : 0;
 
                 if (strcmp(type, "blob") == 0 && argc < 8)

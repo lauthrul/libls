@@ -13,12 +13,12 @@ namespace lslib
 
     }
 
-    lstring::lstring(_lpcstr lpstr) : str(lpstr)
+    lstring::lstring(lpcstr lpstr) : str(lpstr)
     {
 
     }
 
-    lstring::lstring(_lchar c, size_t counts /*= 1*/)
+    lstring::lstring(lchar c, size_t counts /*= 1*/)
     {
         str = string(counts, c);
     }
@@ -33,7 +33,7 @@ namespace lslib
 
     }
 
-    lstring::operator _lpcstr()
+    lstring::operator lpcstr()
     {
         return str.c_str();
     }
@@ -41,7 +41,7 @@ namespace lslib
     //////////////////////////////////////////////////////////////////////////
     namespace strtool
     {
-        LSLIB_API const bool is_empty(_lpcstr str)
+        LSLIB_API const bool is_empty(lpcstr str)
         {
             return (str == 0 || (str)[0] == 0);
         }
@@ -51,9 +51,9 @@ namespace lslib
             return is_empty(str.c_str());
         }
 
-        LSLIB_API const bool is_space(_lpcstr str)
+        LSLIB_API const bool is_space(lpcstr str)
         {
-            _lpcstr p = str;
+            lpcstr p = str;
             while (*p != 0)
             {
                 if (!isspace(*p))
@@ -68,9 +68,9 @@ namespace lslib
             return is_space(str.c_str());
         }
 
-        LSLIB_API const bool is_lower(_lpcstr str)
+        LSLIB_API const bool is_lower(lpcstr str)
         {
-            _lpcstr p = str;
+            lpcstr p = str;
             while (*p != 0)
             {
                 if (!islower(*p))
@@ -85,9 +85,9 @@ namespace lslib
             return is_lower(str.c_str());
         }
 
-        LSLIB_API const bool is_upper(_lpcstr str)
+        LSLIB_API const bool is_upper(lpcstr str)
         {
-            _lpcstr p = str;
+            lpcstr p = str;
             while (*p != 0)
             {
                 if (!isupper(*p))
@@ -102,9 +102,9 @@ namespace lslib
             return is_upper(str.c_str());
         }
 
-        LSLIB_API const bool is_digital(_lpcstr str)
+        LSLIB_API const bool is_digital(lpcstr str)
         {
-            _lpcstr p = str;
+            lpcstr p = str;
             while (*p != 0)
             {
                 if (!isdigit(*p))
@@ -119,9 +119,9 @@ namespace lslib
             return is_digital(str.c_str());
         }
 
-        LSLIB_API const bool is_int(_lpcstr str)
+        LSLIB_API const bool is_int(lpcstr str)
         {
-            _lpcstr p = str;
+            lpcstr p = str;
             if (*p != '-' && !isdigit(*p))
                 return false;
             p++;
@@ -139,9 +139,9 @@ namespace lslib
             return is_int(str.c_str());
         }
 
-        LSLIB_API const bool is_float(_lpcstr str)
+        LSLIB_API const bool is_float(lpcstr str)
         {
-            _lpcstr p = str;
+            lpcstr p = str;
             if (*p != '-' && *p != '.' && !isdigit(*p))
                 return false;
             p++;
@@ -162,7 +162,7 @@ namespace lslib
             return is_float(str.c_str());
         }
 
-        LSLIB_API const bool is_bool(_lpcstr str, bool numeric /*= false*/)
+        LSLIB_API const bool is_bool(lpcstr str, bool numeric /*= false*/)
         {
             string str_lower = lower(str);
             if (str_lower == "true" || str_lower == "false")
@@ -180,7 +180,7 @@ namespace lslib
             return is_bool(str.c_str(), numeric);
         }
 
-        LSLIB_API const int to_int(_lpcstr str)
+        LSLIB_API const int to_int(lpcstr str)
         {
             if (!is_int(str)) return 0;
             return atoi(str);
@@ -191,7 +191,7 @@ namespace lslib
             return to_int(str.c_str());
         }
 
-        LSLIB_API const double to_float(_lpcstr str)
+        LSLIB_API const double to_float(lpcstr str)
         {
             if (!is_float(str)) return 0;
             return atof(str);
@@ -202,7 +202,7 @@ namespace lslib
             return to_float(str.c_str());
         }
 
-        LSLIB_API const bool to_bool(_lpcstr str)
+        LSLIB_API const bool to_bool(lpcstr str)
         {
             if (!is_bool(str)) return false;
             string str_lower = lower(str);
@@ -234,7 +234,7 @@ namespace lslib
             return value ? "true" : "false";
         }
 
-        LSLIB_API string lower(_lpcstr str)
+        LSLIB_API string lower(lpcstr str)
         {
             string str_wrapper = str;
             transform(str_wrapper.begin(), str_wrapper.end(), str_wrapper.begin(), ::tolower);
@@ -246,7 +246,7 @@ namespace lslib
             return lower(str.c_str());
         }
 
-        LSLIB_API string upper(_lpcstr str)
+        LSLIB_API string upper(lpcstr str)
         {
             string str_wrapper = str;
             transform(str_wrapper.begin(), str_wrapper.end(), str_wrapper.begin(), ::toupper);
@@ -258,7 +258,7 @@ namespace lslib
             return upper(str.c_str());
         }
 
-        LSLIB_API string trim(_lpcstr str)
+        LSLIB_API string trim(lpcstr str)
         {
             string str_wrapper = str;
             str_wrapper = trim_left(str_wrapper.c_str());
@@ -271,7 +271,7 @@ namespace lslib
             return trim(str.c_str());
         }
 
-        LSLIB_API string trim_left(_lpcstr str)
+        LSLIB_API string trim_left(lpcstr str)
         {
             string str_wrapper = str;
             string::iterator it = str_wrapper.begin();
@@ -285,7 +285,7 @@ namespace lslib
             return trim_left(str.c_str());
         }
 
-        LSLIB_API string trim_right(_lpcstr str)
+        LSLIB_API string trim_right(lpcstr str)
         {
             string str_wrapper = str;
             string::reverse_iterator it = str_wrapper.rbegin();
@@ -299,7 +299,7 @@ namespace lslib
             return trim_right(str.c_str());
         }
 
-        LSLIB_API string trim(_lpcstr str, _lchar c)
+        LSLIB_API string trim(lpcstr str, lchar c)
         {
             string str_wrapper = str;
             str_wrapper = trim_left(str_wrapper.c_str(), c);
@@ -307,12 +307,12 @@ namespace lslib
             return str_wrapper;
         }
 
-        LSLIB_API string trim(const string& str, _lchar c)
+        LSLIB_API string trim(const string& str, lchar c)
         {
             return trim(str.c_str(), c);
         }
 
-        LSLIB_API string trim(_lpcstr str, _lpcstr trm)
+        LSLIB_API string trim(lpcstr str, lpcstr trm)
         {
             string str_wrapper = str;
             str_wrapper = trim_left(str_wrapper.c_str(), trm);
@@ -325,7 +325,7 @@ namespace lslib
             return trim(str.c_str(), trm.c_str());
         }
 
-        LSLIB_API string trim_left(_lpcstr str, _lchar c)
+        LSLIB_API string trim_left(lpcstr str, lchar c)
         {
             string str_wrapper = str;
             string::iterator it = str_wrapper.begin();
@@ -334,14 +334,14 @@ namespace lslib
             return str_wrapper;
         }
 
-        LSLIB_API string trim_left(const string& str, _lchar c)
+        LSLIB_API string trim_left(const string& str, lchar c)
         {
             return trim_left(str.c_str(), c);
         }
 
-        LSLIB_API string trim_left(_lpcstr str, _lpcstr trm)
+        LSLIB_API string trim_left(lpcstr str, lpcstr trm)
         {
-            _lpcstr p = str;
+            lpcstr p = str;
             while (strncmp(p, trm, strlen(trm)) == 0)
                 p += strlen(trm);
             return p;
@@ -352,7 +352,7 @@ namespace lslib
             return trim_left(str.c_str(), trm.c_str());
         }
 
-        LSLIB_API string trim_right(_lpcstr str, _lchar c)
+        LSLIB_API string trim_right(lpcstr str, lchar c)
         {
             string str_wrapper = str;
             string::reverse_iterator it = str_wrapper.rbegin();
@@ -361,12 +361,12 @@ namespace lslib
             return str_wrapper;
         }
 
-        LSLIB_API string trim_right(const string& str, _lchar c)
+        LSLIB_API string trim_right(const string& str, lchar c)
         {
             return trim_right(str.c_str(), c);
         }
 
-        LSLIB_API string trim_right(_lpcstr str, _lpcstr trm)
+        LSLIB_API string trim_right(lpcstr str, lpcstr trm)
         {
             string str_wrapper = str;
             string trm_wrapper = trm;
@@ -382,7 +382,7 @@ namespace lslib
             return trim_right(str.c_str(), trm.c_str());
         }
 
-        LSLIB_API string replace(_lpcstr str, _lchar needle, _lchar replacement, size_t index /*= 0*/, int counts /*= -1*/)
+        LSLIB_API string replace(lpcstr str, lchar needle, lchar replacement, size_t index /*= 0*/, int counts /*= -1*/)
         {
             if (needle == replacement)
                 return str;
@@ -414,12 +414,12 @@ namespace lslib
             return str_wrapper;
         }
 
-        LSLIB_API string replace(const string& str, _lchar needle, _lchar replacement, size_t index /*= 0*/, int counts /*= -1*/)
+        LSLIB_API string replace(const string& str, lchar needle, lchar replacement, size_t index /*= 0*/, int counts /*= -1*/)
         {
             return replace(str.c_str(), needle, replacement, index, counts);
         }
 
-        LSLIB_API string replace(_lpcstr str, _lpcstr needle, _lpcstr replacement, size_t index /*= 0*/, int counts /*= -1*/)
+        LSLIB_API string replace(lpcstr str, lpcstr needle, lpcstr replacement, size_t index /*= 0*/, int counts /*= -1*/)
         {
             if (is_empty(needle))
                 return str;
@@ -431,7 +431,7 @@ namespace lslib
             int replace_count = 0;
 
             // calculate new buffer size
-            _lpcstr p = str;
+            lpcstr p = str;
             while (*p != 0)
             {
                 if (strncmp(p, needle, needle_len) == 0)  replace_count++;
@@ -441,19 +441,19 @@ namespace lslib
             // new buffer
             size_t new_size = strlen(str) - replace_count * needle_len + replace_count * replacement_len;
 
-            _lpstr pbuffer = new _lchar[new_size + 1];
+            lpstr pbuffer = new lchar[new_size + 1];
             memset(pbuffer, 0, new_size + 1);
 
             // process of replacement
-            _lpstr insert_point = pbuffer;
-            _lpcstr start = str;
-            _lpcstr tmp = start;
+            lpstr insert_point = pbuffer;
+            lpcstr start = str;
+            lpcstr tmp = start;
 
             replace_count = 0;
             size_t replace_index = 0;
             while (1)
             {
-                _lpcstr p = strstr(tmp, needle);
+                lpcstr p = strstr(tmp, needle);
                 if (p != NULL && replace_index < index)
                 {
                     // copy part before needle
@@ -501,7 +501,7 @@ namespace lslib
             return replace(str.c_str(), needle.c_str(), replacement.c_str(), index, counts);
         }
 
-        LSLIB_API string format(_lpcstr pfmt, const va_list& args)
+        LSLIB_API string format(lpcstr pfmt, const va_list& args)
         {
 #ifdef WIN32
             int len = vsnprintf(NULL, 0, pfmt, args);
@@ -517,7 +517,7 @@ namespace lslib
             return str;
         }
 
-        LSLIB_API string format(_lpcstr pfmt, ...)
+        LSLIB_API string format(lpcstr pfmt, ...)
         {
             va_list args;
             va_start(args, pfmt);
@@ -526,7 +526,7 @@ namespace lslib
             return strret;
         }
 
-        LSLIB_API string append_format(__out__ string& str, _lpcstr pfmt, ...)
+        LSLIB_API string append_format(__out__ string& str, lpcstr pfmt, ...)
         {
             va_list args;
             va_start(args, pfmt);
@@ -535,7 +535,7 @@ namespace lslib
             return str;
         }
 
-        LSLIB_API const int split(__out__ string_array& dest, _lpcstr src, _lpcstr patten, bool allow_empty /*= true*/)
+        LSLIB_API const int split(__out__ string_array& dest, lpcstr src, lpcstr patten, bool allow_empty /*= true*/)
         {
             dest.clear();
             if (is_empty(src)) return 0;
@@ -548,9 +548,9 @@ namespace lslib
 #define push(str) \
     if (strlen(str) == 0 && !allow_empty); else dest.push_back(str);
 
-            _lpstr pbuff = NULL;
-            _lpcstr last_pos = src;
-            _lpcstr p = last_pos;
+            lpstr pbuff = NULL;
+            lpcstr last_pos = src;
+            lpcstr p = last_pos;
             int size = 0;
             while (p != NULL)
             {
@@ -558,7 +558,7 @@ namespace lslib
                 if (p != NULL)
                 {
                     size = p - last_pos;
-                    pbuff = new _lchar[size + 1];
+                    pbuff = new lchar[size + 1];
                     memset(pbuff, 0, size + 1);
                     strncpy(pbuff, last_pos, size);
                     push(pbuff);
@@ -572,7 +572,7 @@ namespace lslib
             return dest.size();
         }
 
-        LSLIB_API const int split(__out__ string_list &dest, _lpcstr src, _lpcstr patten, bool allow_empty /*= true*/)
+        LSLIB_API const int split(__out__ string_list &dest, lpcstr src, lpcstr patten, bool allow_empty /*= true*/)
         {
             string_array arr;
             split(arr, src, patten, allow_empty);
@@ -593,7 +593,7 @@ namespace lslib
             return dest.size();
         }
 
-        LSLIB_API _lbyte hex_char_to_byte(_lchar c)
+        LSLIB_API lbyte hex_char_to_byte(lchar c)
         {
             if (c >= '0' && c <= '9') return c - '0';
             else if (c >= 'a' && c <= 'f') return 10 + c - 'a';
@@ -601,34 +601,34 @@ namespace lslib
             else return 0xff;
         }
 
-        LSLIB_API _lchar byte_to_hex_char(_lbyte b)
+        LSLIB_API lchar byte_to_hex_char(lbyte b)
         {
             if (b >= 0x0 && b <= 0x9) return b + '0';
             else if (b >= 0xa && b <= 0xf) return b - 10 + 'a';
             else return 0;
         }
 
-        LSLIB_API _lbyte_array hex_str_to_byte_array(_lpcstr data)
+        LSLIB_API lbyte_array hex_str_to_byte_array(lpcstr data)
         {
             assert(!strtool::is_empty(data));
 
-            _lbyte_array arr;
-            _lpcstr p = data;
+            lbyte_array arr;
+            lpcstr p = data;
             while (*p != 0)
             {
-                _lbyte high = hex_char_to_byte(*p++);
-                _lbyte low = hex_char_to_byte(*p++);
+                lbyte high = hex_char_to_byte(*p++);
+                lbyte low = hex_char_to_byte(*p++);
                 if (high != 0xff && low != 0xff) arr.push_back((high << 4) | low);
             }
             return arr;
         }
 
-        LSLIB_API _lbyte_array hex_str_to_byte_array(const string& data)
+        LSLIB_API lbyte_array hex_str_to_byte_array(const string& data)
         {
             return hex_str_to_byte_array(data.c_str());
         }
 
-        LSLIB_API string byte_array_to_hex_str(_lbyte_array data)
+        LSLIB_API string byte_array_to_hex_str(lbyte_array data)
         {
             string str;
             for (size_t i = 0; i < data.size(); i++)
@@ -639,7 +639,7 @@ namespace lslib
             return str;
         }
 
-        LSLIB_API string byte_array_to_hex_str(_lbyte data[], int len)
+        LSLIB_API string byte_array_to_hex_str(lbyte data[], size_t len)
         {
             string str;
             for (size_t i = 0; i < len; i++)

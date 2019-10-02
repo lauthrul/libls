@@ -30,7 +30,7 @@ namespace lslib
 //             return loggerInternal;
 //         }
 
-        void Log(_loggerptr logger, ELOG_LEVEL level, _lpcstr file, int line, _lpcstr function, int threadId, ...)
+        void Log(_loggerptr logger, ELOG_LEVEL level, lpcstr file, int line, lpcstr function, int threadId, ...)
         {
             if (logger == 0) return;
 
@@ -125,14 +125,14 @@ namespace lslib
             map<string, SLogger> m_mapLogger;
 
             SLogConfig();
-            SLogConfig(_lpcstr lpstrFilePath);
+            SLogConfig(lpcstr lpstrFilePath);
 
             bool Parse();
-            bool Parse(_lpcstr lpstrFilePath);
+            bool Parse(lpcstr lpstrFilePath);
 
-            SLogLayout* GetLayout(_lpcstr name);
-            SLogAppender* GetAppender(_lpcstr name);
-            SLogger* GetLogger(_lpcstr name);
+            SLogLayout* GetLayout(lpcstr name);
+            SLogAppender* GetAppender(lpcstr name);
+            SLogger* GetLogger(lpcstr name);
         };
 
         struct SLogEntity
@@ -155,16 +155,16 @@ namespace lslib
             virtual ~CLogManager();
 
         public:
-            virtual _lpcstr GetName() { return "CLogManager"; }
+            virtual lpcstr GetName() { return "CLogManager"; }
             virtual void OnExecute();
 
         public:
-            static void Init(_lpcstr configFile);
+            static void Init(lpcstr configFile);
             static bool IsInited();
             static void Destroy();
-            static _loggerptr GetLogger(_lpcstr lpstrLoggerName);
+            static _loggerptr GetLogger(lpcstr lpstrLoggerName);
             static void SetLogLevel(_loggerptr pLogger, ELOG_LEVEL eLevel);
-            static void Log(_loggerptr logger, ELOG_LEVEL level, _lpcstr file, int line, _lpcstr function, int threadId, ...);
+            static void Log(_loggerptr logger, ELOG_LEVEL level, lpcstr file, int line, lpcstr function, int threadId, ...);
             static void Log(const SLogEntity& entity);
 
         private:
@@ -190,7 +190,7 @@ namespace lslib
         {
         }
 
-        SLogConfig::SLogConfig(_lpcstr lpstrFilePath) : m_strFile(lpstrFilePath)
+        SLogConfig::SLogConfig(lpcstr lpstrFilePath) : m_strFile(lpstrFilePath)
         {
         }
 
@@ -199,7 +199,7 @@ namespace lslib
             return Parse(m_strFile.c_str());
         }
 
-        bool SLogConfig::Parse(_lpcstr lpstrFilePath)
+        bool SLogConfig::Parse(lpcstr lpstrFilePath)
         {
             Xml xml;
             xml.ParseFile(lpstrFilePath);
@@ -325,21 +325,21 @@ namespace lslib
             return true;
         }
 
-        SLogLayout* SLogConfig::GetLayout(_lpcstr name)
+        SLogLayout* SLogConfig::GetLayout(lpcstr name)
         {
             map<string, SLogLayout>::iterator it = m_mapLayouts.find(name);
             if (it != m_mapLayouts.end()) return &it->second;
             return NULL;
         }
 
-        SLogAppender* SLogConfig::GetAppender(_lpcstr name)
+        SLogAppender* SLogConfig::GetAppender(lpcstr name)
         {
             map<string, SLogAppender>::iterator it = m_mapAppenders.find(name);
             if (it != m_mapAppenders.end()) return &it->second;
             return NULL;
         }
 
-        SLogger* SLogConfig::GetLogger(_lpcstr name)
+        SLogger* SLogConfig::GetLogger(lpcstr name)
         {
             map<string, SLogger>::iterator it = m_mapLogger.find(name);
             if (it != m_mapLogger.end()) return &it->second;
@@ -356,7 +356,7 @@ namespace lslib
         {
         }
 
-        void CLogManager::Init(_lpcstr configFile)
+        void CLogManager::Init(lpcstr configFile)
         {
             if (!m_logConfig.Parse(configFile)) return;
             m_bInited = true;
@@ -367,7 +367,7 @@ namespace lslib
             return m_bInited;
         }
 
-        _loggerptr CLogManager::GetLogger(_lpcstr lpstrLoggerName)
+        _loggerptr CLogManager::GetLogger(lpcstr lpstrLoggerName)
         {
             return m_logConfig.GetLogger(lpstrLoggerName);
         }
@@ -390,7 +390,7 @@ namespace lslib
             }
         }
 
-        void CLogManager::Log(_loggerptr logger, ELOG_LEVEL level, _lpcstr file, int line, _lpcstr function, int threadId, ...)
+        void CLogManager::Log(_loggerptr logger, ELOG_LEVEL level, lpcstr file, int line, lpcstr function, int threadId, ...)
         {
             if (/*!m_bInited || */logger == NULL) return;
 
@@ -543,7 +543,7 @@ namespace lslib
             m_mtxLogEntity.Unlock();
         }
 
-        void Log(_loggerptr logger, ELOG_LEVEL level, _lpcstr file, int line, _lpcstr function, int threadId, ...)
+        void Log(_loggerptr logger, ELOG_LEVEL level, lpcstr file, int line, lpcstr function, int threadId, ...)
         {
             SLogEntity entity;
             entity.logger = logger;
@@ -565,7 +565,7 @@ namespace lslib
 #endif // USE_LOG4CXX
 
         //////////////////////////////////////////////////////////////////////////
-        LSLIB_API void InitLogger(_lpcstr lpstrCfgXml)
+        LSLIB_API void InitLogger(lpcstr lpstrCfgXml)
         {
             if (strtool::is_empty(lpstrCfgXml)) return;
 #ifdef USE_LOG4CXX
@@ -585,7 +585,7 @@ namespace lslib
 #endif
         }
 
-        LSLIB_API _loggerptr GetLogger(_lpcstr lpstrLoggerName)
+        LSLIB_API _loggerptr GetLogger(lpcstr lpstrLoggerName)
         {
             if (strtool::is_empty(lpstrLoggerName)) return (int)NULL;
 #ifdef USE_LOG4CXX

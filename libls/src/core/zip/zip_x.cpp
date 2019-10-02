@@ -22,7 +22,7 @@ namespace lslib
 
 #if defined(USE_ZIPUNZIP) // use zip/unzip lib (only in windows)
 
-        LSLIB_API int zip_file(_lpcstr dst_zip, _lpcstr src_file, _lpstr pwd /*= NULL*/, _lpcstr name_in_zip /*= NULL*/)
+        LSLIB_API int zip_file(lpcstr dst_zip, lpcstr src_file, lpstr pwd /*= NULL*/, lpcstr name_in_zip /*= NULL*/)
         {
             if (strtool::is_empty(dst_zip) || strtool::is_empty(src_file))
                 return -0xf1;
@@ -38,7 +38,7 @@ namespace lslib
             return ret;
         }
 
-        LSLIB_API int zip_folder(_lpcstr dst_zip, _lpcstr src_dir, _lpstr pwd /*= NULL*/, fn_zip_callback cb /*= NULL*/, void* clientp /*= NULL*/)
+        LSLIB_API int zip_folder(lpcstr dst_zip, lpcstr src_dir, lpstr pwd /*= NULL*/, fn_zip_callback cb /*= NULL*/, void* clientp /*= NULL*/)
         {
             if (strtool::is_empty(dst_zip) || strtool::is_empty(src_dir))
                 return -0xf1;
@@ -66,7 +66,7 @@ namespace lslib
             return ret;
         }
 
-        LSLIB_API int unzip(_lpcstr src_zip, _lpcstr dst_dir, _lpstr pwd /*= NULL*/, fn_zip_callback cb /*= NULL*/, void* clientp /*= NULL*/)
+        LSLIB_API int unzip(lpcstr src_zip, lpcstr dst_dir, lpstr pwd /*= NULL*/, fn_zip_callback cb /*= NULL*/, void* clientp /*= NULL*/)
         {
             if (strtool::is_empty(src_zip) || strtool::is_empty(dst_dir))
                 return -0xf1;
@@ -94,7 +94,7 @@ namespace lslib
 
 #elif defined (USE_MINIZ) // use miniz lib (windows/linux)
 
-        LSLIB_API int zip_file(_lpcstr dst_zip, _lpcstr src_file, _lpstr pwd /*= NULL*/, _lpcstr name_in_zip /*= NULL*/)
+        LSLIB_API int zip_file(lpcstr dst_zip, lpcstr src_file, lpstr pwd /*= NULL*/, lpcstr name_in_zip /*= NULL*/)
         {
             if (strtool::is_empty(dst_zip) || strtool::is_empty(src_file))
                 return -0xf1;
@@ -112,7 +112,7 @@ namespace lslib
             return ret;
         }
 
-        LSLIB_API int zip_folder(_lpcstr dst_zip, _lpcstr src_dir, _lpstr pwd /*= NULL*/, fn_zip_callback cb /*= NULL*/, void* clientp /*= NULL*/)
+        LSLIB_API int zip_folder(lpcstr dst_zip, lpcstr src_dir, lpstr pwd /*= NULL*/, fn_zip_callback cb /*= NULL*/, void* clientp /*= NULL*/)
         {
             if (strtool::is_empty(dst_zip) || strtool::is_empty(src_dir))
                 return -0xf1;
@@ -142,7 +142,7 @@ namespace lslib
             return ret;
         }
 
-        LSLIB_API int unzip(_lpcstr src_zip, _lpcstr dst_dir, _lpstr pwd /*= NULL*/, fn_zip_callback cb /*= NULL*/, void* clientp /*= NULL*/)
+        LSLIB_API int unzip(lpcstr src_zip, lpcstr dst_dir, lpstr pwd /*= NULL*/, fn_zip_callback cb /*= NULL*/, void* clientp /*= NULL*/)
         {
             if (strtool::is_empty(src_zip) || strtool::is_empty(dst_dir))
                 return -0x1;
