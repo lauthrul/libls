@@ -6,7 +6,6 @@
 ////////////////////////////////////////////////////////////////////////
 #include "testcase/testcase.hpp"
 #include "testcase/string.hpp"
-#include "testcase/type.hpp"
 #ifdef _MSC_VER
 #include "testcase/registry.hpp"
 #include "testcase/process.hpp"
@@ -20,6 +19,7 @@
 #include "testcase/logger.hpp"
 #include "testcase/cfghandler.hpp"
 #include "testcase/json.hpp"
+#include "testcase/type.hpp"
 
 extern fn_test_list test_cases;
 int main(int argc, char* argv[])
