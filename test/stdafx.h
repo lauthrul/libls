@@ -19,5 +19,5 @@
 #define USE_LIBICONV
 #endif
 
-#include <libls/libls.h>
+#include <libls.h>
 using namespace lslib;

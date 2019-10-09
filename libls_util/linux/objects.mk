@@ -4,5 +4,6 @@
 
 USER_OBJS :=
 
-LIBS :=
+INCLUDE_PATH := -I../src
 
+LIBS :=

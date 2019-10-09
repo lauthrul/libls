@@ -53,7 +53,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)\dist\include;$(SolutionDir)\libls\3rd-party\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libls\src;$(SolutionDir)\libls_util\src;$(SolutionDir)\libls\3rd-party\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -64,7 +64,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>libls.lib;libls_util.lib;log4cxx.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\dist\lib\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\log4cxx\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libls\bin\$(Configuration)\;$(SolutionDir)\libls_util\bin\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\log4cxx\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -79,7 +79,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\dist\include;$(SolutionDir)\libls\3rd-party\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libls\src;$(SolutionDir)\libls_util\src;$(SolutionDir)\libls\3rd-party\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -89,7 +89,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     </ClCompile>
     <Link>
       <AdditionalDependencies>libls.lib;libls_util.lib;log4cxx.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\dist\lib\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\log4cxx\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libls\bin\$(Configuration)\;$(SolutionDir)\libls_util\bin\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\log4cxx\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>

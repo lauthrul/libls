@@ -20,6 +20,7 @@
 #include "testcase/cfghandler.hpp"
 #include "testcase/json.hpp"
 #include "testcase/type.hpp"
+#include "testcase/utils.hpp"
 
 extern fn_test_list test_cases;
 int main(int argc, char* argv[])

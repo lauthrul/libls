@@ -23,8 +23,6 @@ CPP_DEPS :=
 C_DEPS := 
 HEADERS := 
 
-INCLUDE_PATH := -I../src -I../src/core -I../src/utils -I../../libls_util/src 
-
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 core/crypto \

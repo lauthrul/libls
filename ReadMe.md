@@ -42,3 +42,8 @@
 	```
 	$ tar xvf mysql-connector-c-6.1.11-linux-glibc2.12-x86_64.tar.gz /usr/local/mysql
 	```
+
+7. libuuid
+	```
+	$ yum install libuuid-devel # centos安装命令
+	```

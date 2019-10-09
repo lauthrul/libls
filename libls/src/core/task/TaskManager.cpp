@@ -123,6 +123,8 @@ namespace lslib
         m_lstTask.push_back(pTask);
         m_mtxTask.Unlock();
 
+        INFO_LOG(g_logger, "invoke task[0x%p, %d] success, reqid[%d]", pTask, pTask->dwTID, pTask->nReqID);
+
         return pTask->nReqID;
     }
 

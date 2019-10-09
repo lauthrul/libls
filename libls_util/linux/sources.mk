@@ -23,8 +23,6 @@ CPP_DEPS :=
 C_DEPS := 
 HEADERS := 
 
-INCLUDE_PATH := -I../src
-
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 . \

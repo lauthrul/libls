@@ -39,17 +39,27 @@ namespace lslib
 
     ldword GenerateUniqueID()
     {
-        // 24bit(max 16777216) | 8bit(max 256)
-        // can be use as long as max 194.2 days for each process start up
+        if (0)
+        {
+            static int nIndex = 0;
+            return (ldword)Time::CurrentTimeStamp() + nIndex++;
+        }
+        else
+        {
+            // 24bit(max 16777216) | 8bit(max 256)
+            // can be use as long as 194.2 days max for each process start up,
+            // and can use 256 ids per second max. if we want to enlarge capacity,
+            // we should extend return type from ldword(32bit) to lint64 or more.
 
-        const static int nBase = 1570464000; // start from 2019-10-08 00:00:00
-        static time_t tLastStamp = 0;
-        static int nIndex = 0;
+            const static int nBase = 1570464000; // start from 2019-10-08 00:00:00
+            static time_t tLastStamp = 0;
+            static int nIndex = 0;
 
-        time_t now = Time::CurrentTimeStamp();
-        if (tLastStamp != now) nIndex = 0;
-        tLastStamp = now;
-        return ((now - nBase) << 8) | nIndex++;
+            time_t now = Time::CurrentTimeStamp();
+            if (tLastStamp != now) nIndex = 0;
+            tLastStamp = now;
+            return ((now - nBase) << 8) | nIndex++;
+        }
     }
 
     string DumpTaskInfo(const SIdleThreadTask* pTask, bool bBrief /*= false*/)
