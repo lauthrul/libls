@@ -33,10 +33,10 @@ namespace lslib
         virtual void                    InitInvoker() = 0;
 
         void                            AddInvoker(const SInvoker& vInvoker);
-        SInvoker*                       GetInvoker(int dwTID) const;
+        SInvoker*                       GetInvoker(luint uTID) const;
 
     protected:
         CTaskManager*                   m_pManager;
-        map<int, SInvoker>              m_mapInvokerMap;
+        map<luint, SInvoker>            m_mapInvokerMap;
     };
 }

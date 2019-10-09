@@ -11,13 +11,14 @@ namespace lslib
 {
     struct STask
     {
-        int             dwTID;
+        luint           uTID;
         CTaskAgent*     pAgent;
         STaskReq*       pReq;
         STaskResp*      pResp;
         bool            bKeepSingle;
-        int             nReqID;
-        int             nRetryTimes;
+        luint           uDelaySecs;     // task delay perform seconds
+        luint           uReqID;
+        luint           uRetryTimes;
         time_t          tRecycleTime;
 
         STask()
@@ -52,7 +53,7 @@ namespace lslib
         virtual void                        InitAgent() = 0;
         virtual void                        ReleaseAgent() = 0;
         virtual CTaskAgent*                 GetNextAgent();
-        virtual int                         Invoke(CTaskAgent* pAgent, int dwTID, STaskReq* pReq = 0, bool bKeepSingle = true);
+        virtual luint                       Invoke(CTaskAgent* pAgent, luint uTID, STaskReq* pReq = 0, bool bKeepSingle = true, luint uDelaySecs = 0);
         bool                                IsTaskExist(STask* pTask);
         virtual bool                        IsSameTask(STask* plhs, STask* prhs) = 0;
 

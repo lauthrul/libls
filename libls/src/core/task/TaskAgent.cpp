@@ -13,9 +13,9 @@ namespace lslib
     {
     }
 
-    SInvoker* CTaskAgent::GetInvoker(int id) const
+    SInvoker* CTaskAgent::GetInvoker(luint id) const
     {
-        map<int, SInvoker>::const_iterator it = m_mapInvokerMap.find(id);
+        map<luint, SInvoker>::const_iterator it = m_mapInvokerMap.find(id);
         if (it == m_mapInvokerMap.end())
             return NULL;
         else

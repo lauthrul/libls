@@ -101,20 +101,21 @@ namespace lslib
         return pAgent;
     }
 
-    int CTaskManager::Invoke(CTaskAgent* pAgent, int dwTID, STaskReq* pReq /*= 0*/, bool bKeepSingle /*= true*/)
+    luint CTaskManager::Invoke(CTaskAgent* pAgent, luint uTID, STaskReq* pReq /*= 0*/, bool bKeepSingle /*= true*/, luint uDelaySecs /*= 0*/)
     {
         if (pAgent == NULL) return -1;
 
         STask* pTask = new STask();
-        pTask->dwTID = dwTID;
+        pTask->uTID = uTID;
         pTask->pAgent = pAgent;
         pTask->pReq = pReq;
-        pTask->nReqID = GenerateUniqueID();
+        pTask->uReqID = GenerateUniqueID();
         pTask->bKeepSingle = bKeepSingle;
+        pTask->uDelaySecs = uDelaySecs;
 
         if (bKeepSingle && IsTaskExist(pTask))
         {
-            INFO_LOG(g_logger, "same task[%d]", pTask->dwTID);
+            INFO_LOG(g_logger, "same task[%d]", pTask->uTID);
             m_lstTrashbin.push_back(pTask);
             return 0;
         }
@@ -123,9 +124,9 @@ namespace lslib
         m_lstTask.push_back(pTask);
         m_mtxTask.Unlock();
 
-        INFO_LOG(g_logger, "invoke task[0x%p, %d] success, reqid[%d]", pTask, pTask->dwTID, pTask->nReqID);
+        INFO_LOG(g_logger, "invoke task[0x%p, %d] success, reqid[%d]", pTask, pTask->uTID, pTask->uReqID);
 
-        return pTask->nReqID;
+        return pTask->uReqID;
     }
 
     bool CTaskManager::IsTaskExist(STask* pTask)
@@ -194,11 +195,11 @@ namespace lslib
             bool bDealed = false;
             if (pTask->pAgent != NULL)
             {
-                SInvoker* pInvoker = pTask->pAgent->GetInvoker(pTask->dwTID);
+                SInvoker* pInvoker = pTask->pAgent->GetInvoker(pTask->uTID);
                 if (pInvoker != NULL)
                 {
                     SIdleThreadTask vIdleTask;
-                    vIdleTask.m_dwTID = pTask->dwTID;
+                    vIdleTask.m_dwTID = pTask->uTID;
                     vIdleTask.m_eTaskType = SIdleThreadTask::ITT_THREAD;
                     vIdleTask.m_strTaskName = pInvoker->strTaskName;
                     vIdleTask.m_ptrThreadTask = pInvoker->ptrHandler;
@@ -207,7 +208,12 @@ namespace lslib
                     vIdleTask.m_pParam = (ldword)pTask;
 
                     if (pTask->pReq != NULL)
+                    {
+                        if (Time::CurrentTimeStamp() - pTask->pReq->tReqTime < pTask->uDelaySecs)
+                            continue;
+
                         pTask->pReq->tDealTime = Time::CurrentTimeStamp();
+                    }
                     pTask->pAgent->RunTask(vIdleTask);
 
                     m_mtxWorkMapping.Lock();
@@ -219,7 +225,7 @@ namespace lslib
             }
             if (!bDealed)
             {
-                ERROR_LOG(g_logger, "no invoker for task[%d]", pTask->dwTID);
+                ERROR_LOG(g_logger, "no invoker for task[%d]", pTask->uTID);
                 m_lstTrashbin.push_back(pTask);
             }
             it = m_lstTask.erase(it);
