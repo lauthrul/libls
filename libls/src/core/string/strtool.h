@@ -83,13 +83,13 @@ namespace lslib
 
         /// @brief 判断字符串是否为布尔型
         /// @param str 待判断的字符串
-        /// @param numeric 待判断字符串是否为整数型布尔值，如`0`和`1`
-        LSLIB_API const bool is_bool(lpcstr str, bool numeric = false);
+        /// @param numeric 待判断字符串是否允许为整数型布尔值`0`和`1`
+        LSLIB_API const bool is_bool(lpcstr str, bool numeric = true);
 
         /// @brief 判断字符串是否为布尔型
         /// @param str 待判断的字符串
-        /// @param numeric 待判断字符串是否为整数型布尔值，如`0`和`1`
-        LSLIB_API const bool is_bool(const string& str, bool numeric = false);
+        /// @param numeric 待判断字符串是否允许为整数型布尔值`0`和`1`
+        LSLIB_API const bool is_bool(const string& str, bool numeric = true);
 
         /// @brief 转换字符串为整型
         /// @details 非整型字符串将转换失败并返回0
@@ -98,6 +98,14 @@ namespace lslib
         /// @brief 转换字符串为整型
         /// @details 非整型字符串将转换失败并返回0
         LSLIB_API const int to_int(const string& str);
+
+        /// @brief 转换字符串为64位整型
+        /// @details 非整型字符串将转换失败并返回0
+        LSLIB_API const lint64 to_int64(lpcstr str);
+
+        /// @brief 转换字符串为64位整型
+        /// @details 非整型字符串将转换失败并返回0
+        LSLIB_API const lint64 to_int64(const string& str);
 
         /// @brief 转换字符串为浮点型
         /// @details 非浮点型字符串将转换失败并返回0
@@ -117,6 +125,9 @@ namespace lslib
 
         /// 转换整型为字符串
         LSLIB_API string from_int(int value);
+
+        /// 转换64位整型为字符串
+        LSLIB_API string from_int64(lint64 value);
 
         /// 转换浮点型型为字符串
         LSLIB_API string from_float(double value, int bit);

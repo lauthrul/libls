@@ -53,6 +53,8 @@ namespace lslib
 
         LSLIB_API const bool is_space(lpcstr str)
         {
+            if (is_empty(str)) return false;
+
             lpcstr p = str;
             while (*p != 0)
             {
@@ -70,6 +72,8 @@ namespace lslib
 
         LSLIB_API const bool is_lower(lpcstr str)
         {
+            if (is_empty(str)) return false;
+
             lpcstr p = str;
             while (*p != 0)
             {
@@ -87,6 +91,8 @@ namespace lslib
 
         LSLIB_API const bool is_upper(lpcstr str)
         {
+            if (is_empty(str)) return false;
+
             lpcstr p = str;
             while (*p != 0)
             {
@@ -104,6 +110,8 @@ namespace lslib
 
         LSLIB_API const bool is_digital(lpcstr str)
         {
+            if (is_empty(str)) return false;
+
             lpcstr p = str;
             while (*p != 0)
             {
@@ -121,6 +129,8 @@ namespace lslib
 
         LSLIB_API const bool is_int(lpcstr str)
         {
+            if (is_empty(str)) return false;
+
             lpcstr p = str;
             if (*p != '-' && !isdigit(*p))
                 return false;
@@ -141,6 +151,8 @@ namespace lslib
 
         LSLIB_API const bool is_float(lpcstr str)
         {
+            if (is_empty(str)) return false;
+
             lpcstr p = str;
             if (*p != '-' && *p != '.' && !isdigit(*p))
                 return false;
@@ -150,11 +162,11 @@ namespace lslib
             {
                 if (*p == '.')
                     dotcnt++;
-                if (!isdigit(*p) && dotcnt > 1)
+                else if (!isdigit(*p))
                     return false;
                 p++;
             }
-            return true;
+            return (dotcnt == 1);
         }
 
         LSLIB_API const bool is_float(const string& str)
@@ -162,7 +174,7 @@ namespace lslib
             return is_float(str.c_str());
         }
 
-        LSLIB_API const bool is_bool(lpcstr str, bool numeric /*= false*/)
+        LSLIB_API const bool is_bool(lpcstr str, bool numeric /*= true*/)
         {
             string str_lower = lower(str);
             if (str_lower == "true" || str_lower == "false")
@@ -175,20 +187,31 @@ namespace lslib
             return false;
         }
 
-        LSLIB_API const bool is_bool(const string& str, bool numeric /*= false*/)
+        LSLIB_API const bool is_bool(const string& str, bool numeric /*= true*/)
         {
             return is_bool(str.c_str(), numeric);
         }
 
         LSLIB_API const int to_int(lpcstr str)
         {
-            if (!is_int(str)) return 0;
+            if (!is_int(str) && !is_float(str)) return 0;
             return atoi(str);
         }
 
         LSLIB_API const int to_int(const string& str)
         {
             return to_int(str.c_str());
+        }
+
+        LSLIB_API const lint64 to_int64(lpcstr str)
+        {
+            if (!is_int(str) && !is_float(str)) return 0;
+            return atoll(str);
+        }
+
+        LSLIB_API const lint64 to_int64(const string& str)
+        {
+            return to_int64(str.c_str());
         }
 
         LSLIB_API const double to_float(lpcstr str)
@@ -204,11 +227,9 @@ namespace lslib
 
         LSLIB_API const bool to_bool(lpcstr str)
         {
-            if (!is_bool(str)) return false;
-            string str_lower = lower(str);
-            if (str_lower == "true" || str_lower == "1")
-                return true;
-            return false;
+            bool numeric = (is_int(str) || is_float(str));
+            if (numeric)    return to_float(str);
+            else            return (lower(str) == "true");
         }
 
         LSLIB_API const bool to_bool(const string& str)
@@ -218,15 +239,18 @@ namespace lslib
 
         LSLIB_API string from_int(int value)
         {
-            string str = strtool::format("%d", value);
-            return str;
+            return strtool::format("%d", value);
+        }
+
+        LSLIB_API string from_int64(lint64 value)
+        {
+            return strtool::format("%lld", value);
         }
 
         LSLIB_API string from_float(double value, int bit)
         {
             string format = strtool::format("%%0%df", bit);
-            string str = strtool::format(format.c_str(), value);
-            return str;
+            return strtool::format(format.c_str(), value);
         }
 
         LSLIB_API string from_bool(bool value)
@@ -238,7 +262,7 @@ namespace lslib
         {
             string str_wrapper = str;
             transform(str_wrapper.begin(), str_wrapper.end(), str_wrapper.begin(), ::tolower);
-            return str;
+            return str_wrapper;
         }
 
         LSLIB_API string lower(const string& str)
@@ -250,7 +274,7 @@ namespace lslib
         {
             string str_wrapper = str;
             transform(str_wrapper.begin(), str_wrapper.end(), str_wrapper.begin(), ::toupper);
-            return str;
+            return str_wrapper;
         }
 
         LSLIB_API string upper(const string& str)
