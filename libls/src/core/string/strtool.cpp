@@ -525,7 +525,7 @@ namespace lslib
             return replace(str.c_str(), needle.c_str(), replacement.c_str(), index, counts);
         }
 
-        LSLIB_API string format(lpcstr pfmt, const va_list& args)
+        LSLIB_API string format_args(lpcstr pfmt, const va_list& args)
         {
 #ifdef WIN32
             int len = vsnprintf(NULL, 0, pfmt, args);
@@ -545,7 +545,7 @@ namespace lslib
         {
             va_list args;
             va_start(args, pfmt);
-            string strret = format(pfmt, args);
+            string strret = format_args(pfmt, args);
             va_end(args);
             return strret;
         }
@@ -554,7 +554,7 @@ namespace lslib
         {
             va_list args;
             va_start(args, pfmt);
-            str += format(pfmt, args);
+            str += format_args(pfmt, args);
             va_end(args);
             return str;
         }

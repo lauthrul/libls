@@ -270,7 +270,7 @@ namespace lslib
         /// @brief 格式化字符串
         /// @param pfmt 将要格式化成的字符串格式
         /// @param args 可变参列表，与pfmt格式一一对应
-        LSLIB_API string format(lpcstr pfmt, const va_list& args);
+        LSLIB_API string format_args(lpcstr pfmt, const va_list& args);
 
         /// @brief 格式化字符串
         /// @param pfmt 将要格式化成的字符串格式

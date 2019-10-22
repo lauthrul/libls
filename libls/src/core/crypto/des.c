@@ -317,7 +317,7 @@ int32_t des_decrypt_cbc(const uint8_t in[],         // Ciphertext, must be a mul
     return (TRUE);
 }
 
-void three_des_key_setup(const uint8_t key[], uint8_t schedule[][16][6], DES_MODE mode)
+void three_des_key_setup(const uint8_t key[24], uint8_t schedule[][16][6], DES_MODE mode)
 {
     if (mode == DES_ENCRYPT)
     {

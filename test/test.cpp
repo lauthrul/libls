@@ -13,7 +13,6 @@
 #include "testcase/os.hpp"
 #include "testcase/zip.hpp"
 #include "testcase/httpclient.hpp"
-#include "testcase/crypto.hpp"
 #include "testcase/mmr.hpp"
 #include "testcase/logger.hpp"
 #include "testcase/cfghandler.hpp"
@@ -21,6 +20,7 @@
 #include "testcase/type.hpp"
 #include "testcase/utils.hpp"
 #include "testcase/string.hpp"
+#include "testcase/crypto.hpp"
 
 extern fn_test_list test_cases;
 int main(int argc, char* argv[])

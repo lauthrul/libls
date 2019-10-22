@@ -37,7 +37,7 @@ namespace lslib
             va_list args;
             va_start(args, threadId); // last fixed param
             char* format = va_arg(args, char*); // first arg
-            string str = strtool::format(format, args);
+            string str = strtool::format_args(format, args);
             va_end(args);
 
             ::log4cxx::spi::LocationInfo location(file, function, line);
@@ -407,7 +407,7 @@ namespace lslib
                 va_list args;
                 va_start(args, threadId); // last fixed param
                 char* format = va_arg(args, char*); // first arg
-                entity.msg = strtool::format(format, args);
+                entity.msg = strtool::format_args(format, args);
                 va_end(args);
 
                 m_lstLogEntitysTmp.push_back(entity);
@@ -556,7 +556,7 @@ namespace lslib
             va_list args;
             va_start(args, threadId); // last fixed param
             char* format = va_arg(args, char*); // first arg
-            entity.msg = strtool::format(format, args);
+            entity.msg = strtool::format_args(format, args);
             va_end(args);
 
             CLogManager::Log(entity);

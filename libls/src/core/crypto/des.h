@@ -65,7 +65,7 @@ int32_t des_decrypt_cbc(const uint8_t in[],                 // Ciphertext, must 
 // THREE AES - ECB
 ///////////////////
 
-void three_des_key_setup(const uint8_t key[],
+void three_des_key_setup(const uint8_t key[24],
                          uint8_t schedule[][16][6],
                          DES_MODE mode);
 

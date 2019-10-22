@@ -67,7 +67,7 @@ namespace lslib
         }
 
         lint dwCryptSize = 0;
-        string strCryptBuf = crypto::des_decrypt_cbc((lpcstr)pBuffer, dwReadSize, DEFAULT_CRYPT_KEY, crypto::crypto_pkcs7padding, DEFAULT_CRYPT_IV, (int*)&dwCryptSize);
+        string strCryptBuf = crypto::des_decrypt_cbc(pBuffer, dwReadSize, DEFAULT_CRYPT_KEY, crypto::crypto_pkcs7padding, DEFAULT_CRYPT_IV, (int*)&dwCryptSize);
         if (dwCryptSize > 0)
         {
             free(pBuffer);
@@ -345,7 +345,7 @@ namespace lslib
         }
 
         int nCryptSize = 0;
-        string strCryptBuf = crypto::des_encrypt_cbc((lpcstr)pNewBuffer, dwNewBufWriten, DEFAULT_CRYPT_KEY, crypto::crypto_pkcs7padding, DEFAULT_CRYPT_IV, &nCryptSize);
+        string strCryptBuf = crypto::des_encrypt_cbc(pNewBuffer, dwNewBufWriten, DEFAULT_CRYPT_KEY, crypto::crypto_pkcs7padding, DEFAULT_CRYPT_IV, &nCryptSize);
         if (nCryptSize > 0)
         {
             free(pNewBuffer);
