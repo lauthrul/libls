@@ -3,8 +3,6 @@
 #pragma warning(disable:4800)
 #pragma warning(disable:4996)
 
-#define USE_LOG4CXX
-#define USE_LIBCURL
 #define USE_LIBICONV
 
 #include <libls.h>
