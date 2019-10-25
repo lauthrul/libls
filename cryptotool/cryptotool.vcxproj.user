@@ -4,12 +4,12 @@
     <LocalDebuggerCommand>$(TargetFileName)</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)\bin\$(Configuration)\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>encoding_convert -T gb2312 -F utf-8 你好</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>encoding_convert "http://www.baidu.com/?key=你好，world!" -T utf8 -F gb2312</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerCommand>$(TargetFileName)</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)\bin\$(Configuration)\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>encoding_convert -T gb2312 -F utf-8 你好</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>encoding_convert "http://www.baidu.com/?key=你好，world!" -T utf8 -F gb2312</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

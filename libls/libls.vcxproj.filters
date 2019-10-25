@@ -159,6 +159,15 @@
     <ClCompile Include="src\core\task\TaskManager.cpp">
       <Filter>core\task</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\crypto\sha224.c">
+      <Filter>core\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\crypto\sha384.c">
+      <Filter>core\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\crypto\sha512.c">
+      <Filter>core\crypto</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\mmr.h">
@@ -268,6 +277,15 @@
     </ClInclude>
     <ClInclude Include="src\core\task\TaskManager.h">
       <Filter>core\task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\crypto\sha224.h">
+      <Filter>core\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\crypto\sha384.h">
+      <Filter>core\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\crypto\sha512.h">
+      <Filter>core\crypto</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

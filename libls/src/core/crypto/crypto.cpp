@@ -2,7 +2,10 @@
 #include "crypto.h"
 #include "md5.h"
 #include "sha1.h"
+#include "sha224.h"
 #include "sha256.h"
+#include "sha384.h"
+#include "sha512.h"
 #include "base64.h"
 #include "aes.h"
 #include "url_encode.h"
@@ -36,24 +39,30 @@ namespace lslib
 
         LSLIB_API string sha224(lpbyte data, size_t len)
         {
-            return "";
+            uint8_t hash[32] = { 0 };
+            SHA224_Simple(data, len, hash);
+            return strtool::byte_array_to_hex_str(hash, 28);
         }
 
         LSLIB_API string sha256(lpbyte data, size_t len)
         {
-            uint8_t hash[SHA256_BYTES] = {0};
-            ::sha256(data, len, hash);
-            return strtool::byte_array_to_hex_str(hash, SHA256_BYTES);
+            uint8_t hash[32] = {0};
+            SHA256_Simple(data, len, hash);
+            return strtool::byte_array_to_hex_str(hash, 32);
         }
 
         LSLIB_API string sha384(lpbyte data, size_t len)
         {
-            return "";
+            uint8_t hash[64] = { 0 };
+            SHA384_Simple(data, len, hash);
+            return strtool::byte_array_to_hex_str(hash, 48);
         }
 
         LSLIB_API string sha512(lpbyte data, size_t len)
         {
-            return "";
+            uint8_t hash[64] = { 0 };
+            SHA512_Simple(data, len, hash);
+            return strtool::byte_array_to_hex_str(hash, 64);
         }
 
         LSLIB_API string base64_encode(lpbyte data, size_t len, __out__ int* out_len)
@@ -393,7 +402,7 @@ namespace lslib
             const char** pin = &inbuf;
             char** pout = &outbuf;
             cd = iconv_open(to_charset, from_charset);
-            if (cd <= 0) return -1;
+            if ((int)cd <= 0) return -1;
             memset(outbuf, 0, outlen);
             int ret = iconv(cd, pin, &inlen, pout, &outlen);
             iconv_close(cd);
