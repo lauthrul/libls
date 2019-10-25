@@ -29,7 +29,7 @@ void print_usage()
                     "   <data>                  data  or file path to be perform\n"
                     "options: \n"
                     "    -m|--mode              crypt mode: [ecb|cbc]\n"
-                    "    -p|--padding           padding mode: [none|zore|pkcs5|pkcs7]\n"
+                    "    -p|--padding           padding mode: [none|zero|pkcs5|pkcs7]\n"
                     "    -k|--key               crypt key\n"
                     "                               for des, should be 8 bytes\n"
                     "                               for 3des, should be 24 bytes\n"
@@ -218,7 +218,7 @@ int main(int argc, lpcstr argv[])
             }
             crypto::crypto_padding_mode ep;
             if (padding == "none")          ep = crypto::crypto_nopadding;
-            else if (padding == "zore")     ep = crypto::crypto_zeropadding;
+            else if (padding == "zero")     ep = crypto::crypto_zeropadding;
             else if (padding == "pkcs5")    ep = crypto::crypto_pkcs5padding;
             else if (padding == "pkcs7")    ep = crypto::crypto_pkcs7padding;
             else
@@ -291,7 +291,7 @@ int main(int argc, lpcstr argv[])
             if (crypto == "3des_decrypt")   str += "3des_decrypt -m [ecb|cbc] -k <24 size key> [-iv <8 size iv>] ";
             if (crypto == "aes_encrypt")    str += "aes_encrypt -m [ecb|cbc] -k <key> -kl [128|192|256] [-iv <16 size iv>]";
             if (crypto == "aes_decrypt")    str += "aes_decrypt -m [ecb|cbc] -k <key> -kl [128|192|256] [-iv <16 size iv>]";
-            str += "-p [none|zore|pkcs5|pkcs7] [-o <output_file>] [-of [raw|hex]] [-f] <data> -if [raw|hex]";
+            str += "-p [none|zero|pkcs5|pkcs7] [-o <output_file>] [-of [raw|hex]] [-f] <data> -if [raw|hex]";
             printf(str.c_str());
             return 0;
         }
