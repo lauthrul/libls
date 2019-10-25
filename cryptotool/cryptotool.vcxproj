@@ -67,8 +67,8 @@
       <Command>if not exist "$(SolutionDir)\bin\$(Configuration)\" md "$(SolutionDir)\bin\$(Configuration)\"
 copy /y "$(OutDir)$(ProjectName).exe"  "$(SolutionDir)\bin\$(Configuration)\"
 copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
-copy /y "$(OutDir)$(ProjectName).exe"  "$(SolutionDir)\bin\$(Configuration)-Min\"
-copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)-Min\"
+copy /y "$(OutDir)$(ProjectName).exe"  "$(SolutionDir)\bin\$(Configuration)-Basic\"
+copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)-Basic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -94,8 +94,8 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)-Min\
       <Command>if not exist "$(SolutionDir)\bin\$(Configuration)\" md "$(SolutionDir)\bin\$(Configuration)\"
 copy /y "$(OutDir)$(ProjectName).exe"  "$(SolutionDir)\bin\$(Configuration)\"
 copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
-copy /y "$(OutDir)$(ProjectName).exe"  "$(SolutionDir)\bin\$(Configuration)-Min\"
-copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)-Min\"
+copy /y "$(OutDir)$(ProjectName).exe"  "$(SolutionDir)\bin\$(Configuration)-Basic\"
+copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)-Basic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
