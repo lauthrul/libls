@@ -194,7 +194,6 @@ namespace lslib
 
         LSLIB_API const int to_int(lpcstr str)
         {
-            if (!is_int(str) && !is_float(str)) return 0;
             return atoi(str);
         }
 
@@ -205,7 +204,6 @@ namespace lslib
 
         LSLIB_API const lint64 to_int64(lpcstr str)
         {
-            if (!is_int(str) && !is_float(str)) return 0;
             return atoll(str);
         }
 
@@ -216,7 +214,6 @@ namespace lslib
 
         LSLIB_API const double to_float(lpcstr str)
         {
-            if (!is_float(str)) return 0;
             return atof(str);
         }
 
