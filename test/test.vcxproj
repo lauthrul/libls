@@ -41,13 +41,13 @@
     <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(ProjectDir)\bin\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)\build\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\out\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(ProjectName)\$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ProjectDir)\bin\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)\build\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\out\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(ProjectName)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -64,13 +64,14 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>libls.lib;libls_util.lib;log4cxx.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\libls\bin\$(Configuration)\;$(SolutionDir)\libls_util\bin\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\log4cxx\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\out\libls\$(Configuration)\;$(SolutionDir)\out\libls_util\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\log4cxx\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(OutDir)$(ProjectName).exe"  "$(SolutionDir)\bin\$(Configuration)\"
+      <Command>if not exist "$(SolutionDir)\bin\$(Configuration)\" md "$(SolutionDir)\bin\$(Configuration)\"
+copy /y "$(OutDir)$(ProjectName).exe"  "$(SolutionDir)\bin\$(Configuration)\"
 copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
 </Command>
     </PostBuildEvent>
@@ -89,7 +90,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
     </ClCompile>
     <Link>
       <AdditionalDependencies>libls.lib;libls_util.lib;log4cxx.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\libls\bin\$(Configuration)\;$(SolutionDir)\libls_util\bin\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\log4cxx\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\out\libls\$(Configuration)\;$(SolutionDir)\out\libls_util\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\log4cxx\$(Configuration)\;$(SolutionDir)\libls\3rd-party\bin\libcurl\DLL $(Configuration) - DLL OpenSSL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -97,7 +98,8 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(OutDir)$(ProjectName).exe"  "$(SolutionDir)\bin\$(Configuration)\"
+      <Command>if not exist "$(SolutionDir)\bin\$(Configuration)\" md "$(SolutionDir)\bin\$(Configuration)\"
+copy /y "$(OutDir)$(ProjectName).exe"  "$(SolutionDir)\bin\$(Configuration)\"
 copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
 </Command>
     </PostBuildEvent>
