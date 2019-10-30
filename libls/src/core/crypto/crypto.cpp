@@ -65,7 +65,7 @@ namespace lslib
             return strtool::byte_array_to_hex_str(hash, 64);
         }
 
-        LSLIB_API string base64_encode(lpbyte data, size_t len, __out__ int* out_len)
+        LSLIB_API string base64_encode(lpbyte data, size_t len)
         {
             int data_len = estimate_base64_encode_len(len);
             lpbyte pbuf = lsalloc(data_len + 1);
@@ -74,15 +74,15 @@ namespace lslib
             string strret;
             strret.assign((lpcstr)pbuf, data_len);
             lsfree(pbuf);
-            if (out_len) *out_len = data_len;
             return strret;
         }
 
-        LSLIB_API string base64_decode(lpbyte data, size_t len, __out__ int* out_len)
+        LSLIB_API string base64_decode(lpcstr data, __out__ int* out_len)
         {
+            size_t len = strlen(data);
             int data_len = estimate_base64_decode_len(len);
             lpbyte pbuf = lsalloc(data_len + 1);
-            data_len = ::base64_decode((lpcstr)data, len, pbuf);
+            data_len = ::base64_decode(data, len, pbuf);
 
             string strret;
             strret.assign((lpcstr)pbuf, data_len);
@@ -373,19 +373,19 @@ namespace lslib
             return strret;
         }
 
-        LSLIB_API string url_encode(lpbyte data, size_t len, __out__ int* out_len)
+        LSLIB_API string url_encode(lpbyte data, size_t len)
         {
             int data_len = ::url_encode((lpcstr)data, len, NULL, 0);
             lpbyte pbuf = lsalloc(data_len + 1);
             ::url_encode((lpcstr)data, len, (lpstr)pbuf, data_len);
             string str; str.assign((lpcstr)pbuf, data_len);
             lsfree(pbuf);
-            if (out_len) *out_len = data_len;
             return str;
         }
 
-        LSLIB_API string url_decode(lpbyte data, size_t len, __out__ int* out_len)
+        LSLIB_API string url_decode(lpcstr data, __out__ int* out_len)
         {
+            size_t len = strlen(data);
             lpbyte pbuf = lsalloc(len + 1);
             memcpy(pbuf, data, len);
             int data_len = ::url_decode((lpstr)pbuf, len);

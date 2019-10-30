@@ -88,10 +88,10 @@ void test_base64()
     {
         const string& str = texts[i];
 
-        str_en = crypto::base64_encode((lpbyte)str.c_str(), str.length(), NULL);
+        str_en = crypto::base64_encode((lpbyte)str.c_str(), str.length());
         cout << "crypto::base64_encode(\"" << str << "\") = " << str_en << endl;
 
-        str_de = crypto::base64_decode((lpbyte)str_en.c_str(), str_en.length(), NULL);
+        str_de = crypto::base64_decode(str_en.c_str(), NULL);
         cout << "crypto::base64_decode(\"" << str_en << "\") = " << str_de.c_str() << endl;
     }
 }
@@ -332,10 +332,10 @@ void test_url_encode()
     {
         const string& text = texts[i];
 
-        stren = crypto::url_encode((lpbyte)text.c_str(), text.length(), NULL);
+        stren = crypto::url_encode((lpbyte)text.c_str(), text.length());
         cout << "crypto::url_encode(\"" << text << "\") : = " << stren << endl;
 
-        strde = crypto::url_decode((lpbyte)stren.c_str(), text.length(), NULL);
+        strde = crypto::url_decode(stren.c_str(), NULL);
         cout << "crypto::url_decode(\"" << stren << "\") : = " << strde << endl;
     }
 }

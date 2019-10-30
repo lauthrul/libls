@@ -19,18 +19,30 @@ cryptotool encoding_convert "http://www.baidu.com/?key=你好，world!" -T gb231
 
 cryptotool des_encrypt -m ecb -k l53d70p3 -p pkcs7 "http://www.baidu.com/?key=hello,world!" -of hex
 cryptotool des_decrypt -m ecb -k l53d70p3 -p pkcs7 595915461467a6281cdc851002aa2641304cd040a564867afc3a611060cb8e4d58d9455be3ada970 -if hex -of raw
+cryptotool des_encrypt -m ecb -k l53d70p3 -p pkcs7 "http://www.baidu.com/?key=hello,world!" -of base64
+cryptotool des_decrypt -m ecb -k l53d70p3 -p pkcs7 WVkVRhRnpigc3IUQAqomQTBM0EClZIZ6/DphEGDLjk1Y2UVb462pcA== -if base64 -of raw
 cryptotool des_encrypt -m cbc -k l53d70p3 -iv 12345678 -p pkcs7 "http://www.baidu.com/?key=hello,world!" -of hex
 cryptotool des_decrypt -m cbc -k l53d70p3 -iv 12345678 -p pkcs7 957533a15438d28180af0b0d16a771c7907e46f6a1c20841ee1becbb7a32d9dbc21c78608d8d896a -if hex -of raw
+cryptotool des_encrypt -m cbc -k l53d70p3 -iv 12345678 -p pkcs7 "http://www.baidu.com/?key=hello,world!" -of base64
+cryptotool des_decrypt -m cbc -k l53d70p3 -iv 12345678 -p pkcs7 lXUzoVQ40oGArwsNFqdxx5B+RvahwghB7hvsu3oy2dvCHHhgjY2Jag== -if base64 -of raw
 
 cryptotool aes_encrypt -m ecb -k l53d70p3 -kl 128 -p pkcs7 "http://www.baidu.com/?key=hello,world!" -of hex
 cryptotool aes_decrypt -m ecb -k l53d70p3 -kl 128 -p pkcs7 "4e4aad83670ced4d6ba4d4d0832c3dac90540d5c3bdf16afbcf6e68770de3a32a9bb9f5bf7bea50e4ae7f80a1868abd7" -if hex -of raw
+cryptotool aes_encrypt -m ecb -k l53d70p3 -kl 128 -p pkcs7 "http://www.baidu.com/?key=hello,world!" -of base64
+cryptotool aes_decrypt -m ecb -k l53d70p3 -kl 128 -p pkcs7 "Tkqtg2cM7U1rpNTQgyw9rJBUDVw73xavvPbmh3DeOjKpu59b976lDkrn+AoYaKvX" -if base64 -of raw
 cryptotool aes_encrypt -m cbc -k 12345678l53d70p3 -kl 128 -iv 12345678l53d70p3 -p pkcs7 "http://www.baidu.com/?key=hello,world!" -of hex
 cryptotool aes_decrypt -m cbc -k 12345678l53d70p3 -kl 128 -iv 12345678l53d70p3 -p pkcs7 "181922f701165a28f4dd0c695ead9723454003b0d997e1e439eae9b080305e86340f38ca0a9d2d5371de6e01ef7bb141" -if hex -of raw
+cryptotool aes_encrypt -m cbc -k 12345678l53d70p3 -kl 128 -iv 12345678l53d70p3 -p pkcs7 "http://www.baidu.com/?key=hello,world!" -of base64
+cryptotool aes_decrypt -m cbc -k 12345678l53d70p3 -kl 128 -iv 12345678l53d70p3 -p pkcs7 "GBki9wEWWij03QxpXq2XI0VAA7DZl+HkOerpsIAwXoY0DzjKCp0tU3HebgHve7FB" -if base64 -of raw
 
 cryptotool 3des_encrypt -m ecb -k l53d70p312345678l53d70p3 -p pkcs7 "http://www.baidu.com/?key=hello,world!" -of hex
 cryptotool 3des_decrypt -m ecb -k l53d70p312345678l53d70p3 -p pkcs7 d5069779e1b15228b804a9358c76c395374e8e999cf93552089e457736e563d3f9ff6441768e7947 -if hex -of raw
+cryptotool 3des_encrypt -m ecb -k l53d70p312345678l53d70p3 -p pkcs7 "http://www.baidu.com/?key=hello,world!" -of base64
+cryptotool 3des_decrypt -m ecb -k l53d70p312345678l53d70p3 -p pkcs7 1QaXeeGxUii4BKk1jHbDlTdOjpmc+TVSCJ5FdzblY9P5/2RBdo55Rw== -if base64 -of raw
 cryptotool 3des_encrypt -m cbc -k l53d70p312345678l53d70p3 -iv 12345678 -p pkcs7 "http://www.baidu.com/?key=hello,world!" -of hex
 cryptotool 3des_decrypt -m cbc -k l53d70p312345678l53d70p3 -iv 12345678 -p pkcs7 0f3413df682773e1315fa85b050a5ca577579a8f032b78b1b4d73ad64140cc3464d29153c844ad61 -if hex -of raw
+cryptotool 3des_encrypt -m cbc -k l53d70p312345678l53d70p3 -iv 12345678 -p pkcs7 "http://www.baidu.com/?key=hello,world!" -of base64
+cryptotool 3des_decrypt -m cbc -k l53d70p312345678l53d70p3 -iv 12345678 -p pkcs7 DzQT32gnc+ExX6hbBQpcpXdXmo8DK3ixtNc61kFAzDRk0pFTyEStYQ== -if base64 -of raw
 
 cryptotool md5 123 -o crypto/md5.out.txt
 cryptotool sha1 123 -o crypto/sha1.out.txt
@@ -39,9 +51,12 @@ cryptotool sha256 123 -o crypto/sha256.out.txt
 cryptotool sha384 123 -o crypto/sha384.out.txt
 cryptotool sha512 123 -o crypto/sha512.out.txt
 
-cryptotool aes_encrypt -m cbc -k 12345678l53d70p3 -kl 128 -iv 12345678l53d70p3 -p pkcs7 -f "c:\windows\win.ini" -o "crypto/win.ini.out.txt" -of hex
-cryptotool aes_decrypt -m cbc -k 12345678l53d70p3 -kl 128 -iv 12345678l53d70p3 -p pkcs7 -f "crypto/win.ini.out.txt" -if hex -o "crypto/win.ini"
+cryptotool aes_encrypt -m cbc -k 12345678l53d70p3 -kl 128 -iv 12345678l53d70p3 -p pkcs7 -f "c:\windows\win.ini" -o "crypto/win.ini.hexout.txt" -of hex
+cryptotool aes_decrypt -m cbc -k 12345678l53d70p3 -kl 128 -iv 12345678l53d70p3 -p pkcs7 -f "crypto/win.ini.hexout.txt" -if hex -o "crypto/win.ini"
 
-cryptotool 3des_encrypt -m cbc -k l53d70p312345678l53d70p3 -iv 12345678 -p pkcs7 -f "C:\Windows\System32\notepad.exe" -o "crypto/notepad.out.txt"
-cryptotool 3des_decrypt -m cbc -k l53d70p312345678l53d70p3 -iv 12345678 -p pkcs7 -f "crypto/notepad.out.txt" -o "crypto/notepad.exe"
+cryptotool aes_encrypt -m cbc -k 12345678l53d70p3 -kl 128 -iv 12345678l53d70p3 -p pkcs7 -f "c:\windows\win.ini" -o "crypto/win.ini.base64out.txt" -of base64
+cryptotool aes_decrypt -m cbc -k 12345678l53d70p3 -kl 128 -iv 12345678l53d70p3 -p pkcs7 -f "crypto/win.ini.base64out.txt" -if base64 -o "crypto/win.ini"
+
+cryptotool 3des_encrypt -m cbc -k l53d70p312345678l53d70p3 -iv 12345678 -p pkcs7 -f "C:\Windows\System32\notepad.exe" -o "crypto/notepad.rawout.txt"
+cryptotool 3des_decrypt -m cbc -k l53d70p312345678l53d70p3 -iv 12345678 -p pkcs7 -f "crypto/notepad.rawout.txt" -o "crypto/notepad.exe"
 

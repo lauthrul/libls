@@ -77,14 +77,13 @@ namespace lslib
         /// @param data 需要进行base64编码的数据内容
         /// @param len  数据长度
         /// @return 返回base64编码后的字符串
-        LSLIB_API string base64_encode(lpbyte data, size_t len, __out__ int* out_len);
+        LSLIB_API string base64_encode(lpbyte data, size_t len);
 
         /// @brief 对数据进行base64解码
-        /// @param[in] data     需要进行base64解码的数据内容
-        /// @param[in] len      数据长度
+        /// @param[in] data     需要进行base64解码的字符串
         /// @param[out] out_len 输出解码后的数据内容长度，为NULL时不输出长度
         /// @return 返回base64解码后的数据内容，以string作为保存容器，非字符串数据内容请配合输出长度out_len使用
-        LSLIB_API string base64_decode(lpbyte data, size_t len, __out__ int* out_len);
+        LSLIB_API string base64_decode(lpcstr data, __out__ int* out_len);
 
         // -----------------------------------------------------------------------
         // common
@@ -259,15 +258,14 @@ namespace lslib
         /// @param[in] data     需要进行URL编码的数据内容
         /// @param[in] len      数据字节长度
         /// @param[out] out_len 输出编码后的字节长度
-        /// @return 返回URL编码后的数据，以string作为保存容器，非字符串数据内容请配合输出长度out_len使用
-        LSLIB_API string url_encode(lpbyte data, size_t len, __out__ int* out_len);
+        /// @return 返回URL编码后的数据
+        LSLIB_API string url_encode(lpbyte data, size_t len);
 
         /// @brief 对数据进行URL解码
-        /// @param[in] data     需要进行URL解码的数据内容
-        /// @param[in] len      数据字节长度
+        /// @param[in] data     需要进行URL解码的字符串
         /// @param[out] out_len 输出解码后的字节长度
         /// @return 返回URL解码后的数据，以string作为保存容器，非字符串数据内容请配合输出长度out_len使用
-        LSLIB_API string url_decode(lpbyte data, size_t len, __out__ int* out_len);
+        LSLIB_API string url_decode(lpcstr data, __out__ int* out_len);
 
         // -----------------------------------------------------------------------
         // encoding convert

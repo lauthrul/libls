@@ -102,6 +102,11 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)-Basi
   <ItemGroup>
     <ClCompile Include="cryptotool.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libls\libls.vcxproj">
+      <Project>{e5ed28a0-b1e6-4c14-a4f9-f8e47f7b882e}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

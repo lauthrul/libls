@@ -11,7 +11,7 @@ using namespace lslib;
 //////////////////////////////////////////////////////////////////////////
 
 typedef string(*fn_crypto) (lpbyte, size_t);
-typedef string(*fn_crypto2) (lpbyte, size_t, int*);
+typedef string(*fn_crypto2) (lpcstr, int*);
 
 void print_usage()
 {
@@ -43,9 +43,10 @@ void print_usage()
                     "    -F|--from              from charset. for encoding_convert. such as 'utf-8, gbk, gb2312...'\n"
                     "    -T|--to                to charset. for encoding_convert. same to --from\n"
                     "    -f|--file              crypto from a specificed file path\n"
-                    "    -if|--in-format        input format. for des,3des,aes crypto. should be one of [raw|hex]\n"
+                    "    -if|--in-format        input format. for des,3des,aes crypto. should be one of [raw|hex|base64]\n"
                     "                               raw - raw bytes\n"
                     "                               hex - hex string\n"
+                    "                               base64 - base64 string\n"
                     "    -o|--output            specific a output file path\n"
                     "    -of|--ou-format        output format. same to --in-format\n";
 
@@ -163,6 +164,8 @@ int main(int argc, lpcstr argv[])
         data.assign((lpcstr)&arr[0], arr.size());
         datalen = arr.size();
     }
+    else if (inputfmt == "base64")
+        data = crypto::base64_decode(data.c_str(), &datalen);
 
     fn_crypto fn = NULL;
     fn_crypto2 fn2 = NULL;
@@ -172,9 +175,9 @@ int main(int argc, lpcstr argv[])
     else if (crypto == "sha256")            fn = crypto::sha256;
     else if (crypto == "sha384")            fn = crypto::sha384;
     else if (crypto == "sha512")            fn = crypto::sha512;
-    else if (crypto == "base64_encode")     fn2 = crypto::base64_encode;
+    else if (crypto == "base64_encode")     fn = crypto::base64_encode;
     else if (crypto == "base64_decode")     fn2 = crypto::base64_decode;
-    else if (crypto == "url_encode")        fn2 = crypto::url_encode;
+    else if (crypto == "url_encode")        fn = crypto::url_encode;
     else if (crypto == "url_decode")        fn2 = crypto::url_decode;
     if (fn != NULL)
     {
@@ -184,7 +187,7 @@ int main(int argc, lpcstr argv[])
     }
     if (fn2 != NULL)
     {
-        result = fn2((lpbyte)data.c_str(), datalen, &resultlen);
+        result = fn2(data.c_str(), &resultlen);
         goto label_out;
     }
 
@@ -291,7 +294,7 @@ int main(int argc, lpcstr argv[])
             if (crypto == "3des_decrypt")   str += "3des_decrypt -m [ecb|cbc] -k <24 size key> [-iv <8 size iv>] ";
             if (crypto == "aes_encrypt")    str += "aes_encrypt -m [ecb|cbc] -k <key> -kl [128|192|256] [-iv <16 size iv>]";
             if (crypto == "aes_decrypt")    str += "aes_decrypt -m [ecb|cbc] -k <key> -kl [128|192|256] [-iv <16 size iv>]";
-            str += "-p [none|zero|pkcs5|pkcs7] [-o <output_file>] [-of [raw|hex]] [-f] <data> -if [raw|hex]";
+            str += "-p [none|zero|pkcs5|pkcs7] [-o <output_file>] [-of [raw|hex|base64]] [-f] <data> -if [raw|hex|base64]";
             printf(str.c_str());
             return 0;
         }
@@ -302,6 +305,12 @@ int main(int argc, lpcstr argv[])
                 result = strtool::byte_array_to_hex_str((lpbyte)result.c_str(), resultlen);
                 resultlen = result.length();
             }
+            else if (outfmt == "base64")
+            {
+                result = crypto::base64_encode((lpbyte)result.c_str(), resultlen);
+                resultlen = result.length();
+            }
+
             goto label_out;
         }
     }
