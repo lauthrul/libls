@@ -409,16 +409,22 @@ namespace lslib
             return ret;
         }
 
-        LSLIB_API string encoding_convert(lpcstr data, size_t len, lpcstr from_charset, lpcstr to_charset, __out__ int* out_len)
+        LSLIB_API string encoding_convert(lpbyte data, size_t len, lpcstr from_charset, lpcstr to_charset, __out__ int* out_len)
         {
             size_t buff_size = 4 * len;
             lpbyte buf = lsalloc(buff_size);
-            int ret = encoding_convert(from_charset, to_charset, data, len, (lpstr)buf, buff_size);
+            int ret = encoding_convert(from_charset, to_charset, (lpcstr)data, len, (lpstr)buf, buff_size);
             string strret; strret = (lpcstr)buf;
             if (out_len) *out_len = strret.length();
             lsfree(buf);
             return strret;
         }
+
+        LSLIB_API string encoding_convert(lpcstr data, lpcstr from_charset, lpcstr to_charset)
+        {
+            return encoding_convert((lpbyte)data, strlen(data), from_charset, to_charset, NULL);
+        }
+
 #endif
 
     } // crypto

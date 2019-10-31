@@ -356,10 +356,10 @@ void test_encoding()
     {
         const string& text = texts[i];
 
-        stren = crypto::encoding_convert(text.c_str(), text.length(), "gb2312", "utf-8", NULL);
+        stren = crypto::encoding_convert(text.c_str(), "gb2312", "utf-8");
         printf("convert [%s] from [%s] to [%s]  ==> %s\n", text.c_str(), "gb2312", "utf-8", stren.c_str());
 
-        strde = crypto::encoding_convert(stren.c_str(), stren.length(), "utf-8", "gb2312", NULL);
+        strde = crypto::encoding_convert(stren.c_str(), "utf-8", "gb2312");
         printf("convert [%s] from [%s] to [%s]  ==> %s\n", stren.c_str(), "utf-8", "gb2312", strde.c_str());
     }
 #endif

@@ -279,7 +279,14 @@ namespace lslib
         /// @param[in] to_charset   目标编码格式，如"gb2312"
         /// @param[out] out_len     输出转码后的字节长度
         /// @return 返回转码后的字节内容，以string作为保存容器，非字符串数据内容请配合输出长度out_len使用
-        LSLIB_API string encoding_convert(lpcstr data, size_t len, lpcstr from_charset, lpcstr to_charset, __out__ int* out_len);
+        LSLIB_API string encoding_convert(lpbyte data, size_t len, lpcstr from_charset, lpcstr to_charset, __out__ int* out_len);
+
+        /// @brief 编码转换
+        /// @param data         需要进行转码的字符串
+        /// @param from_charset 源编码格式，如"utf-8"
+        /// @param to_charset   目标编码格式，如"gb2312"
+        /// @return 返回转码后的字符串
+        LSLIB_API string encoding_convert(lpcstr data, lpcstr from_charset, lpcstr to_charset);
 #endif
 
     } // crypto

@@ -43,8 +43,8 @@ void print_usage()
                     "    -F|--from              from charset. for encoding_convert. such as 'utf-8, gbk, gb2312...'\n"
                     "    -T|--to                to charset. for encoding_convert. same to --from\n"
                     "    -f|--file              crypto from a specificed file path\n"
-                    "    -if|--in-format        input format. for des,3des,aes crypto. should be one of [raw|hex|base64]\n"
-                    "                               raw - raw bytes\n"
+                    "    -if|--in-format        input format. should be one of [raw|hex|base64]\n"
+                    "                               raw - raw data\n"
                     "                               hex - hex string\n"
                     "                               base64 - base64 string\n"
                     "    -o|--output            specific a output file path\n"
@@ -198,7 +198,8 @@ int main(int argc, lpcstr argv[])
             printf("usage: cryptotool encoding_convert -F <from_charset> -T <to_charset> [-f] <data> [-o <output_file>]\n");
             return 0;
         }
-        result = crypto::encoding_convert(data.c_str(), datalen, from.c_str(), to.c_str(), &resultlen);
+        result = crypto::encoding_convert(data.c_str(), from.c_str(), to.c_str());
+        resultlen = result.length();
         goto label_out;
     }
     else if (crypto == "des_encrypt" || crypto == "des_decrypt" || crypto == "3des_encrypt" || crypto == "3des_decrypt" || crypto == "aes_encrypt" || crypto == "aes_decrypt")
@@ -298,26 +299,22 @@ int main(int argc, lpcstr argv[])
             printf(str.c_str());
             return 0;
         }
-        else
-        {
-            if (outfmt == "hex")
-            {
-                result = strtool::byte_array_to_hex_str((lpbyte)result.c_str(), resultlen);
-                resultlen = result.length();
-            }
-            else if (outfmt == "base64")
-            {
-                result = crypto::base64_encode((lpbyte)result.c_str(), resultlen);
-                resultlen = result.length();
-            }
-
-            goto label_out;
-        }
     }
 
 label_out:
     if (ret == 0)
     {
+        if (outfmt == "hex")
+        {
+            result = strtool::byte_array_to_hex_str((lpbyte)result.c_str(), resultlen);
+            resultlen = result.length();
+        }
+        else if (outfmt == "base64")
+        {
+            result = crypto::base64_encode((lpbyte)result.c_str(), resultlen);
+            resultlen = result.length();
+        }
+
         if (!output.empty())        os::save_buffer_to_file((lpbyte)result.c_str(), resultlen, output.c_str(), 0);
         else                        printf("%s\n", result.c_str());
         return 0;
