@@ -214,6 +214,9 @@ namespace lslib
 
                         pTask->pReq->tDealTime = Time::CurrentTimeStamp();
                     }
+
+                    INFO_LOG(g_logger, "running task[0x%p, %d], reqid[%d]", pTask, pTask->uTID, pTask->uReqID);
+
                     pTask->pAgent->RunTask(vIdleTask);
 
                     m_mtxWorkMapping.Lock();

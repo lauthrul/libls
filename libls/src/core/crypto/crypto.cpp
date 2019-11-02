@@ -79,6 +79,8 @@ namespace lslib
 
         LSLIB_API string base64_decode(lpcstr data, __out__ int* out_len)
         {
+            if (strtool::is_empty(data)) return "";
+
             size_t len = strlen(data);
             int data_len = estimate_base64_decode_len(len);
             lpbyte pbuf = lsalloc(data_len + 1);
@@ -385,6 +387,8 @@ namespace lslib
 
         LSLIB_API string url_decode(lpcstr data, __out__ int* out_len)
         {
+            if (strtool::is_empty(data)) return "";
+
             size_t len = strlen(data);
             lpbyte pbuf = lsalloc(len + 1);
             memcpy(pbuf, data, len);
@@ -422,6 +426,7 @@ namespace lslib
 
         LSLIB_API string encoding_convert(lpcstr data, lpcstr from_charset, lpcstr to_charset)
         {
+            if (strtool::is_empty(data)) return "";
             return encoding_convert((lpbyte)data, strlen(data), from_charset, to_charset, NULL);
         }
 

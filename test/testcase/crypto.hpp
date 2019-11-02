@@ -347,6 +347,7 @@ void test_encoding()
 
     string texts[] = 
     {
+        "",
         "this is text with !, #, $, %, +, @, :, =, ?",
         "this is text with CHINESE character：你好！",
         "这是一段中文文本：你好，世界！",

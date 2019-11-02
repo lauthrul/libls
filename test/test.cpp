@@ -19,8 +19,8 @@
 #include "testcase/json.hpp"
 #include "testcase/type.hpp"
 #include "testcase/utils.hpp"
-#include "testcase/crypto.hpp"
 #include "testcase/string.hpp"
+#include "testcase/crypto.hpp"
 
 extern fn_test_list test_cases;
 int main(int argc, char* argv[])
