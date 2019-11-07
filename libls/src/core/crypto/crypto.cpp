@@ -406,7 +406,7 @@ namespace lslib
             const char** pin = &inbuf;
             char** pout = &outbuf;
             cd = iconv_open(to_charset, from_charset);
-            if ((int)cd <= 0) return -1;
+            if (cd == (iconv_t)-1) return -1;
             memset(outbuf, 0, outlen);
             int ret = iconv(cd, pin, &inlen, pout, &outlen);
             iconv_close(cd);
