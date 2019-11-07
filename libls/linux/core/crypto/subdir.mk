@@ -13,7 +13,10 @@ $(SRC_DIR)/core/crypto/cipher_def.c \
 $(SRC_DIR)/core/crypto/des.c \
 $(SRC_DIR)/core/crypto/md5.c \
 $(SRC_DIR)/core/crypto/sha1.c \
+$(SRC_DIR)/core/crypto/sha224.c \
 $(SRC_DIR)/core/crypto/sha256.c \
+$(SRC_DIR)/core/crypto/sha384.c \
+$(SRC_DIR)/core/crypto/sha512.c \
 $(SRC_DIR)/core/crypto/url_encode.c 
 
 HEADERS += \
@@ -27,7 +30,10 @@ OBJS += \
 ./core/crypto/des.o \
 ./core/crypto/md5.o \
 ./core/crypto/sha1.o \
+./core/crypto/sha224.o \
 ./core/crypto/sha256.o \
+./core/crypto/sha384.o \
+./core/crypto/sha512.o \
 ./core/crypto/url_encode.o 
 
 CPP_DEPS += \
@@ -40,7 +46,10 @@ C_DEPS += \
 ./core/crypto/des.d \
 ./core/crypto/md5.d \
 ./core/crypto/sha1.d \
+./core/crypto/sha224.d \
 ./core/crypto/sha256.d \
+./core/crypto/sha384.d \
+./core/crypto/sha512.d \
 ./core/crypto/url_encode.d 
 
 
@@ -55,7 +64,7 @@ core/crypto/%.o: $(SRC_DIR)/core/crypto/%.c
 core/crypto/%.o: $(SRC_DIR)/core/crypto/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	$(GCPP) $(INCLUDE_PATH) -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	$(GCPP) $(INCLUDE_PATH) $(DEFINES) -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

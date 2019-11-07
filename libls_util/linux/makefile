@@ -50,7 +50,7 @@ define fdist
 	$(eval dst := $(1))
 	@echo "Target path: $(dst)"
 	@for h in $(HEADERS); do \
-		f=$(dst)/include/$${h/"$(SRC_DIR)"/libls}; \
+		f=$(dst)/include/$${h/"$(SRC_DIR)"/libls_util}; \
 		echo "$$h -> $$f"; \
 		d=`dirname $$f`; \
 		mkdir -p $$d; \

@@ -640,6 +640,12 @@ namespace lslib
                 lbyte high = hex_char_to_byte(*p++);
                 lbyte low = hex_char_to_byte(*p++);
                 if (high != 0xff && low != 0xff) arr.push_back((high << 4) | low);
+                else
+                {
+                    // fail
+                    arr.clear();
+                    break;
+                }
             }
             return arr;
         }
