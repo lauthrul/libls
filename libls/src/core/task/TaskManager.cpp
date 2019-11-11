@@ -187,6 +187,8 @@ namespace lslib
     void CTaskManager::DealTask()
     {
         // deal normal tasks
+        time_t tNow = Time::CurrentTimeStamp();
+
         m_mtxTask.Lock();
         list<STask*>::iterator it = m_lstTask.begin();
         while (it != m_lstTask.end())
@@ -209,10 +211,10 @@ namespace lslib
 
                     if (pTask->pReq != NULL)
                     {
-                        if (Time::CurrentTimeStamp() - pTask->pReq->tReqTime < pTask->uDelaySecs)
+                        if (tNow - pTask->pReq->tReqTime < pTask->uDelaySecs)
                             continue;
 
-                        pTask->pReq->tDealTime = Time::CurrentTimeStamp();
+                        pTask->pReq->tDealTime = tNow;
                     }
 
                     INFO_LOG(g_logger, "running task[0x%p, %d], reqid[%d]", pTask, pTask->uTID, pTask->uReqID);

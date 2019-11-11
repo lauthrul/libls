@@ -54,10 +54,10 @@ define fdist
 		echo "$$h -> $$f"; \
 		d=`dirname $$f`; \
 		mkdir -p $$d; \
-		cp -f $$h $$d; \
+		cp -fp $$h $$d; \
 	done
 	@echo "$(TARGET) -> $(dst)/lib/$(TARGET)"
-	@cp -f $(TARGET) $(dst)/lib/
+	@cp -fp $(TARGET) $(dst)/lib/
 endef
 
 # Add inputs and outputs from these tool invocations to the build variables 
