@@ -143,7 +143,7 @@ namespace lslib
             memcpy(data_buf, data, data_len);
             crypto_padding(data_buf, data_len, DES_BLOCK_SIZE, mode);
 
-            for (int i = 0; i < data_len; i += DES_BLOCK_SIZE)
+            for (size_t i = 0; i < data_len; i += DES_BLOCK_SIZE)
                 ::des_crypt(data_buf + i, data_buf + i, key_schedule);
 
             string strret;
@@ -163,7 +163,7 @@ namespace lslib
             lpbyte data_buf = lsalloc(data_len);
             memcpy(data_buf, data, data_len);
 
-            for (int i = 0; i < data_len; i += DES_BLOCK_SIZE)
+            for (size_t i = 0; i < data_len; i += DES_BLOCK_SIZE)
                 ::des_crypt(data_buf + i, data_buf + i, key_schedule);
 
             crypto_unpadding(data_buf, data_len, mode);
@@ -223,7 +223,7 @@ namespace lslib
             memcpy(data_buf, data, data_len);
             crypto_padding(data_buf, data_len, DES_BLOCK_SIZE, mode);
 
-            for (int i = 0; i < data_len; i += DES_BLOCK_SIZE)
+            for (size_t i = 0; i < data_len; i += DES_BLOCK_SIZE)
                 ::three_des_crypt(data_buf + i, data_buf + i, key_schedule);
 
             string strret;
@@ -243,7 +243,7 @@ namespace lslib
             lpbyte data_buf = lsalloc(data_len);
             memcpy(data_buf, data, data_len);
 
-            for (int i = 0; i < data_len; i += DES_BLOCK_SIZE)
+            for (size_t i = 0; i < data_len; i += DES_BLOCK_SIZE)
                 ::three_des_crypt(data_buf + i, data_buf + i, key_schedule);
 
             crypto_unpadding(data_buf, data_len, mode);
@@ -304,7 +304,7 @@ namespace lslib
             memcpy(data_buf, data, data_len);
             crypto_padding(data_buf, data_len, AES_BLOCK_SIZE, mode);
 
-            for (int i = 0; i < data_len; i += AES_BLOCK_SIZE)
+            for (size_t i = 0; i < data_len; i += AES_BLOCK_SIZE)
                 ::aes_encrypt(data_buf + i, data_buf + i, key_schedule, key_bits);
 
             string strret;
@@ -324,7 +324,7 @@ namespace lslib
             lpbyte data_buf = lsalloc(data_len);
             memcpy(data_buf, data, data_len);
 
-            for (int i = 0; i < data_len; i += AES_BLOCK_SIZE)
+            for (size_t i = 0; i < data_len; i += AES_BLOCK_SIZE)
                 ::aes_decrypt(data_buf + i, data_buf + i, key_schedule, key_bits);
 
             crypto_unpadding(data_buf, data_len, mode);

@@ -194,6 +194,12 @@ namespace lslib
         while (it != m_lstTask.end())
         {
             STask* pTask = *it;
+            if (pTask->pReq != NULL && tNow - pTask->pReq->tReqTime < pTask->uDelaySecs)
+            {
+                it++;
+                continue;
+            }
+
             bool bDealed = false;
             if (pTask->pAgent != NULL)
             {
@@ -209,15 +215,9 @@ namespace lslib
                     vIdleTask.m_bSyncCallback = true; // self thread callback, so set sync as true, in case other task pending callback
                     vIdleTask.m_pParam = (ldword)pTask;
 
-                    if (pTask->pReq != NULL)
-                    {
-                        if (tNow - pTask->pReq->tReqTime < pTask->uDelaySecs)
-                            continue;
-
-                        pTask->pReq->tDealTime = tNow;
-                    }
-
                     INFO_LOG(g_logger, "running task[0x%p, %d], reqid[%d]", pTask, pTask->uTID, pTask->uReqID);
+
+                    if (pTask->pReq != NULL) pTask->pReq->tDealTime = tNow;
 
                     pTask->pAgent->RunTask(vIdleTask);
 
