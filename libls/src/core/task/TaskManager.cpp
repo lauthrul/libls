@@ -21,49 +21,63 @@ namespace lslib
 #ifdef _MSC_VER
     bool CTaskManager::RegisterCallBack(HWND hWnd)
     {
+        m_mtxCBs.Lock();
+        bool ret = false;
         list<HWND>::iterator it = find(m_lstCBWnds.begin(), m_lstCBWnds.end(), hWnd);
         if (it == m_lstCBWnds.end())
         {
             m_lstCBWnds.push_back(hWnd);
-            return true;
+            ret = true;
         }
-        return false;
+        m_mtxCBs.Unlock();
+        return ret;
     }
 
     bool CTaskManager::UnRegisterCallBack(HWND hWnd)
     {
+        m_mtxCBs.Lock();
+        bool ret = false;
         list<HWND>::iterator it = find(m_lstCBWnds.begin(), m_lstCBWnds.end(), hWnd);
         if (it != m_lstCBWnds.end())
         {
             m_lstCBWnds.erase(it);
-            return true;
+            ret = true;
         }
-        return false;
+        m_mtxCBs.Unlock();
+        return ret;
     }
 #endif // _MSC_VER
 
     bool CTaskManager::RegisterCallBack(CThread* pThread)
     {
         if (pThread == NULL) return false;
+
+        m_mtxCBs.Lock();
+        bool ret = false;
         list<CThread*>::iterator it = find(m_lstCBThreads.begin(), m_lstCBThreads.end(), pThread);
         if (it == m_lstCBThreads.end())
         {
             m_lstCBThreads.push_back(pThread);
-            return true;
+            ret = true;
         }
-        return false;
+        m_mtxCBs.Unlock();
+        return ret;
     }
 
     bool CTaskManager::UnRegisterCallBack(CThread* pThread)
     {
         if (pThread == NULL) return false;
+
+        m_mtxCBs.Lock();
+        bool ret = false;
         list<CThread*>::iterator it = find(m_lstCBThreads.begin(), m_lstCBThreads.end(), pThread);
         if (it != m_lstCBThreads.end())
         {
             m_lstCBThreads.erase(it);
-            return true;
+            ret = true;
         }
-        return false;
+        m_mtxCBs.Unlock();
+        return ret;
     }
 
     void CTaskManager::SetCleanInterval(int nSecond /*= 60*/)
@@ -339,6 +353,7 @@ namespace lslib
     {
         if (pInvoker == NULL || pInvoker->nMsgID <= 0) return;
 
+        m_mtxCBs.Lock();
 #ifdef _MSC_VER
         for (list<HWND>::iterator it = m_lstCBWnds.begin(); it != m_lstCBWnds.end(); it++)
         {
@@ -352,12 +367,14 @@ namespace lslib
             if (pThread == NULL) continue;
             pThread->PostMessage(pInvoker->nMsgID, wParam, lParam);
         }
+        m_mtxCBs.Unlock();
     }
 
     void CTaskManager::Notice(int nMsgID, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/)
     {
         if (nMsgID <= 0) return;
 
+        m_mtxCBs.Lock();
 #ifdef _MSC_VER
         for (list<HWND>::iterator it = m_lstCBWnds.begin(); it != m_lstCBWnds.end(); it++)
         {
@@ -371,6 +388,7 @@ namespace lslib
             if (pThread == NULL) continue;
             pThread->PostMessage(nMsgID, wParam, lParam);
         }
+        m_mtxCBs.Unlock();
     }
 
     int CTaskManager::HandleCustomMessage(msgid_t uMsg, wparam_t wParam, lparam_t lParam, __inout__ bool& bHandled)

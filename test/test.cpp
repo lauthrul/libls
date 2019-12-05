@@ -21,6 +21,7 @@
 #include "testcase/utils.hpp"
 #include "testcase/string.hpp"
 #include "testcase/crypto.hpp"
+#include "testcase/time.hpp"
 
 extern fn_test_list test_cases;
 int main(int argc, char* argv[])

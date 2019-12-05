@@ -3,7 +3,7 @@
 
 #define DATE_FMT            "%04d-%02d-%02d"
 #define TIME_FMT            "%02d:%02d:%02d"
-#define MILLTIME_FMT        TIME_FMT ".%3d"
+#define MILLTIME_FMT        TIME_FMT ".%03d"
 #define DATE_TIME_FMT       DATE_FMT " " TIME_FMT
 #define DATE_MILLTIME_FMT   DATE_FMT " " MILLTIME_FMT
 

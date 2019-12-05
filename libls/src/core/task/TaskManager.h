@@ -72,6 +72,7 @@ namespace lslib
         virtual int                         OnHandleMessage(STask* pTask, __inout__ bool& bRecycle, __inout__ bool& bNotice);
 
     protected:
+        CMutexLock                          m_mtxCBs;
 #ifdef _MSC_VER
         list<HWND>                          m_lstCBWnds;                // callback hwnd handler
 #endif // _MSC_VER
