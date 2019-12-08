@@ -337,13 +337,13 @@ label_exit:
             }
             else
             {
-                if (!vParam.strToken.empty())
-                {
-                    if (strRequest.find("?") != string::npos)
-                        strRequest += "&token=" + vParam.strToken;
-                    else
-                        strRequest += "?token=" + vParam.strToken;
-                }
+                //if (!vParam.strToken.empty())
+                //{
+                //    if (strRequest.find("?") != string::npos)
+                //        strRequest += "&token=" + vParam.strToken;
+                //    else
+                //        strRequest += "?token=" + vParam.strToken;
+                //}
 
                 long infoHeader[2] = {0, 0}; // [0] = accept ranges or not, [1] = file size
                 if (vParam.bBreakPointSupport)
@@ -374,6 +374,8 @@ label_exit:
                     if (it == mapHeader.end()) it = mapHeader.find("content-length");
                     if (it != mapHeader.end())
                         infoHeader[1] = atol(it->second.c_str());
+
+                    INFO_LOG(g_netlogger, "break point support: %d, total size: %d", infoHeader[0], infoHeader[1]);
                 }
 
                 // download file from last broken position if server support range
@@ -420,16 +422,29 @@ label_exit:
                 if (strFile.empty())
                     strFile = os::path_get_name(vParam.strUrl.c_str());
 
-                vector<char> vctRespBuf;
-                curl_easy_setopt(pCurl, CURLOPT_WRITEDATA, (void*)&vctRespBuf);
-                curl_easy_setopt(pCurl, CURLOPT_WRITEFUNCTION, OnWriteData);
+                FILE* pFile = NULL;
+                size_t nWriteSize = 0;
+                if (vParam.bBreakPointSupport) pFile = fopen(strFile.c_str(), "ab+");
+                else pFile = fopen(strFile.c_str(), "wb+");
+                if (pFile == NULL)
+                {
+                    vResult.nCode = CURLE_WRITE_ERROR;
+                    goto label_exit;
+                }
+
+                pair<FILE*, size_t*> param;
+                param.first = pFile;
+                param.second = &nWriteSize;
+                curl_easy_setopt(pCurl, CURLOPT_WRITEDATA, (void*)&param);
+                curl_easy_setopt(pCurl, CURLOPT_WRITEFUNCTION, OnWriteFileData);
 
                 CURLcode ret = CURLE_OK;
                 for (int i = 0; i < TRYCOUNT_DOWNLOAD; i++)
                 {
-                    if (infoHeader[0])
+                    if (vParam.bBreakPointSupport)
                     {
-                        int nSize = os::get_file_size(strFile.c_str());
+                        fseek(pFile, 0, SEEK_END);
+                        int nSize = ftell(pFile);
                         if (nSize == infoHeader[1] && infoHeader[1] > 0) //already finished download
                         {
                             INFO_LOG(g_netlogger, "already finished download[%s], size: %d, file size: %d", strRequest.c_str(), nSize, infoHeader[1]);
@@ -440,6 +455,8 @@ label_exit:
 
                         char szRange[32] = {0}; sprintf(szRange, "%d-", nSize);
                         curl_easy_setopt(pCurl, CURLOPT_RANGE, szRange);
+
+                        INFO_LOG(g_netlogger, "download from point: %d, total: %d", nSize, infoHeader[1]);
                     }
 
                     ret = curl_easy_perform(pCurl);
@@ -451,15 +468,16 @@ label_exit:
 
                 curl_slist_free_all(headers);
                 curl_easy_cleanup(pCurl);
+                fclose(pFile);
 
+                vResult.strData = "[file://" + strFile + "]";
                 if (ret != CURLE_OK || !(vResult.nCode >= 200 && vResult.nCode < 300))
                 {
-                    vResult.strData.assign(vctRespBuf.begin(), vctRespBuf.end());
+                    vResult.strData = "[failed] " + vResult.strData;
                 }
                 else
                 {
-                    os::save_buffer_to_file((lpbyte)vctRespBuf.data(), vctRespBuf.size(), strFile.c_str(), infoHeader[0] ? 1 : 0);
-                    vResult.strData = "[file://" + strFile + "]";
+                    vResult.strData = "[succeed] " + vResult.strData;;
                 }
             }
             //////////////////////////////////////////////////////////////////////////

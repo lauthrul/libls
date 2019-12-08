@@ -194,11 +194,11 @@ namespace lslib
         {
 #ifdef _MSC_VER
             TCHAR szPath[MAX_PATH + 2] = { 0 };
-            int nLen = MIN(_tcsclen(path), MAX_PATH);
+            int nLen = MIN(_tcslen(path), MAX_PATH);
             memcpy(szPath, path, nLen);
 
             TCHAR szTarget[MAX_PATH + 2] = { 0 };
-            nLen = MIN(_tcsclen(target), MAX_PATH);
+            nLen = MIN(_tcslen(target), MAX_PATH);
             memcpy(szTarget, target, nLen);
 
             SHFILEOPSTRUCT fop = { 0 };
@@ -246,11 +246,11 @@ namespace lslib
             if (strtool::is_empty(path) || strtool::is_empty(target)) return -1;
 #ifdef _MSC_VER
             TCHAR szPath[MAX_PATH + 2] = { 0 };
-            int nLen = MIN(_tcsclen(path), MAX_PATH);
+            int nLen = MIN(_tcslen(path), MAX_PATH);
             memcpy(szPath, path, nLen);
 
             TCHAR szTarget[MAX_PATH + 2] = { 0 };
-            nLen = MIN(_tcsclen(target), MAX_PATH);
+            nLen = MIN(_tcslen(target), MAX_PATH);
             memcpy(szTarget, target, nLen);
 
             SHFILEOPSTRUCT fop = { 0 };
@@ -269,11 +269,11 @@ namespace lslib
             if (strtool::is_empty(path) || strtool::is_empty(target)) return -1;
 #ifdef _MSC_VER
             TCHAR szPath[MAX_PATH + 2] = { 0 };
-            int nLen = MIN(_tcsclen(path), MAX_PATH);
+            int nLen = MIN(_tcslen(path), MAX_PATH);
             memcpy(szPath, path, nLen);
 
             TCHAR szTarget[MAX_PATH + 2] = { 0 };
-            nLen = MIN(_tcsclen(target), MAX_PATH);
+            nLen = MIN(_tcslen(target), MAX_PATH);
             memcpy(szTarget, target, nLen);
 
             SHFILEOPSTRUCT fop = { 0 };
@@ -347,7 +347,7 @@ namespace lslib
 
 #ifdef _MSC_VER
             TCHAR szPath[MAX_PATH + 2] = { 0 };
-            int nLen = MIN(_tcsclen(path), MAX_PATH);
+            int nLen = MIN(_tcslen(path), MAX_PATH);
             memcpy(szPath, path, nLen);
 
             SHFILEOPSTRUCT fop = { 0 };

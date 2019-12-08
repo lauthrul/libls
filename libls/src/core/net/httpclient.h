@@ -51,9 +51,9 @@ namespace lslib
             EHttpMethod             eMethod;            ///< 请求类型， 参考@ref EHttpMethod
             string                  strUrl;             ///< 请求URL
             map<string, string>     mapHeaders;         ///< 请求头
-            int                     nConnetTimeout;     ///< 连接超时时间，默认3s
-            int                     nPerformTimeout;    ///< 总执行超时时间（包括连接时间），小于0由程序决定
-            int                     nTryCount;          ///< 失败重试次数，小于0由程序决定
+            int                     nConnetTimeout;     ///< 连接超时时间，默认-1，由程序决定
+            int                     nPerformTimeout;    ///< 总执行超时时间（包括连接时间），默认-1，由程序决定
+            int                     nTryCount;          ///< 失败重试次数，默认-1，不重试
             HttpCallback            cb;                 ///< 回调函数，参考@ref HttpCallback
             void*                   clientp;            ///< 回调函数用户参数
 
@@ -71,21 +71,26 @@ namespace lslib
                 eMethod = HTTP_GET;
                 strUrl.clear();
                 mapHeaders.clear();
-                nConnetTimeout = TIMEOUT_CONNECT;
+                nConnetTimeout = -1; // evaluate by program
                 nPerformTimeout = -1; // evaluate by program
-                nTryCount = -1; // evaluate by program
+                nTryCount = -1; // no retry by default
                 cb = NULL;
                 clientp = NULL;
             }
         };
 
         /// @brief HTTP GET请求参数
-        /// @note 默认执行超时时间为5s，重试次数为2次
+        /*/// @note 默认执行超时时间为5s，重试次数为2次*/
         struct SHttpGetParam : public SHttpParam
         {
             SHttpGetParam()
             {
                 Reset();
+            }
+            SHttpGetParam(const SHttpParam& param)
+            {
+                Reset();
+                *(SHttpParam*)this = param;
             }
             SHttpGetParam(lpcstr lpstrUrl)
             {
@@ -96,13 +101,13 @@ namespace lslib
             {
                 SHttpParam::Reset();
                 eMethod = HTTP_GET;
-                nPerformTimeout = TIMEOUT_HTTPGET;
-                nTryCount = TRYCOUNT_HTTPGET;
+                //nPerformTimeout = TIMEOUT_HTTPGET;
+                //nTryCount = TRYCOUNT_HTTPGET;
             }
         };
 
         /// @brief HTTP POST请求参数
-        /// @note 默认执行超时时间为15s，重试次数为2次
+        /*/// @note 默认执行超时时间为15s，重试次数为2次*/
         struct SHttpPostParam : public SHttpParam
         {
             string                  strPost;        ///< POST内容
@@ -112,6 +117,11 @@ namespace lslib
             SHttpPostParam()
             {
                 Reset();
+            }
+            SHttpPostParam(const SHttpParam& param)
+            {
+                Reset();
+                *(SHttpParam*)this = param;
             }
             SHttpPostParam(lpcstr lpstrUrl, lpcstr lpstrPost)
             {
@@ -123,8 +133,8 @@ namespace lslib
             {
                 SHttpParam::Reset();
                 eMethod = HTTP_POST;
-                nPerformTimeout = TIMEOUT_HTTPPOST;
-                nTryCount = TRYCOUNT_HTTPPOST;
+                //nPerformTimeout = TIMEOUT_HTTPPOST;
+                //nTryCount = TRYCOUNT_HTTPPOST;
                 strPost.clear();
                 bgZip = false;
                 nThresholdSize = GZIP_THRESHOLD_SIZE;
@@ -132,7 +142,7 @@ namespace lslib
         };
 
         /// @brief 下载请求参数
-        /// @note 默认执行超时时间为30s，重试次数为2次
+        /*/// @note 默认执行超时时间为30s，重试次数为2次*/
         struct SHttpDowloadParam : public SHttpParam
         {
             string                  strFile;            ///< 下载保存文件路径
@@ -142,6 +152,11 @@ namespace lslib
             SHttpDowloadParam()
             {
                 Reset();
+            }
+            SHttpDowloadParam(const SHttpParam& param)
+            {
+                Reset();
+                *(SHttpParam*)this = param;
             }
             SHttpDowloadParam(lpcstr lpstrUrl, lpcstr lpstrFile)
             {
@@ -153,8 +168,8 @@ namespace lslib
             {
                 SHttpParam::Reset();
                 eMethod = HTTP_DOWNLOAD;
-                nPerformTimeout = TIMEOUT_HTTPDOWNLOAD;
-                nTryCount = TRYCOUNT_DOWNLOAD;
+                //nPerformTimeout = TIMEOUT_HTTPDOWNLOAD;
+                //nTryCount = TRYCOUNT_DOWNLOAD;
                 strFile.clear();
                 strToken.clear();
                 bBreakPointSupport = false;
@@ -162,7 +177,7 @@ namespace lslib
         };
 
         /// @brief 上传请求参数
-        /// @note 默认执行超时时间为15s，重试次数为2次
+        /*/// @note 默认执行超时时间为15s，重试次数为2次*/
         struct SHttpUploadParam : public SHttpParam
         {
             string                 strFile;         ///< 本地文件路径
@@ -171,6 +186,11 @@ namespace lslib
             SHttpUploadParam()
             {
                 Reset();
+            }
+            SHttpUploadParam(const SHttpParam& param)
+            {
+                Reset();
+                *(SHttpParam*)this = param;
             }
             SHttpUploadParam(lpcstr lpstrUrl, lpcstr lpstrFile)
             {
@@ -182,8 +202,8 @@ namespace lslib
             {
                 SHttpParam::Reset();
                 eMethod = HTTP_UPLOAD;
-                nPerformTimeout = TIMEOUT_HTTPUPLOAD;
-                nTryCount = TRYCOUNT_UPLOAD;
+                //nPerformTimeout = TIMEOUT_HTTPUPLOAD;
+                //nTryCount = TRYCOUNT_UPLOAD;
                 strFile.clear();
                 strRemoteFile.clear();
             }

@@ -147,3 +147,7 @@ using namespace std;
 #ifndef CLAMP
 #define CLAMP(x, a, b) (MIN(b, MAX(a, x)))
 #endif
+
+#ifndef FLOAT_EQUAL
+#define FLOAT_EQUAL(a, b)		((a) - (b) >= -0.00001 && (a) - (b) <= 0.00001)
+#endif
