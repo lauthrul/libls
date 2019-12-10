@@ -249,8 +249,9 @@ namespace lslib
         {
             if (!IsInit()) Init();
 
+            string strSid = utils::gen_uuid();
             string strText = DumpParamText((SHttpParam*)&vParam);
-            DEBUG_LOG(g_netlogger, "begin to do http get, param:[%s]", strText.c_str());
+            DEBUG_LOG(g_netlogger, "[%s]begin to do http get, param:[%s]", strSid.c_str(), strText.c_str());
 
             Time tmStart;
             SHttpResult vResult;
@@ -265,7 +266,7 @@ namespace lslib
             else
             {
                 // perform
-                Perform(pCurl, vParam, vResult);
+                Perform(strSid, pCurl, vParam, vResult);
 
                 curl_easy_cleanup(pCurl);
             }
@@ -274,7 +275,7 @@ namespace lslib
 label_exit:
             vResult.nTimeSpend = Time().BetweenAllMilliSec(tmStart);
             strText = DumpResultText(&vResult);
-            DEBUG_LOG(g_netlogger, "finish http get[%s], result[%s]", vParam.strUrl.c_str(), strText.c_str());
+            DEBUG_LOG(g_netlogger, "[%s]finish http get[%s], result[%s]", strSid.c_str(), vParam.strUrl.c_str(), strText.c_str());
 
             return vResult;
         }
@@ -283,8 +284,9 @@ label_exit:
         {
             if (!IsInit()) Init();
 
+            string strSid = utils::gen_uuid();
             string strText = DumpParamText((SHttpParam*)&vParam);
-            DEBUG_LOG(g_netlogger, "begin to do http post, param:[%s]", strText.c_str());
+            DEBUG_LOG(g_netlogger, "[%s]begin to do http post, param:[%s]", strSid.c_str(), strText.c_str());
 
             Time tmStart;
             SHttpResult vResult;
@@ -303,7 +305,7 @@ label_exit:
                 curl_easy_setopt(pCurl, CURLOPT_POSTFIELDSIZE, vParam.strPost.length());
 
                 // perform
-                Perform(pCurl, vParam, vResult);
+                Perform(strSid, pCurl, vParam, vResult);
 
                 curl_easy_cleanup(pCurl);
             }
@@ -312,7 +314,7 @@ label_exit:
 label_exit:
             vResult.nTimeSpend = Time().BetweenAllMilliSec(tmStart);
             strText = DumpResultText(&vResult);
-            DEBUG_LOG(g_netlogger, "finish http post[%s], result[%s]", vParam.strUrl.c_str(), strText.c_str());
+            DEBUG_LOG(g_netlogger, "[%s]finish http post[%s], result[%s]", strSid.c_str(), vParam.strUrl.c_str(), strText.c_str());
 
             return vResult;
         }
@@ -321,8 +323,9 @@ label_exit:
         {
             if (!IsInit()) Init();
 
+            string strSid = utils::gen_uuid();
             string strText = DumpParamText((SHttpParam*)&vParam);
-            DEBUG_LOG(g_netlogger, "begin to do http download, param:[%s]", strText.c_str());
+            DEBUG_LOG(g_netlogger, "[%s]begin to do http download, param:[%s]", strSid.c_str(), strText.c_str());
 
             Time tmStart;
             SHttpResult vResult;
@@ -447,7 +450,7 @@ label_exit:
                         int nSize = ftell(pFile);
                         if (nSize == infoHeader[1] && infoHeader[1] > 0) //already finished download
                         {
-                            INFO_LOG(g_netlogger, "already finished download[%s], size: %d, file size: %d", strRequest.c_str(), nSize, infoHeader[1]);
+                            INFO_LOG(g_netlogger, "[%s]already finished download[%s], size: %d, file size: %d", strSid.c_str(), strRequest.c_str(), nSize, infoHeader[1]);
 
                             vResult.nCode = CURLE_OK;
                             goto label_exit;
@@ -456,7 +459,7 @@ label_exit:
                         char szRange[32] = {0}; sprintf(szRange, "%d-", nSize);
                         curl_easy_setopt(pCurl, CURLOPT_RANGE, szRange);
 
-                        INFO_LOG(g_netlogger, "download from point: %d, total: %d", nSize, infoHeader[1]);
+                        INFO_LOG(g_netlogger, "[%s]download from point: %d, total: %d", strSid.c_str(), nSize, infoHeader[1]);
                     }
 
                     ret = curl_easy_perform(pCurl);
@@ -485,7 +488,7 @@ label_exit:
 label_exit:
             vResult.nTimeSpend = Time().BetweenAllMilliSec(tmStart);
             strText = DumpResultText(&vResult);
-            DEBUG_LOG(g_netlogger, "finish http download[%s], result[%s]", strRequest.c_str(), strText.c_str());
+            DEBUG_LOG(g_netlogger, "[%s]finish http download[%s], result[%s]", strSid.c_str(), strRequest.c_str(), strText.c_str());
 
             return vResult;
         }
@@ -494,8 +497,9 @@ label_exit:
         {
             if (!IsInit()) Init();
 
+            string strSid = utils::gen_uuid();
             string strText = DumpParamText((SHttpParam*)&vParam);
-            DEBUG_LOG(g_netlogger, "begin to do http upload, param:[%s]", strText.c_str());
+            DEBUG_LOG(g_netlogger, "[%s]begin to do http upload, param:[%s]", strSid.c_str(), strText.c_str());
 
             Time tmStart;
             SHttpResult vResult;
@@ -575,7 +579,7 @@ label_exit:
                 curl_easy_setopt(pCurl, CURLOPT_POSTFIELDSIZE, nContentLength);
 
                 // perform
-                Perform(pCurl, vParam, vResult);
+                Perform(strSid, pCurl, vParam, vResult);
 
                 fclose(pFile);
                 curl_slist_free_all(headers);
@@ -587,12 +591,12 @@ label_exit:
 label_exit:
             vResult.nTimeSpend = Time().BetweenAllMilliSec(tmStart);
             strText = DumpResultText(&vResult);
-            DEBUG_LOG(g_netlogger, "finish http upload[%s], result[%s]", vParam.strUrl.c_str(), strText.c_str());
+            DEBUG_LOG(g_netlogger, "[%s]finish http upload[%s], result[%s]", strSid.c_str(), vParam.strUrl.c_str(), strText.c_str());
 
             return vResult;
         }
 
-        int CHttpClient::Perform(CURL* pCurl, const SHttpParam& vParam, __inout__ SHttpResult& vResult)
+        int CHttpClient::Perform(const string& sid, CURL* pCurl, const SHttpParam& vParam, __inout__ SHttpResult& vResult)
         {
             if (!IsInit()) Init();
 
@@ -646,7 +650,7 @@ label_exit:
                 ret = curl_easy_perform(pCurl);
                 if (ret == CURLE_OK) break;
 
-                ERROR_LOG(g_netlogger, "http perform fail[%d], try[%d], url[%s]", ret, i, vParam.strUrl.c_str());
+                ERROR_LOG(g_netlogger, "[%s]http perform fail[%d], try[%d], url[%s]", sid.c_str(), ret, i, vParam.strUrl.c_str());
             }
 
             if (ret == CURLE_OK) ret = curl_easy_getinfo(pCurl, CURLINFO_RESPONSE_CODE, &vResult.nCode);

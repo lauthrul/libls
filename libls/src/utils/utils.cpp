@@ -23,7 +23,10 @@ namespace lslib
 
             UuidCreate(&guid);
             UuidToString(&guid, &buf);
+
             str = (lpcstr)buf;
+            str = strtool::replace(str, "-", "");
+            str = strtool::lower(str);
 
             RpcStringFree(&buf);
 #else

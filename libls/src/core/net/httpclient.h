@@ -286,7 +286,7 @@ namespace lslib
             static SHttpResult      UploadFile(const SHttpUploadParam& vParam);
 
         protected:
-            static int              Perform(CURL* pCurl, const SHttpParam& vParam, __inout__ SHttpResult& vResult);
+            static int              Perform(const string& sid, CURL* pCurl, const SHttpParam& vParam, __inout__ SHttpResult& vResult);
             static string           DumpParamText(SHttpParam* pParam);
             static string           DumpResultText(SHttpResult* pResult);
 
