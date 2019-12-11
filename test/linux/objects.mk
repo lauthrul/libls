@@ -5,5 +5,5 @@
 USER_OBJS :=
 
 DEFINES := -DUSE_LOG4CXX -DUSE_LIBCURL -DUSE_LIBICONV
-INCLUDE_PATH := -I../../libls/src -I../../libls_util/src -I../ -I../testcase
-LIBS := -llog4cxx -L../../libls/linux -lls -L../../libls_util/linux -lls_util
+INCLUDE_PATH := -I/usr/local/include/libls -I/usr/local/include/libls/core -I/usr/local/include/libls/utils -I/usr/local/include/libls_util
+LIBS := -lls -lls_util -llog4cxx

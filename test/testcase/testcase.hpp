@@ -4,7 +4,7 @@
 
 typedef void (*fn_test) (void);
 
-define_stl_type(fn_test);
+quick_define_stl(fn_test);
 
 fn_test_list test_cases;
 

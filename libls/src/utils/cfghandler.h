@@ -33,7 +33,7 @@ namespace lslib
         string          v_blob;
         int             v_bloblen;
     };
-    define_stl_type(SCfgData);
+    quick_define_stl(SCfgData);
 
     /// @brief 配置文件相关操作
     class CCfgHandler

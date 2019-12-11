@@ -67,4 +67,20 @@ void test_type_size()
     printf("lpcwstr:  %d\n", sizeof(lpcwstr));
 }
 
-declare_test_case(test_type_size);
+void test_quick_define()
+{
+    quick_define_map(int, string);
+    int_string_map mp;
+    mp[0] = "00";
+    mp[1] = "11";
+    mp[2] = "22";
+}
+
+void test_type()
+{
+    test_enum();
+    test_type_size();
+    test_quick_define();
+}
+
+declare_test_case(test_type);

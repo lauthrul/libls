@@ -171,7 +171,7 @@ namespace lslib
             file_attr attr;
             int     size;
         };
-        define_stl_type(enum_file);
+        quick_define_stl(enum_file);
 
         /// @brief 遍历当前目录下所有文件。
         /// @param[out] array_files 输出文件列表

@@ -12,16 +12,16 @@
 //#include "testcase/math.hpp"
 #include "testcase/os.hpp"
 #include "testcase/zip.hpp"
-#include "testcase/httpclient.hpp"
 #include "testcase/mmr.hpp"
 #include "testcase/logger.hpp"
 #include "testcase/cfghandler.hpp"
 #include "testcase/json.hpp"
-#include "testcase/type.hpp"
 #include "testcase/utils.hpp"
 #include "testcase/string.hpp"
 #include "testcase/crypto.hpp"
 #include "testcase/time.hpp"
+#include "testcase/httpclient.hpp"
+#include "testcase/type.hpp"
 
 extern fn_test_list test_cases;
 int main(int argc, char* argv[])

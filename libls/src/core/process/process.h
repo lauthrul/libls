@@ -7,7 +7,7 @@ namespace lslib
     /// @brief 进程相关
     namespace process
     {
-        define_stl_type(PROCESSENTRY32);
+        quick_define_stl(PROCESSENTRY32);
 
         /// @brief 根据进程ID获取进程信息
         /// @param[out] pe 进程信息，参考@link https://docs.microsoft.com/en-us/previous-versions/aa911518(v=msdn.10)?redirectedfrom=MSDN @endlink

@@ -115,76 +115,83 @@ namespace lslib
     typedef lwchar*                 lpwstr;
     typedef const lwchar*           lpcwstr;
 
-#define define_stl_type(type) \
-    typedef vector<type>            type##_array; \
-    typedef list<type>              type##_list; \
-    typedef set<type>               type##_set;
+#define define_list(type, name)                 typedef list<type> name;
+#define define_vector(type, name)               typedef vector<type> name;
+#define define_set(type, name)                  typedef set<type> name;
+#define define_map(key_type, type, name)        typedef map<key_type, type> name;
 
-#define declare_stl_map(key_type, type, name) \
-    typedef map<key_type, type>     name;
+#define quick_define_list(type)                 define_list(type, type##_list)
+#define quick_define_array(type)                define_vector(type, type##_array)
+#define quick_define_set(type)                  define_set(type, type##_set)
+#define quick_define_map(key_type, type)        define_map(key_type, type, key_type##_##type##_map)
 
-    define_stl_type(lint8);
-    define_stl_type(lpint8);
+#define quick_define_stl(type) \
+    quick_define_list(type) \
+    quick_define_array(type) \
+    quick_define_set(type)
 
-    define_stl_type(lint16);
-    define_stl_type(lpint16);
+    quick_define_stl(lint8);
+    quick_define_stl(lpint8);
 
-    define_stl_type(lint32);
-    define_stl_type(lpint32);
+    quick_define_stl(lint16);
+    quick_define_stl(lpint16);
 
-    define_stl_type(lint64);
-    define_stl_type(lpint64);
+    quick_define_stl(lint32);
+    quick_define_stl(lpint32);
 
-    define_stl_type(luint8);
-    define_stl_type(lpuint8);
+    quick_define_stl(lint64);
+    quick_define_stl(lpint64);
 
-    define_stl_type(luint16);
-    define_stl_type(lpuint16);
+    quick_define_stl(luint8);
+    quick_define_stl(lpuint8);
 
-    define_stl_type(luint32);
-    define_stl_type(lpuint32);
+    quick_define_stl(luint16);
+    quick_define_stl(lpuint16);
 
-    define_stl_type(luint64);
-    define_stl_type(lpuint64);
+    quick_define_stl(luint32);
+    quick_define_stl(lpuint32);
 
-    define_stl_type(lvoid);
-    define_stl_type(lpvoid);
+    quick_define_stl(luint64);
+    quick_define_stl(lpuint64);
 
-    define_stl_type(lbool);
-    define_stl_type(lpbool);
+    quick_define_stl(lvoid);
+    quick_define_stl(lpvoid);
 
-    define_stl_type(lint);
-    define_stl_type(lpint);
+    quick_define_stl(lbool);
+    quick_define_stl(lpbool);
 
-    define_stl_type(lfloat);
-    define_stl_type(lpfloat);
+    quick_define_stl(lint);
+    quick_define_stl(lpint);
 
-    define_stl_type(ldouble);
-    define_stl_type(lpdouble);
+    quick_define_stl(lfloat);
+    quick_define_stl(lpfloat);
 
-    define_stl_type(luint);
-    define_stl_type(lpuint);
+    quick_define_stl(ldouble);
+    quick_define_stl(lpdouble);
 
-    define_stl_type(lbyte);
-    define_stl_type(lpbyte);
+    quick_define_stl(luint);
+    quick_define_stl(lpuint);
 
-    define_stl_type(lword);
-    define_stl_type(lpword);
+    quick_define_stl(lbyte);
+    quick_define_stl(lpbyte);
 
-    define_stl_type(ldword);
-    define_stl_type(lpdword);
+    quick_define_stl(lword);
+    quick_define_stl(lpword);
 
-    define_stl_type(luchar);
-    define_stl_type(lpustr);
-    define_stl_type(lpcustr);
+    quick_define_stl(ldword);
+    quick_define_stl(lpdword);
 
-    define_stl_type(lchar);
-    define_stl_type(lpstr);
-    define_stl_type(lpcstr);
+    quick_define_stl(luchar);
+    quick_define_stl(lpustr);
+    quick_define_stl(lpcustr);
 
-    define_stl_type(lwchar);
-    define_stl_type(lpwstr);
-    define_stl_type(lpcwstr);
+    quick_define_stl(lchar);
+    quick_define_stl(lpstr);
+    quick_define_stl(lpcstr);
+
+    quick_define_stl(lwchar);
+    quick_define_stl(lpwstr);
+    quick_define_stl(lpcwstr);
 
 //////////////////////////////////////////////////////////////////////////
 // enum related functions
