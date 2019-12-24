@@ -156,11 +156,26 @@ namespace lslib
 
     bool CThread::PostMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/, int nLevel /*= 0*/)
     {
-#ifdef _MSC_VER
-        msg_t msg = { NULL, uMsg, wParam, lParam, 0, 0 };
-#else
-        msg_t msg = { uMsg, wParam, lParam };
-#endif
+        msg_t msg;
+        msg.message = uMsg;
+        msg.wParam = wParam;
+        msg.lParam = lParam;
+
+        m_mutexMsgs.Lock();
+        m_mapMsgs[nLevel].push_back(msg);
+        m_mutexMsgs.Unlock();
+        return true;
+    }
+
+    bool CThread::PostMessageDelay(msgid_t uMsg, luint uDelay, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/, int nLevel /*= 0*/)
+    {
+        msg_t msg;
+        msg.message = uMsg;
+        msg.wParam = wParam;
+        msg.lParam = lParam;
+        msg.uDelay = uDelay;
+        msg.tTime = Time::CurrentTimeStamp();
+
         m_mutexMsgs.Lock();
         m_mapMsgs[nLevel].push_back(msg);
         m_mutexMsgs.Unlock();
@@ -268,38 +283,38 @@ namespace lslib
             list<msg_t>& msglist = rit->second;
             if (!msglist.empty())
             {
-                msg_t msg = msglist.front();
-                msglist.pop_front();
-                if (lpMsg != NULL)
+                time_t tm = Time::CurrentTimeStamp();
+                list<msg_t>::iterator it = msglist.begin();
+                while (it != msglist.end())
                 {
-                    *lpMsg = msg;
-//                     DEBUG_LOG(g_logger, "get msg. level[%d], msg[%d, (0x%p, 0x%p)]", rit->first, msg.message, msg.wParam, msg.lParam);
+                    if (it->uDelay > 0 && tm - it->tTime < it->uDelay)
+                        it++;
+                    else break;
                 }
-                if (msglist.empty())
+                if (it != msglist.end())
                 {
-                    m_mapMsgs.erase(rit->first);
+                    if (lpMsg != NULL)
+                    {
+                        *lpMsg = *it;
+                        //DEBUG_LOG(g_logger, "get msg. level[%d], msg[%d, (0x%p, 0x%p)]", rit->first, msg.message, msg.wParam, msg.lParam);
+                    }
+                    msglist.erase(it);
+                    if (msglist.empty())
+                        m_mapMsgs.erase(rit->first);
+
+                    bret = true;
                 }
             }
-            bret = true;
         }
         m_mutexMsgs.Unlock();
         return bret;
     }
 
-// #ifdef _MSC_VER
-//     unsigned __stdcall CThread::_ThreadEntry(void* pParam)
-//     {
-//         if (pParam == NULL) return -1;
-//         ((CThread*)pParam)->Execute();
-//         return 0;
-//     }
-// #else
     void* CThread::_ThreadEntry(void* pParam)
     {
         if (pParam == NULL) return (void*)-1;
         ((CThread*)pParam)->Execute();
         return (void*)0;
     }
-// #endif
 
 }

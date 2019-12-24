@@ -22,7 +22,6 @@ namespace lslib
 
 #define __THREAD__      GetCurrentThreadId()
 
-    typedef MSG         msg_t;
     typedef UINT        msgid_t;
     typedef WPARAM      wparam_t;
     typedef LPARAM      lparam_t;
@@ -36,14 +35,19 @@ namespace lslib
     typedef uint32_t    msgid_t;
     typedef uint64_t    wparam_t;
     typedef uint64_t    lparam_t;
+
+#endif // end of _MSC_VER
+
     typedef struct msg_t
     {
         msgid_t message;
         wparam_t wParam;
         lparam_t lParam;
-    };
+        luint uDelay;
+        time_t tTime;
 
-#endif // end of _MSC_VER
+        msg_t() { memset(this, 0, sizeof(msg_t)); }
+    };
 
     typedef bool (*CompareMessageFunc) (msg_t, int, msg_t, int);
 
@@ -75,8 +79,8 @@ namespace lslib
         bool SetPriority(int nPriority);
         bool WaitFor(DWORD dwMilliseconds);// return: [true]-OK; [false]-timeout
 #endif
-
         bool PostMessage(msgid_t msgid, wparam_t wParam = 0, lparam_t lParam = 0, int nLevel = 0);
+        bool PostMessageDelay(msgid_t msgid, luint uDelay, wparam_t wParam = 0, lparam_t lParam = 0, int nLevel = 0);
         int SendMessage(msgid_t msgid, wparam_t wParam = 0, lparam_t lParam = 0);
         bool FindMessage(msg_t msg, int level, CompareMessageFunc pfunc);
         int GetMessageSize();
