@@ -5,7 +5,7 @@
 -include ../makefile.init
 
 GCC := gcc
-GCPP := g++
+GCPP := g++ -std=c++11
 RM := rm -rf
 
 # All of the sources participating in the build are defined here
