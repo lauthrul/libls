@@ -11,12 +11,12 @@ namespace lslib
 #ifdef _MSC_VER
         if (bSuspend)
         {
-            m_hThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (unsigned int(__stdcall *)(void *))_ThreadEntry, this, CREATE_SUSPENDED, &m_uThreadID);
+            m_hThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (unsigned int(__stdcall*)(void*))_ThreadEntry, this, CREATE_SUSPENDED, &m_uThreadID);
             m_eThreadState = TS_SUSPENDED;
         }
         else
         {
-            m_hThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (unsigned int(__stdcall *)(void *))_ThreadEntry, this, NULL, &m_uThreadID);
+            m_hThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (unsigned int(__stdcall*)(void*))_ThreadEntry, this, NULL, &m_uThreadID);
             m_eThreadState = TS_WORKING;
         }
 #else
@@ -279,11 +279,17 @@ namespace lslib
         m_mutexMsgs.Lock();
         if (!m_mapMsgs.empty())
         {
+            time_t tm = Time::CurrentTimeStamp();
             map<int, list<msg_t> >::reverse_iterator rit = m_mapMsgs.rbegin();
-            list<msg_t>& msglist = rit->second;
-            if (!msglist.empty())
+            while (rit != m_mapMsgs.rend())
             {
-                time_t tm = Time::CurrentTimeStamp();
+                list<msg_t>& msglist = rit->second;
+                if (msglist.empty())
+                {
+                    rit = map<int, list<msg_t> >::reverse_iterator(m_mapMsgs.erase((++rit).base()));
+                    continue;
+                }
+
                 list<msg_t>::iterator it = msglist.begin();
                 while (it != msglist.end())
                 {
@@ -299,11 +305,11 @@ namespace lslib
                         //DEBUG_LOG(g_logger, "get msg. level[%d], msg[%d, (0x%p, 0x%p)]", rit->first, msg.message, msg.wParam, msg.lParam);
                     }
                     msglist.erase(it);
-                    if (msglist.empty())
-                        m_mapMsgs.erase(rit->first);
-
                     bret = true;
                 }
+
+                if (bret) break;
+                ++rit;
             }
         }
         m_mutexMsgs.Unlock();
