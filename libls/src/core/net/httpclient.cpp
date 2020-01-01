@@ -420,6 +420,13 @@ label_exit:
                 // response header
                 curl_easy_setopt(pCurl, CURLOPT_HEADERFUNCTION, OnGetHeaderInfo);
                 curl_easy_setopt(pCurl, CURLOPT_HEADERDATA, &vResult.mapHeaders);
+                // set download callback
+                if (vParam.cb != NULL)
+                {
+                    curl_easy_setopt(pCurl, CURLOPT_NOPROGRESS, 0);
+                    curl_easy_setopt(pCurl, CURLOPT_PROGRESSFUNCTION, *vParam.cb);
+                    curl_easy_setopt(pCurl, CURLOPT_PROGRESSDATA, vParam.clientp);
+                }
 
                 string strFile = vParam.strFile;
                 if (strFile.empty())

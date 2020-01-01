@@ -279,6 +279,39 @@ namespace lslib
             return upper(str.c_str());
         }
 
+        LSLIB_API size_t find(lpcstr str, lpcstr pattern, size_t offset /*= 0*/)
+        {
+            if (is_empty(str)) return string::npos;
+            return find(string(str), pattern, offset);
+        }
+
+        LSLIB_API size_t find(const string& str, const string& pattern, size_t offset /*= 0*/)
+        {
+            return str.find(pattern, offset);
+        }
+
+        LSLIB_API size_t find_case_ignore(lpcstr str, lpcstr pattern, size_t offset /*= 0*/)
+        {
+            if (is_empty(str)) return string::npos;
+            return find_case_ignore(string(str), pattern, offset);
+        }
+
+        LSLIB_API size_t find_case_ignore(const string& str, const string& pattern, size_t offset /*= 0*/)
+        {
+            if (str.empty() || pattern.empty()) return string::npos;
+
+            struct my_equal
+            {
+                bool operator()(char ch1, char ch2)
+                {
+                    return toupper(ch1) == toupper(ch2);
+                }
+            };
+            string::const_iterator it = std::search(str.begin() + offset, str.end(), pattern.begin(), pattern.end(), my_equal());
+            if (it != str.end()) return it - str.begin();
+            else return string::npos;
+        }
+
         LSLIB_API string trim(lpcstr str)
         {
             string str_wrapper = str;
@@ -593,7 +626,7 @@ namespace lslib
             return dest.size();
         }
 
-        LSLIB_API const int split(__out__ string_list &dest, lpcstr src, lpcstr patten, bool allow_empty /*= true*/)
+        LSLIB_API const int split(__out__ string_list& dest, lpcstr src, lpcstr patten, bool allow_empty /*= true*/)
         {
             string_array arr;
             split(arr, src, patten, allow_empty);

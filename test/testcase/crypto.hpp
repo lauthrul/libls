@@ -344,26 +344,46 @@ void test_encoding()
 {
 #ifdef USE_LIBICONV
     cout << "------------------" << endl;
-
-    string texts[] = 
     {
-        "",
-        "this is text with !, #, $, %, +, @, :, =, ?",
-        "this is text with CHINESE character：你好！",
-        "这是一段中文文本：你好，世界！",
-    };
-    string stren, strde;
-    for (size_t i = 0; i < sizeof(texts) / sizeof(string); i++)
-    {
-        const string& text = texts[i];
+        string texts[] =
+        {
+            "",
+            "this is text with !, #, $, %, +, @, :, =, ?",
+            "this is text with CHINESE character：你好！",
+            "这是一段中文文本：你好，世界！",
+        };
+        string stren, strde;
+        for (size_t i = 0; i < sizeof(texts) / sizeof(string); i++)
+        {
+            const string& text = texts[i];
 
-        stren = crypto::encoding_convert(text.c_str(), "gb2312", "utf-8");
-        printf("convert [%s] from [%s] to [%s]  ==> %s\n", text.c_str(), "gb2312", "utf-8", stren.c_str());
+            stren = crypto::encoding_convert(text.c_str(), "gb2312", "utf-8");
+            printf("convert [%s] from [%s] to [%s]  ==> %s\n", text.c_str(), "gb2312", "utf-8", stren.c_str());
 
-        strde = crypto::encoding_convert(stren.c_str(), "utf-8", "gb2312");
-        printf("convert [%s] from [%s] to [%s]  ==> %s\n", stren.c_str(), "utf-8", "gb2312", strde.c_str());
+            strde = crypto::encoding_convert(stren.c_str(), "utf-8", "gb2312");
+            printf("convert [%s] from [%s] to [%s]  ==> %s\n", stren.c_str(), "utf-8", "gb2312", strde.c_str());
+        }
     }
 #endif
+
+    cout << "------------------" << endl;
+    {
+        string texts[] =
+        {
+            "",
+            "\xef\xbb",
+            "\xef\xbb\xbf",
+            "\xef\xbb\xbfHello, World!",
+            "Hello, World!",
+        };
+        string str;
+        for (size_t i = 0; i < sizeof(texts) / sizeof(string); i++)
+        {
+            const string& text = texts[i];
+            str = crypto::trim_utf8_bom(text.c_str());
+            printf("trim_utf8_bom [%s] ==> [%s]\n", text.c_str(), str.c_str());
+        }
+    }
 }
 
 void test_crypto()

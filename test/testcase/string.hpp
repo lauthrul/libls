@@ -85,5 +85,16 @@ void test_string()
 
         printf("\n  thex_str_to_byte_array: %s\n", byte_array_to_hex_str(arr).c_str());
     }
+
+    printf("------------------\n");
+    string str7 = "find_case_ignore test, ÄãºÃ hello, world!";
+    string arr7[] = { "Hello,", "HEllo,", "hElLO", "HELLO", "hello,", "ÄãºÃ", "Istr", "Nd_CaSe" };
+    for (size_t i = 0; i < sizeof(arr7) / sizeof(string); i++)
+    {
+        const string& str = arr7[i];
+        printf("find(\"%s\", \"%s\") ==> %d\n", str7.c_str(), str.c_str(), strtool::find(str7.c_str(), str.c_str(), 2));
+        printf("find_case_ignore(\"%s\", \"%s\") ==> %d\n", str7.c_str(), str.c_str(), strtool::find_case_ignore(str7.c_str(), str.c_str(), 2));
+    }
+
 }
 declare_test_case(test_string);

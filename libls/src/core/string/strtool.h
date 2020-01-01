@@ -147,6 +147,26 @@ namespace lslib
         /// 将字符串转换为大写
         LSLIB_API string upper(const string& str);
 
+        /// @brief 查找字符串
+        /// @param str 源字符串
+        /// @param pattern 待查找的字符串
+        LSLIB_API size_t find(lpcstr str, lpcstr pattern, size_t offset = 0);
+
+        /// @brief 查找字符串
+        /// @param str 源字符串
+        /// @param pattern 待查找的字符串
+        LSLIB_API size_t find(const string& str, const string& pattern, size_t offset = 0);
+
+        /// @brief 忽略大小写查找字符串
+        /// @param str 源字符串
+        /// @param pattern 待查找的字符串
+        LSLIB_API size_t find_case_ignore(lpcstr str, lpcstr pattern, size_t offset = 0);
+
+        /// @brief 忽略大小写查找字符串
+        /// @param str 源字符串
+        /// @param pattern 待查找的字符串
+        LSLIB_API size_t find_case_ignore(const string& str, const string& pattern, size_t offset = 0);
+
         /// @brief 将字符串转换为大写
         /// @details 空白字符参考 ::is_space 说明
         LSLIB_API string trim(lpcstr str);

@@ -429,8 +429,21 @@ namespace lslib
             if (strtool::is_empty(data)) return "";
             return encoding_convert((lpbyte)data, strlen(data), from_charset, to_charset, NULL);
         }
-
 #endif
+
+        LSLIB_API string trim_utf8_bom(lpcstr data)
+        {
+            if (strtool::is_empty(data)) return "";
+            if (strlen(data) < 3) return data;
+
+            string strret;
+            if ((luchar)data[0] == 0xef && (luchar)data[1] == 0xbb && (luchar)data[2] == 0xbf)
+            {
+                strret = (lpcstr)&data[3];
+                return strret;
+            }
+            else return data;
+        }
 
     } // crypto
 

@@ -289,5 +289,10 @@ namespace lslib
         LSLIB_API string encoding_convert(lpcstr data, lpcstr from_charset, lpcstr to_charset);
 #endif
 
+        /// @brief 去除UTF-8字符串的bom
+        /// @param[in] data         需要处理的字符串内容
+        /// @return 返回处理后的字符串
+        LSLIB_API string trim_utf8_bom(lpcstr data);
+
     } // crypto
 }
