@@ -82,12 +82,13 @@ namespace lslib
     bool CThread::Stop()
     {
 #ifdef _MSC_VER
+        bool ret = true;
         if (m_eThreadState == TS_WORKING)
         {
             PostMessage(WM_QUIT, 0, 0, MAXINT);
-            return WaitFor(5000);
+            ret = WaitFor(10000);
         }
-        else
+        if (!ret) // wait for timeout, force to terminate
         {
             return TerminateThread(m_hThreadHandle, 0);
         }
