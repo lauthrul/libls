@@ -399,6 +399,7 @@ label_exit:
                 curl_easy_setopt(pCurl, CURLOPT_SSL_VERIFYHOST, 0);
                 curl_easy_setopt(pCurl, CURLOPT_ACCEPT_ENCODING, ""); // accept encodings supported built-in
                 curl_easy_setopt(pCurl, CURLOPT_SHARE, s_shobject);
+                // curl_easy_setopt(pCurl, CURLOPT_FAILONERROR, 1);
                 if (!m_strDefaultCookieFile.empty())
                 {
                     curl_easy_setopt(pCurl, CURLOPT_COOKIEFILE, m_strDefaultCookieFile.c_str()); //cookie read
@@ -455,11 +456,12 @@ label_exit:
                     {
                         fseek(pFile, 0, SEEK_END);
                         int nSize = ftell(pFile);
-                        if (nSize == infoHeader[1] && infoHeader[1] > 0) //already finished download
+                        if (nSize >= infoHeader[1] && infoHeader[1] > 0) //already finished download
                         {
                             INFO_LOG(g_netlogger, "[%s] already finished download[%s], size: %d, file size: %d", strSid.c_str(), strRequest.c_str(), nSize, infoHeader[1]);
 
                             vResult.nCode = CURLE_OK;
+                            fclose(pFile);
                             goto label_exit;
                         }
 
@@ -620,6 +622,7 @@ label_exit:
             curl_easy_setopt(pCurl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_easy_setopt(pCurl, CURLOPT_ACCEPT_ENCODING, ""); // accept encodings supported built-in
             curl_easy_setopt(pCurl, CURLOPT_SHARE, s_shobject);
+            // curl_easy_setopt(pCurl, CURLOPT_FAILONERROR, 1);
             if (!m_strDefaultCookieFile.empty())
             {
                 curl_easy_setopt(pCurl, CURLOPT_COOKIEFILE, m_strDefaultCookieFile.c_str()); //cookie read
