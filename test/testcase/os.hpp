@@ -118,7 +118,7 @@ void path_test()
         for (int i = 0; i < sizeof(strsz) / sizeof(string) - 1; i += 2)
         {
             const string& str = strsz[i];
-            printf("(%s, %s) : %s\n", strsz[i].c_str(), strsz[i+1].c_str(), path_combine(strsz[i].c_str(), strsz[i+1].c_str()).c_str());
+            printf("(%s, %s) : %s\n", strsz[i].c_str(), strsz[i + 1].c_str(), path_combine(strsz[i].c_str(), strsz[i + 1].c_str()).c_str());
         }
     }
 }
@@ -330,11 +330,11 @@ void shell_test()
 
     string_array arr_files;
     open_file_select_dialog(arr_files, "请选择文件",
-        "常见图片格式\0*.jpg;*.jpeg;*.png;*.bmp\0"
-        " JPG图片(*.jpg)\0*.jpg;*.jpeg\0"
-        " PNG图片(*.png)\0*.png\0"
-        " BMP图片(*.bmp)\0*.bmp\0"
-        " 所有文件(*.*)\0*.*\0", true, NULL);
+                            "常见图片格式\0*.jpg;*.jpeg;*.png;*.bmp\0"
+                            " JPG图片(*.jpg)\0*.jpg;*.jpeg\0"
+                            " PNG图片(*.png)\0*.png\0"
+                            " BMP图片(*.bmp)\0*.bmp\0"
+                            " 所有文件(*.*)\0*.*\0", true, NULL);
     for (size_t i = 0; i < arr_files.size(); i++)
     {
         cout << "open_file_select_dialog[" << i << "]: " << arr_files[i].c_str() << endl;
@@ -342,6 +342,18 @@ void shell_test()
 
     open_folder_select_dialog(str, NULL, NULL);
     cout << "open_folder_select_dialog: " << str.c_str() << endl;
+
+    os::open_console();
+    os::write_console("CONSOLE_DEFAULT", CONSOLE_DEFAULT);
+    os::write_console("CONSOLE_INFO", CONSOLE_INFO);
+    os::write_console("CONSOLE_WARN", CONSOLE_WARN);
+    os::write_console("CONSOLE_ERROR", CONSOLE_ERROR);
+    cout << os::get_last_console_text() << endl;
+    os::close_console();
+
+    os::play_file_sound((os::get_module_path() + "dong.wav").c_str(), true);
+
+    os::create_file_shortcut(_pgmptr, get_module_path().c_str(), get_module_path().c_str(), "test.lnk", 0, "快捷方式");
 #endif
 }
 
@@ -400,10 +412,10 @@ void other_os_test()
 
 void test_os()
 {
-    path_test();
-    file_test();
-    system_path_test();
+//     path_test();
+//     file_test();
+//     system_path_test();
     shell_test();
-    other_os_test();
+//     other_os_test();
 }
 declare_test_case(test_os);

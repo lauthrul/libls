@@ -105,7 +105,7 @@ namespace lslib
         /// @param[in] filter       文件类型
         /// @param[in] multi        是否可以多选
         /// @param[in] owner        父窗口
-        /// @details 
+        /// @details
         /// 其中lpstrFilter格式如下：
         ///      _T(" 常见图片格式\0*.jpg;*.jpeg;*.png;*.bmp\0"
         ///      " JPG图片(*.jpg)\0*.jpg;*.jpeg\0"
@@ -151,6 +151,46 @@ namespace lslib
 
         /// 获取文件版本号
         LSLIB_API string get_product_version(lpcstr path);
+
+        /// 打开控制台窗口
+        /// @param lpstrTitle    窗口标题
+        LSLIB_API bool open_console(lpcstr lpstrTitle = NULL);
+
+        enum CONSOLE_LEVEL { CONSOLE_DEFAULT, CONSOLE_INFO, CONSOLE_WARN, CONSOLE_ERROR };
+
+        /// 向控制台写入消息
+        /// @param lpstrText    待写入的消息
+        /// @param eLevel       消息级别，不同级别颜色不一样，可选有CONSOLE_DEFAULT, CONSOLE_INFO, CONSOLE_WARN, CONSOLE_ERROR
+        ///                     CONSOLE_DEFAULT 白色
+        ///                     CONSOLE_INFO 绿色
+        ///                     CONSOLE_WARN 黄色
+        ///                     CONSOLE_WARN 红色
+        LSLIB_API bool write_console(lpcstr lpstrText, CONSOLE_LEVEL eLevel = CONSOLE_DEFAULT);
+
+        /// 获取最后一次写入控制台窗口的消息内容
+        LSLIB_API lpcstr get_last_console_text();
+
+        /// 关闭控制台窗口
+        LSLIB_API bool close_console();
+
+        /// 播放音频文件
+        /// @param bSyncMode    是否同步模式，同步模式下，等待播放完毕后函数才会返回
+        LSLIB_API bool play_file_sound(lpcstr lpstrFile, bool bSyncMode = false);
+
+        /// 播放音频资源
+        /// @param bSyncMode    是否同步模式，同步模式下，等待播放完毕后函数才会返回
+        LSLIB_API bool play_resource_sound(ldword dwRes, bool bSyncMode = false);
+
+        /// @brief 对指定文件在指定的目录下创建其快捷方式
+        /// @param lpszFileName    目标文件
+        /// @param lpszWorkDir     目标起始位置
+        /// @param lpszLnkFileDir  指定快捷方式所在目录
+        /// @param lpszLnkFileName 指定快捷方式名称
+        /// @param wHotkey         快捷方式快捷键，默认0表示不设置
+        /// @param pszDescription  快捷方式备注信息
+        /// @param iShowCmd        快捷方式运行方式，默认为常规窗口
+        LSLIB_API bool create_file_shortcut(lpcstr lpszFileName, lpcstr lpszWorkDir, lpcstr lpszLnkFileDir, lpcstr lpszLnkFileName,
+                                            lword wHotkey = 0, lpcstr lpszDescription = NULL, int iShowCmd = SW_SHOWNORMAL);
 
 #endif
 

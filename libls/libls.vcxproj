@@ -136,7 +136,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>log4cxx.lib;libeay32.lib;libcurld.lib;version.lib;libiconv.lib;psapi.lib;rpcrt4.lib;libls_util.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>log4cxx.lib;libeay32.lib;libcurld.lib;libiconv.lib;libls_util.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\out\libls_util\Debug;$(ProjectDir)\3rd-party\bin\log4cxx\Debug;$(ProjectDir)\3rd-party\bin\libcurl\DLL Debug - DLL OpenSSL\;$(ProjectDir)\3rd-party\bin\openssl\dll\lib;$(ProjectDir)\3rd-party\bin\iconv\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -163,7 +163,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>version.lib;psapi.lib;rpcrt4.lib;libls_util.lib;libiconv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libls_util.lib;libiconv.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\out\libls_util\Debug;$(ProjectDir)\3rd-party\bin\log4cxx\Debug;$(ProjectDir)\3rd-party\bin\libcurl\DLL Debug - DLL OpenSSL\;$(ProjectDir)\3rd-party\bin\openssl\dll\lib;$(ProjectDir)\3rd-party\bin\iconv\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -190,7 +190,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>version.lib;psapi.lib;rpcrt4.lib;libls_util.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libls_util.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\out\libls_util\Debug;$(ProjectDir)\3rd-party\bin\log4cxx\Debug;$(ProjectDir)\3rd-party\bin\libcurl\DLL Debug - DLL OpenSSL\;$(ProjectDir)\3rd-party\bin\openssl\dll\lib;$(ProjectDir)\3rd-party\bin\iconv\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -215,7 +215,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>log4cxx.lib;libeay32.lib;libcurl.lib;version.lib;libiconv.lib;psapi.lib;rpcrt4.lib;libls_util.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>log4cxx.lib;libeay32.lib;libcurl.lib;libiconv.lib;libls_util.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\out\libls_util\Release;$(ProjectDir)\3rd-party\bin\log4cxx\Release;$(ProjectDir)\3rd-party\bin\libcurl\DLL Release - DLL OpenSSL\;$(ProjectDir)\3rd-party\bin\openssl\dll\lib;$(ProjectDir)\3rd-party\bin\iconv\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -242,7 +242,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>version.lib;psapi.lib;rpcrt4.lib;libls_util.lib;libiconv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libls_util.lib;libiconv.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\out\libls_util\Release;$(ProjectDir)\3rd-party\bin\log4cxx\Release;$(ProjectDir)\3rd-party\bin\libcurl\DLL Release - DLL OpenSSL\;$(ProjectDir)\3rd-party\bin\openssl\dll\lib;$(ProjectDir)\3rd-party\bin\iconv\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -269,7 +269,7 @@ copy /y "$(OutDir)$(ProjectName).pdb"  "$(SolutionDir)\bin\$(Configuration)\"
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>version.lib;psapi.lib;rpcrt4.lib;libls_util.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libls_util.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\out\libls_util\Release;$(ProjectDir)\3rd-party\bin\log4cxx\Release;$(ProjectDir)\3rd-party\bin\libcurl\DLL Release - DLL OpenSSL\;$(ProjectDir)\3rd-party\bin\openssl\dll\lib;$(ProjectDir)\3rd-party\bin\iconv\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>

@@ -7,6 +7,10 @@
 #include <ShlObj.h>
 #include <ShellAPI.h>
 #include <CommDlg.h>
+#include <mmsystem.h>
+#pragma comment (lib, "winmm.lib")
+#pragma comment (lib, "version.lib")
+#pragma comment (lib, "psapi.lib")
 #else
 #include <unistd.h>
 #endif
@@ -488,16 +492,23 @@ namespace lslib
             if (::GetOpenFileName(&ofn))
             {
                 // For Explorer-style dialog boxes, the directory and file name strings are NULL separated, with an extra NULL character after the last file name.
+                string_array arr;
                 lpcstr p = szFileName;
-
-                string strPath = p;
-                p += strPath.length() + 1;
-
                 while (*p != NULL)
                 {
-                    string strName = p;
-                    arr_files.push_back(strPath + _T("\\") + strName);
-                    p += strName.length() + 1;
+                    arr.push_back(p);
+                    p += strlen(p) + 1;
+                }
+                if (arr.size() == 1) // full_file_path \0
+                {
+                    arr_files.push_back(arr[0]);
+                }
+                else if (arr.size() > 1) // path \0 file1 \0 file2 \0 file3 \0 ...
+                {
+                    for (size_t i = 1; i < arr.size(); i++)
+                    {
+                        arr_files.push_back(arr[0] + _T("\\") + arr[i]);
+                    }
                 }
                 return true;
             }
@@ -644,6 +655,115 @@ namespace lslib
             delete[] szBuf;
 
             return strVersion;
+        }
+
+        bool open_console(lpcstr lpstrTitle /*= NULL*/)
+        {
+            AllocConsole();
+            HWND hConsole = GetConsoleWindow();
+            HMENU hMenu = GetSystemMenu(hConsole, FALSE);
+            DeleteMenu(hMenu, SC_CLOSE, MF_BYCOMMAND);
+            if (lpstrTitle != NULL)
+                SetConsoleTitle(lpstrTitle);
+            freopen("conin$", "r+t", stdin);
+            freopen("conout$", "w+t", stdout);
+            freopen("conout$", "w+t", stderr);
+            return true;
+        }
+
+        static string sConsoleText;
+        bool write_console(lpcstr lpstrText, CONSOLE_LEVEL eLevel /*= CONSOLE_DEFAULT*/)
+        {
+            sConsoleText = lpstrText;
+
+            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+            DWORD dwColor = 0;
+            switch (eLevel)
+            {
+                case CONSOLE_DEFAULT: dwColor = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE; break;
+                case CONSOLE_INFO: dwColor = FOREGROUND_GREEN; break;
+                case CONSOLE_WARN: dwColor = FOREGROUND_RED | FOREGROUND_GREEN; break;
+                case CONSOLE_ERROR: dwColor = FOREGROUND_RED; break;
+            }
+            SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY | dwColor);
+
+            //SYSTEMTIME tm;
+            //GetLocalTime(&tm);
+
+            //TCHAR szBuff[MAX_PATH] = { 0 };
+            //_stprintf(szBuff, _T("%.4d-%.2d-%.2d %.2d:%.2d:%.2d"),
+            //    tm.wYear, tm.wMonth, tm.wDay, tm.wHour, tm.wMinute, tm.wSecond, tm.wMilliseconds);
+
+            //_tprintf(_T("[%s] %s\n"), szBuff, lpstrText);
+            _tprintf(_T("%s\n"), lpstrText);
+
+            return true;
+        }
+
+        lpcstr get_last_console_text()
+        {
+            return sConsoleText.c_str();
+        }
+
+        bool close_console()
+        {
+            fclose(stdin);
+            fclose(stdout);
+            fclose(stderr);
+            FreeConsole();
+            return true;
+        }
+
+        bool play_file_sound(lpcstr lpstrFile, bool bSyncMode /*= false*/)
+        {
+            DWORD dw = bSyncMode ? SND_SYNC : SND_ASYNC;
+            return ::PlaySound(lpstrFile, NULL, SND_FILENAME | dw);
+        }
+
+        bool play_resource_sound(ldword dwRes, bool bSyncMode /*= false*/)
+        {
+            DWORD dw = bSyncMode ? SND_SYNC : SND_ASYNC;
+            return ::PlaySound(MAKEINTRESOURCE(dwRes), GetModuleHandle(NULL), SND_RESOURCE | dw);
+        }
+
+        bool create_file_shortcut(lpcstr lpszFileName, lpcstr lpszWorkDir, lpcstr lpszLnkFileDir, lpcstr lpszLnkFileName,
+                                  lword wHotkey /*= 0*/, lpcstr lpszDescription /*= NULL*/, int iShowCmd /*= SW_SHOWNORMAL*/)
+        {
+            if (lpszFileName == NULL || lpszWorkDir == NULL || lpszLnkFileDir == NULL || lpszLnkFileName == NULL)
+                return FALSE;
+
+            HRESULT hr;
+            IShellLink*     pLink;
+            IPersistFile*   ppf;
+
+            CoInitialize(NULL);
+            hr = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**)&pLink);
+            if (FAILED(hr)) return FALSE;
+
+            hr = pLink->QueryInterface(IID_IPersistFile, (void**)&ppf);
+            if (FAILED(hr))
+            {
+                pLink->Release();
+                return FALSE;
+            }
+
+            pLink->SetPath(lpszFileName);
+            pLink->SetWorkingDirectory(lpszWorkDir);
+            if (wHotkey != 0)               pLink->SetHotkey(wHotkey);
+            if (lpszDescription != NULL)    pLink->SetDescription(lpszDescription);
+            pLink->SetShowCmd(iShowCmd);
+
+            TCHAR sz[MAX_PATH] = { 0 };
+            if (lpszLnkFileName != NULL)
+                _stprintf(sz, "%s\\%s.lnk", lpszLnkFileDir, lpszLnkFileName);
+            WCHAR  wsz[MAX_PATH] = { 0 };
+            MultiByteToWideChar(CP_ACP, 0, sz, -1, wsz, MAX_PATH);
+
+            hr = ppf->Save(wsz, TRUE);
+
+            ppf->Release();
+            pLink->Release();
+            return SUCCEEDED(hr);
         }
 
 #endif

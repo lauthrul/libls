@@ -10,7 +10,6 @@
 #include "testcase/process.hpp"
 #endif
 //#include "testcase/math.hpp"
-#include "testcase/os.hpp"
 #include "testcase/zip.hpp"
 #include "testcase/mmr.hpp"
 #include "testcase/logger.hpp"
@@ -22,6 +21,7 @@
 #include "testcase/type.hpp"
 #include "testcase/crypto.hpp"
 #include "testcase/string.hpp"
+#include "testcase/os.hpp"
 
 extern fn_test_list test_cases;
 int main(int argc, char* argv[])

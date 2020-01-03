@@ -5,6 +5,7 @@
 #include "utils.h"
 
 #ifdef _MSC_VER
+#pragma comment (lib, "rpcrt4.lib")
 #else
 #include <uuid/uuid.h>
 #endif
