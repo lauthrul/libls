@@ -86,7 +86,7 @@ namespace lslib
         if (m_eThreadState == TS_WORKING)
         {
             PostMessage(WM_QUIT, 0, 0, MAXINT);
-            ret = WaitFor(10000);
+            ret = WaitFor(5000);
         }
         if (!ret) // wait for timeout, force to terminate
         {
@@ -103,6 +103,7 @@ namespace lslib
             return (pthread_cancel(m_uThreadID) == 0);
         }
 #endif
+        return true;
     }
 
     unsigned int CThread::GetThreadID() const

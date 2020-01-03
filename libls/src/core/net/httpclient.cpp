@@ -37,18 +37,30 @@ namespace lslib
             return size * nmemb;
         }
 
+        struct SWriteFileParam
+        {
+            CURL*   pCurl;
+            size_t  nDataLen;
+            string  strData;
+            FILE*   fp;
+
+            SWriteFileParam() : pCurl(0), nDataLen(0), fp(0) {};
+        };
+
         static size_t OnWriteFileData(void* buffer, size_t size, size_t nmemb, void* lpVoid)
         {
-            pair<FILE*, size_t*>* param = (pair<FILE*, size_t*>*)(lpVoid);
-            if (param == NULL || param->first == NULL || param->second == NULL)
-                return -1;
+            SWriteFileParam* param = (SWriteFileParam*)(lpVoid);
+            if (param == NULL) return -1;
 
-            FILE* file = param->first;
-            size_t* wirte_size = param->second;
+            param->strData += (lpcstr)buffer;
+            param->nDataLen += size * nmemb;
 
-            size_t s = fwrite(buffer, 1, size * nmemb, file);
-            *wirte_size += s;
-            return  s;
+            int nCode = 0;
+            curl_easy_getinfo(param->pCurl, CURLINFO_RESPONSE_CODE, &nCode);
+            if (nCode >= 200 && nCode < 300)
+                fwrite(buffer, 1, size * nmemb, param->fp);
+
+            return size * nmemb;
         }
 
         static size_t OnGetHeaderInfo(void* ptr, size_t size, size_t nmemb, void* stream)
@@ -227,6 +239,7 @@ namespace lslib
                 curl_global_init(CURL_GLOBAL_ALL);
                 s_shobject = curl_share_init();
                 curl_share_setopt(s_shobject, CURLSHOPT_SHARE, CURL_LOCK_DATA_COOKIE);
+                curl_share_setopt(s_shobject, CURLSHOPT_SHARE, CURL_LOCK_DATA_DNS);
             }
         }
 
@@ -443,9 +456,9 @@ label_exit:
                     goto label_exit;
                 }
 
-                pair<FILE*, size_t*> param;
-                param.first = pFile;
-                param.second = &nWriteSize;
+                SWriteFileParam param;
+                param.fp = pFile;
+                param.pCurl = pCurl;
                 curl_easy_setopt(pCurl, CURLOPT_WRITEDATA, (void*)&param);
                 curl_easy_setopt(pCurl, CURLOPT_WRITEFUNCTION, OnWriteFileData);
 
@@ -482,15 +495,10 @@ label_exit:
                 curl_easy_cleanup(pCurl);
                 fclose(pFile);
 
-                vResult.strData = "[file://" + strFile + "]";
-                if (ret != CURLE_OK || !(vResult.nCode >= 200 && vResult.nCode < 300))
-                {
-                    vResult.strData = "[failed] " + vResult.strData;
-                }
-                else
-                {
-                    vResult.strData = "[succeed] " + vResult.strData;;
-                }
+                vResult.strData = param.strData;
+                vResult.nDataLen = param.nDataLen;
+                if (ret == CURLE_OK && (vResult.nCode >= 200 && vResult.nCode < 300))
+                    vResult.strData = "[file://" + strFile + "]";
             }
             //////////////////////////////////////////////////////////////////////////
 
