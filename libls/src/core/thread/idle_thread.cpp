@@ -39,7 +39,7 @@ namespace lslib
 
     ldword GenerateUniqueID()
     {
-        if (0)
+        if (1)
         {
             static int nIndex = 0;
             return (ldword)Time::CurrentTimeStamp() + nIndex++;

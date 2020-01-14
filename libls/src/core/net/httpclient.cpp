@@ -55,9 +55,9 @@ namespace lslib
             param->strData += (lpcstr)buffer;
             param->nDataLen += size * nmemb;
 
-            int nCode = 0;
-            curl_easy_getinfo(param->pCurl, CURLINFO_RESPONSE_CODE, &nCode);
-            if (nCode >= 200 && nCode < 300)
+            long lCode = 0; // may core dump if type is int
+            curl_easy_getinfo(param->pCurl, CURLINFO_RESPONSE_CODE, &lCode);
+            if (lCode >= 200 && lCode < 300)
                 fwrite(buffer, 1, size * nmemb, param->fp);
 
             return size * nmemb;
@@ -488,7 +488,12 @@ label_exit:
                     if (ret == CURLE_OK) break;
                 }
 
-                if (ret == CURLE_OK) curl_easy_getinfo(pCurl, CURLINFO_RESPONSE_CODE, &vResult.nCode);
+                if (ret == CURLE_OK)
+                {
+                    long lCode = 0; // may core dump if type is int
+                    curl_easy_getinfo(pCurl, CURLINFO_RESPONSE_CODE, &lCode);
+                    vResult.nCode = lCode;
+                }
                 if (ret != CURLE_OK) vResult.nCode = ret;
 
                 curl_slist_free_all(headers);
@@ -671,7 +676,12 @@ label_exit:
                 ERROR_LOG(g_netlogger, "[%s] http perform fail[%d], try[%d], url[%s]", sid.c_str(), ret, i, vParam.strUrl.c_str());
             }
 
-            if (ret == CURLE_OK) ret = curl_easy_getinfo(pCurl, CURLINFO_RESPONSE_CODE, &vResult.nCode);
+            if (ret == CURLE_OK)
+            {
+                long lCode = 0; // may core dump if type is int
+                curl_easy_getinfo(pCurl, CURLINFO_RESPONSE_CODE, &lCode);
+                vResult.nCode = lCode;
+            }
             if (ret != CURLE_OK) vResult.nCode = ret;
 
             if (vResult.nCode >= 300 && vResult.nCode < 400) //redirect
