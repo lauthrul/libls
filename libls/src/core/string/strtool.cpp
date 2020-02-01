@@ -567,7 +567,7 @@ namespace lslib
             vasprintf(&pbuf, pfmt, args);
 #endif
             string str = pbuf;
-            delete[] pbuf;
+            free(pbuf);
             return str;
         }
 
