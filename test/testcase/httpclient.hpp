@@ -119,7 +119,7 @@ void http_download_test()
     {
         vd.strUrl = sz3[i];
         vd.strFile = path_combine("download_test", path_get_name(vd.strUrl.c_str()).c_str());
-        vd.bBreakPointSupport = true;
+        vd.bBreakPointSupport = false;
         r = CHttpClient::DownloadFile(vd);
         cout << "http download: " << vd.strUrl << ", code: " << r.nCode  << ", size: " << r.nDataLen << ", spend: " << r.nTimeSpend << "ms" << endl;
     }
@@ -141,6 +141,41 @@ void test_httpclient()
     http_post_test();
     http_download_test();
 }
-declare_test_case(test_httpclient);
+
+class CMultiThreadTest : public CThread
+{
+public:
+    CMultiThreadTest() : CThread(false) {};
+    virtual ~CMultiThreadTest() = default;
+
+private:
+    virtual void OnExecute()
+    {
+        http_get_test();
+        http_post_test();
+        http_download_test();
+    }
+};
+
+void multi_thread_test()
+{
+    InitLogger("log4cxx.xml");
+    _loggerptr lplogger = GetLogger("applogger");
+    _loggerptr lpnetlogger = GetLogger("netlogger");
+    RegistGlobalLogger(lplogger);
+    RegistNetLogger(lpnetlogger);
+
+    httpclient_thread_setup();
+
+    INFO_LOG(lplogger, "============================");
+    INFO_LOG(lpnetlogger, "============================");
+
+    CMultiThreadTest th[50];
+    while (true);
+
+    httpclient_thread_cleanup();
+}
+
+declare_test_case(multi_thread_test);
 
 #endif // end of USE_LIBCURL

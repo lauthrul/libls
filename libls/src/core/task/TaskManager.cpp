@@ -108,10 +108,15 @@ namespace lslib
             return NULL;
         }
 
+        static CMutexLock mtx;
         static int nLastAgentIndex = 0;
+
+        mtx.Lock();
         CTaskAgent* pAgent = m_pAgents[nLastAgentIndex++];
         if (nLastAgentIndex >= m_nAgentCounts)
             nLastAgentIndex = 0;
+        mtx.Unlock();
+
         return pAgent;
     }
 
@@ -138,7 +143,7 @@ namespace lslib
         m_lstTask.push_back(pTask);
         m_mtxTask.Unlock();
 
-        INFO_LOG(g_logger, "invoke task[0x%p, %d] success, reqid[%d]", pTask, pTask->uTID, pTask->uReqID);
+        INFO_LOG(g_logger, "invoke task[%p, %d] success, reqid[%d]", pTask, pTask->uTID, pTask->uReqID);
 
         return pTask->uReqID;
     }
@@ -229,7 +234,7 @@ namespace lslib
                     vIdleTask.m_bSyncCallback = true; // self thread callback, so set sync as true, in case other task pending callback
                     vIdleTask.m_pParam = (ldword)pTask;
 
-                    INFO_LOG(g_logger, "running task[0x%p, %d], reqid[%d]", pTask, pTask->uTID, pTask->uReqID);
+                    INFO_LOG(g_logger, "running task[%p, %d], reqid[%d]", pTask, pTask->uTID, pTask->uReqID);
 
                     if (pTask->pReq != NULL) pTask->pReq->tDealTime = tNow;
 

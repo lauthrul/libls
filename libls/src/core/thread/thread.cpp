@@ -37,7 +37,7 @@ namespace lslib
 
     bool CThread::Suspend()
     {
-        DEBUG_LOG(g_logger, "%s[0x%p] suspend", GetName(), m_uThreadID);
+        DEBUG_LOG(g_logger, "%s[%p] suspend", GetName(), m_uThreadID);
 
 #ifdef _MSC_VER
         if (m_hThreadHandle <= 0)                   return false;
@@ -53,7 +53,7 @@ namespace lslib
 
     bool CThread::Resume()
     {
-        DEBUG_LOG(g_logger, "%s[0x%p] resume", GetName(), m_uThreadID);
+        DEBUG_LOG(g_logger, "%s[%p] resume", GetName(), m_uThreadID);
 
 #ifdef _MSC_VER
         if (m_hThreadHandle <= 0)                   return false;
@@ -223,7 +223,7 @@ namespace lslib
     void CThread::Execute()
     {
         string strThreadName = GetName();
-        DEBUG_LOG(g_logger, "%s[0x%p] excute", strThreadName.c_str(), m_uThreadID);
+        DEBUG_LOG(g_logger, "%s[%p] excute", strThreadName.c_str(), m_uThreadID);
 
         while (true)
         {
@@ -249,7 +249,7 @@ namespace lslib
             }
         }
 
-        DEBUG_LOG(g_logger, "%s[0x%p] exit. remain tasks[%d]", strThreadName.c_str(), m_uThreadID, GetMessageSize());
+        DEBUG_LOG(g_logger, "%s[%p] exit. remain tasks[%d]", strThreadName.c_str(), m_uThreadID, GetMessageSize());
     }
 
     void CThread::OnExecute()
@@ -267,7 +267,7 @@ namespace lslib
 
     void CThread::OnDumpThreadInfo()
     {
-        DEBUG_LOG(g_logger, "%s[0x%p] msg size[%d]", GetName(), m_uThreadID, GetMessageSize());
+        DEBUG_LOG(g_logger, "%s[%p] msg size[%d]", GetName(), m_uThreadID, GetMessageSize());
     }
 
     int CThread::HandleMessage(msgid_t uMsg, wparam_t wParam /*= 0*/, lparam_t lParam /*= 0*/)
@@ -304,7 +304,7 @@ namespace lslib
                     if (lpMsg != NULL)
                     {
                         *lpMsg = *it;
-                        //DEBUG_LOG(g_logger, "get msg. level[%d], msg[%d, (0x%p, 0x%p)]", rit->first, msg.message, msg.wParam, msg.lParam);
+                        //DEBUG_LOG(g_logger, "get msg. level[%d], msg[%d, (%p, %p)]", rit->first, msg.message, msg.wParam, msg.lParam);
                     }
                     msglist.erase(it);
                     bret = true;

@@ -68,13 +68,13 @@ namespace lslib
 
         string strText;
         if (bBrief)
-            strText = strtool::format("task info[0x%p]: uid:%d, tid:%d, name:%s", pTask, pTask->m_dwUniqueID, pTask->m_dwTID, pTask->m_strTaskName.c_str());
+            strText = strtool::format("task info[%p]: uid:%d, tid:%d, name:%s", pTask, pTask->m_dwUniqueID, pTask->m_dwTID, pTask->m_strTaskName.c_str());
         else
             strText = strtool::format(
 #ifdef _MSC_VER
-                             "task info[0x%p]: uid:%d, tid:%d, name:%s, param:0x%p, result:0x%p, keep single:%d, sync:%d, task type: %d, client task:0x%p, static task:0x%p, thread task:0x%p",
+                             "task info[%p]: uid:%d, tid:%d, name:%s, param:%p, result:%p, keep single:%d, sync:%d, task type: %d, client task:%p, static task:%p, thread task:%p",
 #else
-                             "task info[0x%p]: uid:%d, tid:%d, name:%s, param:0x%p, result:0x%p, keep single:%d, sync:%d, thread task:0x%p",
+                             "task info[%p]: uid:%d, tid:%d, name:%s, param:%p, result:%p, keep single:%d, sync:%d, thread task:%p",
 #endif
                              pTask,
                              pTask->m_dwUniqueID,
@@ -170,7 +170,7 @@ namespace lslib
                     case SIdleThreadTask::ITT_CLIENT:
                         if ( pTask->m_pClient != NULL && pTask->m_ptrClientTask != NULL )
                         {
-                            DEBUG_LOG(g_logger, "%s[0x%p] run client task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask, true).c_str());
+                            DEBUG_LOG(g_logger, "%s[%p] run client task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask, true).c_str());
                             int nRet = (pTask->m_pClient->*(pTask->m_ptrClientTask))(pTask->m_pParam, pTask->m_pResult);
                             if (pTask->m_pClient->GetMessageHanlder() != NULL)
                             {
@@ -179,13 +179,13 @@ namespace lslib
                                 else                        bPostRet = ::PostMessage(pTask->m_pClient->GetMessageHanlder(), pTask->m_dwTID, (wparam_t)nRet, (lparam_t)pTask->m_pResult);
                                 if (bPostRet)
                                 {
-                                    DEBUG_LOG(g_logger, "%s[0x%p] finish client task. ret:%d, %s", GetName(), GetThreadID(), nRet, DumpTaskInfo(pTask, true).c_str());
+                                    DEBUG_LOG(g_logger, "%s[%p] finish client task. ret:%d, %s", GetName(), GetThreadID(), nRet, DumpTaskInfo(pTask, true).c_str());
                                     if (m_pManager != NULL)
                                         m_pManager->PostMessage(WM_TASK_FINISH, pTask->m_dwUniqueID);
                                 }
                                 else
                                 {
-                                    ERROR_LOG(g_logger, "%s[0x%p] post client task fail. ret:%d, post result[%d], last err[%d], %s", GetName(), GetThreadID(), nRet, bPostRet, GetLastError(), DumpTaskInfo(pTask, true).c_str());
+                                    ERROR_LOG(g_logger, "%s[%p] post client task fail. ret:%d, post result[%d], last err[%d], %s", GetName(), GetThreadID(), nRet, bPostRet, GetLastError(), DumpTaskInfo(pTask, true).c_str());
                                     m_mapRetryCBNotify[pTask] = nRet;
                                     bDelete = FALSE;
                                 }
@@ -194,7 +194,7 @@ namespace lslib
                         break;
                     case SIdleThreadTask::ITT_STATIC:
                         {
-                            DEBUG_LOG(g_logger, "%s[0x%p] run static task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask, true).c_str());
+                            DEBUG_LOG(g_logger, "%s[%p] run static task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask, true).c_str());
                             int nRet = (*(pTask->m_ptrStaticTask))(pTask->m_pParam, pTask->m_pResult);
                             if (pTask->m_hcbStatic != NULL)
                             {
@@ -203,13 +203,13 @@ namespace lslib
                                 else                        bPostRet = ::PostMessage(pTask->m_hcbStatic, pTask->m_dwTID, (wparam_t)nRet, (lparam_t)pTask->m_pResult);
                                 if (bPostRet)
                                 {
-                                    DEBUG_LOG(g_logger, "%s[0x%p] finish static task. ret:%d, %s", GetName(), GetThreadID(), nRet, DumpTaskInfo(pTask, true).c_str());
+                                    DEBUG_LOG(g_logger, "%s[%p] finish static task. ret:%d, %s", GetName(), GetThreadID(), nRet, DumpTaskInfo(pTask, true).c_str());
                                     if (m_pManager != NULL)
                                         m_pManager->PostMessage(WM_TASK_FINISH, pTask->m_dwUniqueID);
                                 }
                                 else
                                 {
-                                    ERROR_LOG(g_logger, "%s[0x%p] post static task fail. ret:%d, post result[%d], last err[%d], %s", GetName(), GetThreadID(), nRet, bPostRet, GetLastError(), DumpTaskInfo(pTask, true).c_str());
+                                    ERROR_LOG(g_logger, "%s[%p] post static task fail. ret:%d, post result[%d], last err[%d], %s", GetName(), GetThreadID(), nRet, bPostRet, GetLastError(), DumpTaskInfo(pTask, true).c_str());
                                     m_mapRetryCBNotify[pTask] = nRet;
                                     bDelete = FALSE;
                                 }
@@ -220,14 +220,14 @@ namespace lslib
                     case SIdleThreadTask::ITT_THREAD:
                         if ( pTask->m_pcbThread != NULL && pTask->m_ptrThreadTask != NULL )
                         {
-                            DEBUG_LOG(g_logger, "%s[0x%p] run thread task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask, true).c_str());
+                            DEBUG_LOG(g_logger, "%s[%p] run thread task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask, true).c_str());
                             int nRet = (pTask->m_pcbThread->*(pTask->m_ptrThreadTask))(pTask->m_pParam, pTask->m_pResult);
                             {
                                 if (pTask->m_bSyncCallback) pTask->m_pcbThread->SendMessage(pTask->m_dwTID, (wparam_t)nRet, (lparam_t)pTask->m_pResult);
                                 else                        pTask->m_pcbThread->PostMessage(pTask->m_dwTID, (wparam_t)nRet, (lparam_t)pTask->m_pResult);
                                 if (m_pManager != NULL) m_pManager->PostMessage(WM_TASK_FINISH, pTask->m_dwUniqueID);
                             }
-                            DEBUG_LOG(g_logger, "%s[0x%p] finish thread task. ret:%d, %s", GetName(), GetThreadID(), nRet, DumpTaskInfo(pTask, true).c_str());
+                            DEBUG_LOG(g_logger, "%s[%p] finish thread task. ret:%d, %s", GetName(), GetThreadID(), nRet, DumpTaskInfo(pTask, true).c_str());
                         }
                         break;
                 }
@@ -244,7 +244,7 @@ namespace lslib
     void CIdleThread::OnDumpThreadInfo()
     {
         CThread::OnDumpThreadInfo();
-        DEBUG_LOG(g_logger, "%s[0x%p] task size[%d]", GetName(), GetThreadID(), GetTaskRemain());
+        DEBUG_LOG(g_logger, "%s[%p] task size[%d]", GetName(), GetThreadID(), GetTaskRemain());
     }
 
     void CIdleThread::RetryCBNotify()
@@ -269,13 +269,13 @@ namespace lslib
                     case SIdleThreadTask::ITT_CLIENT:
                         {
                             bPostRet = ::PostMessage(pTask->m_pClient->GetMessageHanlder(), pTask->m_dwTID, (wparam_t)nRet, (lparam_t)pTask->m_pResult);
-                            DEBUG_LOG(g_logger, "%s[0x%p] retry post client task. ret:%d, post result[%d], last err[%d], %s", GetName(), GetThreadID(), nRet, bPostRet, GetLastError(), DumpTaskInfo(pTask, true).c_str());
+                            DEBUG_LOG(g_logger, "%s[%p] retry post client task. ret:%d, post result[%d], last err[%d], %s", GetName(), GetThreadID(), nRet, bPostRet, GetLastError(), DumpTaskInfo(pTask, true).c_str());
                         }
                         break;
                     case SIdleThreadTask::ITT_STATIC:
                         {
                             bPostRet = ::PostMessage(pTask->m_hcbStatic, pTask->m_dwTID, (wparam_t)nRet, (lparam_t)pTask->m_pResult);
-                            DEBUG_LOG(g_logger, "%s[0x%p] retry post static task. ret:%d, post result[%d], last err[%d], %s", GetName(), GetThreadID(), nRet, bPostRet, GetLastError(), DumpTaskInfo(pTask, true).c_str());
+                            DEBUG_LOG(g_logger, "%s[%p] retry post static task. ret:%d, post result[%d], last err[%d], %s", GetName(), GetThreadID(), nRet, bPostRet, GetLastError(), DumpTaskInfo(pTask, true).c_str());
                         }
                         break;
                 }
@@ -305,7 +305,7 @@ namespace lslib
         m_lstTmpTasks.push_back(pTask);
         m_mutexTmpTasks.Unlock();
 
-        DEBUG_LOG(g_logger, "%s[0x%p] add task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask).c_str());
+        DEBUG_LOG(g_logger, "%s[%p] add task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask).c_str());
 
         return task.m_dwUniqueID;
     }
@@ -325,7 +325,7 @@ namespace lslib
             SIdleThreadTask* pTask = *it;
             if ( pTask && pClient == pTask->m_pClient && ( hanlder == NULL || hanlder == pTask->m_ptrClientTask ) )
             {
-                DEBUG_LOG(g_logger, "%s[0x%p] cancel task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask).c_str());
+                DEBUG_LOG(g_logger, "%s[%p] cancel task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask).c_str());
                 delete pTask;
                 pTask = NULL;
                 m_lstTmpTasks.erase(it++);
@@ -344,7 +344,7 @@ namespace lslib
             SIdleThreadTask* pTask = *it;
             if ( pTask && pClient == pTask->m_pClient && ( hanlder == NULL || hanlder == pTask->m_ptrClientTask ) )
             {
-                DEBUG_LOG(g_logger, "%s[0x%p] cancel task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask).c_str());
+                DEBUG_LOG(g_logger, "%s[%p] cancel task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask).c_str());
                 delete pTask;
                 pTask = NULL;
                 m_lstTasks.erase(it++);
@@ -370,7 +370,7 @@ namespace lslib
             SIdleThreadTask* pTask = *it;
             if (pTask && dwUniqueID == pTask->m_dwUniqueID)
             {
-                DEBUG_LOG(g_logger, "%s[0x%p] cancel task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask).c_str());
+                DEBUG_LOG(g_logger, "%s[%p] cancel task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask).c_str());
                 delete pTask;
                 pTask = NULL;
                 m_lstTmpTasks.erase(it++);
@@ -389,7 +389,7 @@ namespace lslib
             SIdleThreadTask* pTask = *it;
             if (pTask && dwUniqueID == pTask->m_dwUniqueID)
             {
-                DEBUG_LOG(g_logger, "%s[0x%p] cancel task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask).c_str());
+                DEBUG_LOG(g_logger, "%s[%p] cancel task. %s", GetName(), GetThreadID(), DumpTaskInfo(pTask).c_str());
                 delete pTask;
                 pTask = NULL;
                 m_lstTasks.erase(it++);
@@ -437,7 +437,7 @@ namespace lslib
         m_mutexFnTaskCmp.Unlock();
 
         bool bret = IsTaskExist(task, fnCmp);
-        if (bret) DEBUG_LOG(g_logger, "%s[0x%p] same task. %s", GetName(), GetThreadID(), DumpTaskInfo(&task).c_str());
+        if (bret) DEBUG_LOG(g_logger, "%s[%p] same task. %s", GetName(), GetThreadID(), DumpTaskInfo(&task).c_str());
         return bret;
     }
 
@@ -472,7 +472,7 @@ namespace lslib
         }
         m_mutexTasks.Unlock();
 
-        if (bret) DEBUG_LOG(g_logger, "%s[0x%p] same task. %s", GetName(), GetThreadID(), DumpTaskInfo(&task).c_str());
+        if (bret) DEBUG_LOG(g_logger, "%s[%p] same task. %s", GetName(), GetThreadID(), DumpTaskInfo(&task).c_str());
         return bret;
     }
 
