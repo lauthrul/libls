@@ -558,10 +558,10 @@ namespace lslib
         LSLIB_API string format_args(lpcstr pfmt, const va_list& args)
         {
 #ifdef WIN32
-            int len = vsnprintf(NULL, 0, pfmt, args);
-            char* pbuf = (char*)malloc(len + 1);
+            int len = _vscprintf_p(pfmt, args) + 1;
+            char* pbuf = (char*)malloc(len);
             memset(pbuf, 0, len + 1);
-            vsnprintf(pbuf, len, pfmt, args);
+            _vsprintf_p(pbuf, len, pfmt, args);
 #else
             char* pbuf = NULL;
             vasprintf(&pbuf, pfmt, args);
